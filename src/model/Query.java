@@ -115,10 +115,10 @@ public class Query {
 			return true;
 		}
 		
-		/*if(visitedTables.contains(relation1) && visitedTables.contains(relation2)) {
-			System.out.println();
-			break;
-		}*/
+		if(visitedTables.contains(relation1) && visitedTables.contains(relation2)) {
+			root = new Intersection(root, new Jointure(new Relation(relation1), new Relation(relation2), C));
+			return true;
+		}
 		
 		if(visitedTables.contains(relation1)) {
 			root = new Jointure(root, new Relation(relation2), C);

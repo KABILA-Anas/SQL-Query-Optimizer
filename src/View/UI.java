@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import Controller.Optimizer;
-import model.Afficheur;
 import model.Node;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;

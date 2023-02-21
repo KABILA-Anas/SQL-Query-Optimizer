@@ -1,4 +1,6 @@
-package model;
+package View;
+
+import model.Node;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

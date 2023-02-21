@@ -1,16 +1,7 @@
 package View;
 
-import java.util.LinkedList;
-
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import Controller.Optimizer;
-import model.Afficheur;
 import model.Node;
-import model.Query;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
@@ -30,7 +21,7 @@ public class MainClass {
 		
 		
 		
-		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250 and P.Pid = T.Pid or E.Eid = T.Eid";
+		String query = "SELECT Enom, Titre From Employe E, Projet P, C Where P.Pid = E.Pid and E.Eid = C.Eid and P.nm = E.nm";
 		Node N = null;
 		try {
 			N = optimizer.TransformQuery(query);
