@@ -30,7 +30,7 @@ public class UI extends JFrame{
         jLabel1.setForeground(new java.awt.Color(255, 51, 102));
         jLabel1.setText("Query Optimizer");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        jTextField1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -107,7 +107,7 @@ public class UI extends JFrame{
     	try {
 			Node N = optimizer.TransformQuery(jTextField1.getText());
 			System.out.println("---------------------------------------------------------------------");
-			P = new Afficheur(N);
+			P = new Afficheur(N,this);
 			//P.printTree();
 		} catch (SyntaxeException | SemantiqueException e) {
 			// TODO Auto-generated catch block

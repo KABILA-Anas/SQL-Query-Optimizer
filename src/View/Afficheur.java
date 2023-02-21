@@ -8,16 +8,17 @@ import java.awt.Graphics;
 import javax.swing.*;
 
 
-public class Afficheur extends JFrame {
+public class Afficheur{
 	private Node tree;
 
-    public Afficheur(Node tree) {
+    public Afficheur(Node tree,JFrame frame) {
         this.tree = tree;
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setContentPane(new TreePanel());
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        JDialog jDialog = new JDialog(frame,"Relational Tree",true);
+        jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        jDialog.setContentPane(new TreePanel());
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(null);
+        jDialog.setVisible(true);
     }
 
     private class TreePanel extends JPanel {
