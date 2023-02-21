@@ -21,7 +21,7 @@ public class MainClass {
 		
 		
 		
-		String query = "SELECT Enom, Titre From Employe E, Projet P, C Where P.Pid = E.Pid and E.Eid = C.Eid and P.nm = E.nm";
+		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
 		Node N = null;
 		try {
 			N = optimizer.TransformQuery(query);
