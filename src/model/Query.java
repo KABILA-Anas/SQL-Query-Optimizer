@@ -12,13 +12,13 @@ import model.exception.SyntaxeException;
 public class Query {
 	private Map<String,String> columns;
 	private Map<String,String> tables_alias;
-	private Set<String> tables;
+	private Vector<String> tables;
     Vector<Vector<String>> conditions;
     private Node root;
     private Set<String> visitedTables;
 
     
-	public Query(Map<String, String> columns, Map<String, String> tables_alias, Set<String> tables,
+	public Query(Map<String, String> columns, Map<String, String> tables_alias, Vector<String> tables,
 			Vector<Vector<String>> conditions) {
 		this.columns = columns;
 		this.tables_alias = tables_alias;
@@ -267,7 +267,19 @@ public class Query {
 		
 		String condition;
 		Node tmpNode  = null;
-		
+
+		//Si il n'y a pas la partie where
+		System.out.println(conditions.size());
+		if(conditions.size() == 0){
+			for(String t : tables) {
+				if(tmpNode == null)
+					tmpNode = new Relation(t);
+				else
+					tmpNode = new Cartesien(tmpNode, new Relation(t));
+			}
+			return tmpNode;
+		}
+
 		for(Vector<String> V : conditions) {
 			List<String> nodesQueue = new LinkedList<String>();
 			visitedTables = new HashSet<String>();
@@ -330,11 +342,11 @@ public class Query {
 					root = new Cartesien(root,new Relation(t));
 				}
 			}	
-			
+
 			//root.print2DUtil(root, 0);
-			
+
 			//System.out.println("**************************************************************************");
-			
+
 			if(tmpNode == null)
 				tmpNode = root;
 			else

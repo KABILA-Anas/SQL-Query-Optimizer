@@ -21,14 +21,14 @@ public class MainClass {
 		
 		
 		
-		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
+		/*String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
 		Node N = null;
 		try {
 			N = optimizer.TransformQuery(query);
 		} catch (SyntaxeException | SemantiqueException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		//Afficheur P = new Afficheur(N);
 		//P.printTree();
