@@ -125,12 +125,104 @@ public class Transformer {
 		return Q.buidTree();
 	}
 
-	public void TransformerTree(Node tree){
+	public void TransformerTree(Query Q) throws SyntaxeException, SemantiqueException {
+
+		Vector<Vector<String>> conditions = Q.getConditions();
+		Vector<String> conditions1 = conditions.get(0);
+
+		//System.out.println(conditions1);
+
+		Vector<Vector<String>> combinations = vectorCombinations(conditions1);
+
+		Node tree = Q.buidTree();
+
+		Vector<Node> nodes = new Vector<Node>();
+		for (Vector<String> v : combinations){
+			System.out.println(v);
+			Vector<Vector<String>> cdts = new Vector<Vector<String>>();
+			cdts.add(v);
+			Query query = new Query(Q.getColumns(), Q.getTables_alias(), Q.getTables(), cdts);
+			Node T  = query.buidTree();
+			if(compareTree(T, tree))
+				System.out.println("===========>Same tree");
+			else
+				System.out.println("===========>Different");
+			//nodes.add(T);
+			System.out.println("-------------------------------------------------------------------------------------");
+		}
 
 
+		/*for(Vector<String> v : combinations){
+			System.out.println(v);
+		}*/
 
 	}
-	public Node OptimizeQuery(String query) {return null;}
+
+
+	private boolean seaechTree(Node T){
+		return false;
+	}
+
+	private boolean compareTree(Node T1, Node T2){
+		/*if(T1.height() != T2.height())
+			return false;*/
+		if(T1 == null && T2 == null)
+			return true;
+		if(T1 == null || T2 == null)
+			return false;
+		if(T1.getExpression() != T2.getExpression())
+			return false;
+		if(!compareTree(T1.getRightChild(), T2.getRightChild()) || !compareTree(T1.getLeftChild(), T2.getLeftChild()))
+			return false;
+		return true;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	private Vector<Vector<String>> vectorCombinations(Vector<String> vector){
+		Vector<Vector<String>> result = new Vector<Vector<String>>();
+		generateVectorCombinations(vector, new boolean[vector.size()], new Vector<String>(), 0, result);
+		return result;
+	}
+
+	private void generateVectorCombinations(Vector<String> vector, boolean[] used, Vector<String> current, int index, Vector<Vector<String>> result){
+		if (index == vector.size()) {
+			result.add((Vector<String>) current.clone());
+			//current = new Vector<String>();
+		} else {
+			for (int i = 0; i < vector.size(); i++) {
+				if (!used[i]) {
+					used[i] = true;
+					//current.remove(index);
+					if(current.size() == vector.size())
+						current.set(index, vector.get(i));
+					else
+						current.add(index, vector.get(i));
+					generateVectorCombinations(vector, used, current, index + 1, result);
+					used[i] = false;
+				}
+			}
+		}
+	}
 	
 	
 

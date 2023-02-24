@@ -89,6 +89,25 @@ public class Node {
 		return null;
 	}
 
+
+
+	private int height(Node node){
+		if(node == null)
+			return  0;
+		return 1 + Math.max(height(node.leftChild), height(node.rightChild));
+	}
+
+	public int height(){
+		return height(this);
+	}
+
+
+
+
+
+
+
+
 	public void print2DUtil(Node root, int space)
 	{
 	    // Base case

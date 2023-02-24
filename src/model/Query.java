@@ -26,6 +26,22 @@ public class Query {
 		this.conditions = conditions;
 	}
 
+	public Map<String, String> getColumns() {
+		return columns;
+	}
+
+	public Map<String, String> getTables_alias() {
+		return tables_alias;
+	}
+
+	public Vector<String> getTables() {
+		return tables;
+	}
+
+	public Vector<Vector<String>> getConditions() {
+		return conditions;
+	}
+
 	@Override
 	public String toString() {
 		return "Query [columns=" + columns + ", tables_alias=" + tables_alias + ", tables=" + tables + ", conditions="
@@ -269,7 +285,7 @@ public class Query {
 		Node tmpNode  = null;
 
 		//Si il n'y a pas la partie where
-		System.out.println(conditions.size());
+		//System.out.println(conditions.size());
 		if(conditions.size() == 0){
 			for(String t : tables) {
 				if(tmpNode == null)

@@ -1,6 +1,8 @@
 package View;
 
 import Controller.Transformer;
+import model.exception.SemantiqueException;
+import model.exception.SyntaxeException;
 
 public class MainClass {
 
@@ -26,11 +28,20 @@ public class MainClass {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		
+
+		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
+		try {
+			transformer.TransformerTree(transformer.SplitQuery(query));
+		} catch (SyntaxeException | SemantiqueException e) {
+			e.printStackTrace();
+		}
+
 		//Afficheur P = new Afficheur(N);
 		//P.printTree();
-		
-		UI.run();
+
+
+
+		//UI.run();
 
 	}
 	
