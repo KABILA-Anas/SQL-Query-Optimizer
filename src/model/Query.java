@@ -60,16 +60,16 @@ public class Query {
 			return "Between";
 		
 		//** Jointure **//
-		pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s*=\\s*(\\w+)(\\.\\w+)?");
+		pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s*(<|>|<=|>=|=)\\s*(\\w+)(\\.\\w+)?");
 		matcher = pattern.matcher(condition);
 		if(matcher.matches())
 			return "Jointure";
 		
 		//** Two Columns Selection **//
-		pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s*(<|>|<=|>=)\\s*(\\w+)(\\.\\w+)?");
+		/*pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s*(<|>|<=|>=)\\s*(\\w+)(\\.\\w+)?");
 		matcher = pattern.matcher(condition);
 		if(matcher.matches())
-			return "TwoColSelection";
+			return "TwoColSelection";*/
 		
 		throw new SyntaxeException();
 		
@@ -104,10 +104,10 @@ public class Query {
 		if(root == null || !relationCheck) {
 			
 			if(root == null)
-				root = new Jointure(new Relation(relation1), new Relation(relation2), C);
+				root = new Node("Jointure", C,new Node("Relation",relation1), new Node("Relation",relation2));
 			
 			if(!relationCheck)
-				root = new Cartesien(root, new Jointure(new Relation(relation1), new Relation(relation2), C));
+				root = new Node("Cartesien",root,new Node("Jointure", C,new Node("Relation",relation1), new Node("Relation",relation2)));
 			
 			visitedTables.add(relation1);
 			visitedTables.add(relation2);
@@ -116,19 +116,19 @@ public class Query {
 		}
 		
 		if(visitedTables.contains(relation1) && visitedTables.contains(relation2)) {
-			root = new Intersection(root, new Jointure(new Relation(relation1), new Relation(relation2), C));
+				root = new Node("Intersection",root, new Node("Jointure", C,new Node("Relation",relation1), new Node("Relation",relation2)));
 			return true;
 		}
 		
 		if(visitedTables.contains(relation1)) {
-			root = new Jointure(root, new Relation(relation2), C);
+			root = new Node("Jointure", C,root, new Node("Relation",relation2));
 			visitedTables.add(relation2);
 			
 			return true;
 		}
 		
 		if(visitedTables.contains(relation2)) {
-			root = new Jointure(root, new Relation(relation1), C);
+			root = new Node("Jointure", C,root, new Node("Relation",relation1));
 			visitedTables.add(relation1);
 			
 			return true;
@@ -165,22 +165,22 @@ public class Query {
 		
 		if(root == null || !relationCheck) {
 			if(root == null)
-				root = new Selection(new Relation(relation), C);
+				root = new Node("Selection",C,new Node("Relation",relation));
 			if(!relationCheck)
-				root = new Cartesien(root, new Selection(new Relation(relation), C));
+				root = new Node("Cartesien",root, new Node("Selection",C,new Node("Relation",relation)));
 			visitedTables.add(relation);
 			return true;
 		}
 		
 		if(visitedTables.contains(relation)) {
-			root = new Selection(root, C);
+			root = new Node("Selection",C,root);
 			return true;
 		}
 		return false;
 	}
 	
 	//**//**Creer un operateur (Node) de jointure
-		private boolean createTwoColSelection(String C, boolean relationCheck) throws SemantiqueException {
+		/*private boolean createTwoColSelection(String C, boolean relationCheck) throws SemantiqueException {
 			
 			StringTokenizer tokenizer;
 			String relation1, relation2;
@@ -242,7 +242,7 @@ public class Query {
 			return false;
 			
 		}
-	
+	*/
 	//** relationCheck ? Tester si les tables necessaires sont deja viste : creer directement le noeud
 	public boolean createNode(String C, boolean relationCheck) throws SemantiqueException, SyntaxeException {
 		
@@ -255,8 +255,8 @@ public class Query {
 		case "Like":	
 			return createSelection(C, relationCheck);
 		
-		case "TwoColSelection" :
-			return createTwoColSelection(C, relationCheck);
+		/*case "TwoColSelection" :
+			return createTwoColSelection(C, relationCheck);*/
 		
 		}
 		return false;
@@ -273,9 +273,9 @@ public class Query {
 		if(conditions.size() == 0){
 			for(String t : tables) {
 				if(tmpNode == null)
-					tmpNode = new Relation(t);
+					tmpNode = new Node("Relation",t);
 				else
-					tmpNode = new Cartesien(tmpNode, new Relation(t));
+					tmpNode = new Node("Cartesien",tmpNode,new Node("Relation",t));
 			}
 			return tmpNode;
 		}
@@ -339,7 +339,7 @@ public class Query {
 			//** Creer un produit cartesienne avec chaque table dans le from qui ne se trouve pas dans le where
 			for(String t : tables) {
 				if(!visitedTables.contains(t)) {
-					root = new Cartesien(root,new Relation(t));
+					root = new Node("Cartesien",root,new Node("Relation",t));
 				}
 			}	
 
@@ -350,7 +350,7 @@ public class Query {
 			if(tmpNode == null)
 				tmpNode = root;
 			else
-				tmpNode = new Union(tmpNode, root);
+				tmpNode = new Node("Union",tmpNode, root);
 			
 			
 		}//end for pour les unions

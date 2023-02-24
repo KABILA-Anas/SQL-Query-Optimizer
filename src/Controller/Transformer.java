@@ -8,18 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import model.Query;
-import model.Table;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
-import model.Catalog;
 import model.Node;
 
-public class Optimizer {
+public class Transformer {
 	
-	private Catalog database;
-	private Vector<Query> queries;
-	
-	public Optimizer() {}
+	Vector<Node> trees = new Vector<Node>();
+	public Transformer() {}
 	
 	public Query SplitQuery(String query) throws SyntaxeException {
 
@@ -99,7 +95,7 @@ public class Optimizer {
 		    tables_alias.put(alias,table);
         }
 
-		
+
 		//**Split where conditions
 		Vector<Vector<String>> or_oper = new Vector<Vector<String>>();
 		if(whereIndex != -1) {
@@ -128,7 +124,12 @@ public class Optimizer {
 		Query Q = SplitQuery(query);
 		return Q.buidTree();
 	}
-	
+
+	public void TransformerTree(Node tree){
+
+
+
+	}
 	public Node OptimizeQuery(String query) {return null;}
 	
 	

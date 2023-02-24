@@ -2,11 +2,13 @@ package model;
 
 
 
-public abstract class Node {
+public class Node {
 	private String name;
+	private String expression;
 	private Node leftChild;
 	private Node rightChild;
-    final private int COUNT = 10;
+
+	final private int COUNT = 10;
 
 	
 	
@@ -16,24 +18,34 @@ public abstract class Node {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;
 	}
-	
-	public Node(String name, Node leftChild) {
-		super();
+
+	public Node(String name, String expression, Node leftChild) {
 		this.name = name;
+		this.expression = expression;
 		this.leftChild = leftChild;
 	}
-	public Node(String name) {
-		super();
+
+	public Node(String name, String expression) {
 		this.name = name;
+		this.expression = expression;
 	}
 
-	public int Estimate() {
-		return 0;
+	public Node(String name, String expression, Node leftChild, Node rightChild) {
+		this.name = name;
+		this.expression = expression;
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
 	}
 
-	
-	
-	
+
+	public String getExpression() {
+		return expression;
+	}
+
+	public void setExpression(String expression) {
+		this.expression = expression;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -56,6 +68,25 @@ public abstract class Node {
 
 	public void setRightChild(Node rightChild) {
 		this.rightChild = rightChild;
+	}
+
+	@Override
+	public String toString() {
+		switch(name.toLowerCase()){
+			case "jointure":
+				return "⋈";
+			case "cartesien":
+				return "X";
+			case "selection":
+				return "σ (" + expression + ")";
+			case "union":
+				return "∪";
+			case "intersection":
+				return "∩";
+			case "relation":
+				return expression;
+		}
+		return null;
 	}
 
 	public void print2DUtil(Node root, int space)

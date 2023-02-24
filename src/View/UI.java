@@ -2,7 +2,7 @@ package View;
 
 import javax.swing.*;
 
-import Controller.Optimizer;
+import Controller.Transformer;
 import model.Node;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
@@ -102,9 +102,9 @@ public class UI extends JFrame{
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    	Optimizer optimizer = new Optimizer();
+    	Transformer transformer = new Transformer();
     	try {
-			Node N = optimizer.TransformQuery(jTextField1.getText());
+			Node N = transformer.TransformQuery(jTextField1.getText());
 			System.out.println("---------------------------------------------------------------------");
 			P = new Afficheur(N,this);
 			//P.printTree();

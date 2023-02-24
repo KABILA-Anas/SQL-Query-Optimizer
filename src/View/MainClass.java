@@ -1,15 +1,12 @@
 package View;
 
-import Controller.Optimizer;
-import model.Node;
-import model.exception.SemantiqueException;
-import model.exception.SyntaxeException;
+import Controller.Transformer;
 
 public class MainClass {
 
 	public static void main(String[] args) {
 		
-		Optimizer optimizer = new Optimizer();
+		Transformer transformer = new Transformer();
 		//Query Q = optimizer.SplitQuery("SELECT column1 C1, column2 FROM table t1,table t2 WHERE column = 'value' AND a = b OR C = D AND F = G");
 		//Query Q = optimizer.SplitQuery("SELECT Enom, Titre From Employe E, Projet P, Travaux T, C Where P.budget > 250  and E.Eid = T.Eid and T.budget like '250'");
 		//Query Q = optimizer.SplitQuery("SELECT Enom, Titre From Employe E, Projet P, Travaux T, C Where P.budget > 250 and P.Pid = T.Pid and E.Eid = T.Eid");
