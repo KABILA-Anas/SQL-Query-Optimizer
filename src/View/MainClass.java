@@ -6,6 +6,8 @@ import model.Node;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
+import java.util.Vector;
+
 public class MainClass {
 
 	public static void main(String[] args) {
@@ -31,24 +33,30 @@ public class MainClass {
 			e.printStackTrace();
 		}*/
 
-		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.Pid = T.Pid and P.budget >= 250  and E.Eid = T.Eid and T.budget >= 250";
+		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where   E.Eid = T.Eid and T.budget >= 250 and P.budget >= 250 and P.Pid = T.Pid ";
 		try {
 			/*transformer.TransformerTree(transformer.SplitQuery(query));
 			transformer.printTrees();*/
 
 			Transformer transformer = new Transformer(Decomposer.SplitQuery(query));
 			Node T = transformer.TransformQuery();
-			T.print2DUtil(T,0);
+			transformer.TransformerTree();
+			//T.print2DUtil(T,0);
 			System.out.println("\n-------------------------------\n");
 			int[] childType = {0};
 			//System.out.println(transformer.getRelationParent(T, "TRAVAUX", childType).getExpression());
 			//System.out.println(childType[0]);
-			System.out.println(transformer.getFirstSelection(T).getExpression());
+			//System.out.println(transformer.getFirstSelection(T).getExpression());
+			/*Vector<Node> nodes = new Vector<Node>();
+			transformer.CSG(T,nodes);
+			System.out.println(nodes.size());
+			for(Node node : nodes)
+				node.print2DUtil(node,0);*/
 			/*Node node = Node.copierNode(T);
 			node.setLeftChild(null);
 			node.print2DUtil(node,0);
 			System.out.println("\n-------------------------------\n");*/
-
+			transformer.CSG();
 		} catch (SyntaxeException | SemantiqueException e) {
 			e.printStackTrace();
 		}

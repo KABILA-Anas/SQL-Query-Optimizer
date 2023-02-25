@@ -128,7 +128,7 @@ public class Transformer {
 		return Q.buidTree();
 	}
 
-	public void TransformerTree(Query Q) throws SyntaxeException, SemantiqueException {
+	public void TransformerTree() throws SyntaxeException, SemantiqueException {
 
 		Vector<Vector<String>> conditions = Q.getConditions();
 		Vector<String> conditions1 = conditions.get(0);
@@ -136,9 +136,7 @@ public class Transformer {
 		//System.out.println(conditions1);
 
 		Vector<Vector<String>> combinations = vectorCombinations(conditions1);
-
 		Node tree = Q.buidTree();
-
 		for (Vector<String> v : combinations){
 			//System.out.println(v);
 			Vector<Vector<String>> cdts = new Vector<Vector<String>>();
@@ -200,27 +198,86 @@ public class Transformer {
 
 	}
 
-	public void CSG(Node root){
-		//Vector<Node> nodes = new Vector<Node>();
+	private void CSG(Node root , Vector<Node> nodes) throws SyntaxeException, SemantiqueException {
 		if(root != null){
+			int[] childType = {-1};
 			Node newTree = Node.copierNode(root);
+			Node firstSelectionParent = getFirstSelectionParent(newTree,childType);
+			if(firstSelectionParent != null) {
+				switch (childType[0]) {
+					case -1:
+						newTree = moveSelection(firstSelectionParent);
+						break;
+					case 0:
+						firstSelectionParent.setLeftChild(moveSelection(firstSelectionParent.getLeftChild()));
+						break;
+					case 1:
+						firstSelectionParent.setRightChild(moveSelection(firstSelectionParent.getRightChild()));
+						break;
+				}
+				nodes.add(newTree);
+				//newTree.print2DUtil(newTree,0);
+				//System.out.println("----------------------------------------------\n");
+				CSG(newTree,nodes);
+			}
 			//if(newTree.getName() == "Selection");
 		}
 	}
+	public void CSG() throws SyntaxeException, SemantiqueException {
+		Vector<Node> tempNodes = new Vector<Node>();
+		for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet()) {
+			for (Node n : entry.getValue()) {
+				/*System.out.println("*****************************************\n");
+				System.out.println("\nOriginal Tree\n");
+				n.print2DUtil(n, 0);*/
+				Vector<Node> nodes = new Vector<Node>();
+				CSG(n , nodes);
+				System.out.println("Inter");
+				System.out.println(nodes.size());
+				for(Node temp : nodes)
+					tempNodes.add(temp);
+				/*for(Node temp : nodes) {
+					System.out.println("------------------------------------\n");
+					temp.print2DUtil(temp, 0);
+				}*/
 
-	public Node getFirstSelection(Node root){
+				//n.print2DUtil(n, 0);
+				//System.out.println("-------------------------------------------------------------------------------------");
+			}
+		}
+		/*System.out.println("Finale");
+		System.out.println(tempNodes.size());*/
+		for(Node n : tempNodes)
+			addTree(n);
+
+	}
+
+	public Node getFirstSelectionParent(Node root , int[] childType){
 		Node R = null;
 		if(root == null)
 			return null;
-		if(root.getName() == "Selection")
+		if(root.getName().equals("Selection")) {
+			if(root.getLeftChild().getName().equals("Relation")){
+				return null;
+			}
 			return root;
-		R = getFirstSelection(root.getLeftChild());
-		if(R != null)
+		}
+		R = getFirstSelectionParent(root.getLeftChild() , childType);
+		if(R != null) {
+			if(R.getName().equals("Selection")){
+				childType[0] = 0;
+				return root;
+			}
 			return R;
-
-		R = getFirstSelection(root.getRightChild());
-		if(R != null)
+		}
+		R = getFirstSelectionParent(root.getRightChild(),childType);
+		if(R != null){
+			if(R.getName().equals("Selection")) {
+				childType[0] = 1;
+				return root;
+			}
 			return R;
+		}
 
 		return null;
 	}
