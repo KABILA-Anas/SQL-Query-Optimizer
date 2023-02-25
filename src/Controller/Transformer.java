@@ -245,8 +245,8 @@ public class Transformer {
 				//System.out.println("-------------------------------------------------------------------------------------");
 			}
 		}
-		/*System.out.println("Finale");
-		System.out.println(tempNodes.size());*/
+		System.out.println("Finale");
+		System.out.println(tempNodes.size());
 		for(Node n : tempNodes)
 			addTree(n);
 
