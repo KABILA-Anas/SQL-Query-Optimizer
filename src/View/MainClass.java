@@ -1,6 +1,7 @@
 package View;
 
 import Controller.Transformer;
+import model.Node;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
@@ -32,6 +33,15 @@ public class MainClass {
 		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
 		try {
 			transformer.TransformerTree(transformer.SplitQuery(query));
+			transformer.printTrees();
+			/*Node T = transformer.SplitQuery(query).buidTree();
+			T.print2DUtil(T,0);
+			System.out.println("\n-------------------------------\n");
+			Node node = Node.copierNode(T);
+			node.setLeftChild(null);
+			node.print2DUtil(node,0);
+			System.out.println("\n-------------------------------\n");*/
+
 		} catch (SyntaxeException | SemantiqueException e) {
 			e.printStackTrace();
 		}

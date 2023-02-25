@@ -14,7 +14,7 @@ import model.Node;
 
 public class Transformer {
 	
-	Vector<Node> trees = new Vector<Node>();
+	Map<Integer,Vector<Node>> trees = new HashMap<Integer,Vector<Node>>();
 	public Transformer() {}
 	
 	public Query SplitQuery(String query) throws SyntaxeException {
@@ -22,7 +22,7 @@ public class Transformer {
 		query = query.toUpperCase();
 		//String sql = "SELECT column1, column2 FROM table1 WHERE column3 = 'value'";
 		//Split the query to 3 parts
-		
+
 		String regex = "SELECT\\s+(\\w+(\\s+(as\\s+)?\\w+)?|\\*)(\\s*,\\s*(\\w+(\\s+(as\\s+)?\\w+)?|\\*))*\\s+FROM\\s+(\\w+)(\\s+(as\\s+)?\\w+)?(\\s*(,\\s*\\w+)(\\s+(as\\s+)?\\w+)?)*\\s*";
 		query = query.toUpperCase();
 		if(query.contains("WHERE"))
@@ -63,7 +63,7 @@ public class Transformer {
 		    columns.put(column,alias);
         }
 		
-		
+
 		//Split from tables
 		String fromPart;
 		if(whereIndex != -1)
@@ -119,7 +119,7 @@ public class Transformer {
 
 		return new Query(columns,tables_alias,tables,or_oper);
 	}
-	
+
 	public Node TransformQuery(String query) throws SyntaxeException, SemantiqueException {
 		Query Q = SplitQuery(query);
 		return Q.buidTree();
@@ -136,19 +136,13 @@ public class Transformer {
 
 		Node tree = Q.buidTree();
 
-		Vector<Node> nodes = new Vector<Node>();
 		for (Vector<String> v : combinations){
-			System.out.println(v);
+			//System.out.println(v);
 			Vector<Vector<String>> cdts = new Vector<Vector<String>>();
 			cdts.add(v);
 			Query query = new Query(Q.getColumns(), Q.getTables_alias(), Q.getTables(), cdts);
 			Node T  = query.buidTree();
-			if(compareTree(T, tree))
-				System.out.println("===========>Same tree");
-			else
-				System.out.println("===========>Different");
-			//nodes.add(T);
-			System.out.println("-------------------------------------------------------------------------------------");
+			addTree(T);
 		}
 
 
@@ -159,23 +153,51 @@ public class Transformer {
 	}
 
 
-	private boolean seaechTree(Node T){
+	private boolean searchTree(Node T){
+		Vector<Node> nodes = trees.get(T.height());
+		if(nodes == null)
+			return false;
+		for(Node N : nodes)
+			if(compareTree(T,N))
+				return true;
 		return false;
 	}
 
+	private void addTree(Node T ){
+
+		if(!searchTree(T)){
+			if(trees.get(T.height()) == null)
+				trees.put(T.height(), new Vector<Node>());
+			trees.get(T.height()).add(T);
+		}
+
+	}
 	private boolean compareTree(Node T1, Node T2){
-		/*if(T1.height() != T2.height())
-			return false;*/
 		if(T1 == null && T2 == null)
 			return true;
 		if(T1 == null || T2 == null)
 			return false;
-		if(T1.getExpression() != T2.getExpression())
+		if(T1.height() != T2.height())
 			return false;
+
+		if(!T1.getExpression().equals(T2.getExpression()))
+				return false;
+
 		if(!compareTree(T1.getRightChild(), T2.getRightChild()) || !compareTree(T1.getLeftChild(), T2.getLeftChild()))
 			return false;
 		return true;
 	}
+
+	public void printTrees() {
+		for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
+			for (Node n : entry.getValue()) {
+				n.print2DUtil(n, 0);
+				System.out.println("-------------------------------------------------------------------------------------");
+			}
+
+	}
+
+
 
 
 
@@ -223,7 +245,5 @@ public class Transformer {
 			}
 		}
 	}
-	
-	
 
 }

@@ -29,7 +29,13 @@ public class Node {
 		this.name = name;
 		this.expression = expression;
 	}
-
+	public static Node copierNode(Node node){
+		if (node == null) {
+			return null;
+		}
+		Node copy = new Node(node.name,node.expression,copierNode(node.leftChild),copierNode(node.rightChild));
+		return copy;
+	}
 	public Node(String name, String expression, Node leftChild, Node rightChild) {
 		this.name = name;
 		this.expression = expression;

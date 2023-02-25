@@ -371,7 +371,7 @@ public class Query {
 			
 		}//end for pour les unions
 		
-		tmpNode.print2DUtil(tmpNode, 0);
+		//tmpNode.print2DUtil(tmpNode, 0);
 		
 		
 		return tmpNode;
