@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 
+import Controller.Decomposer;
 import Controller.Transformer;
 import model.Node;
 import model.exception.SemantiqueException;
@@ -41,7 +42,11 @@ public class UI extends JFrame{
         jButton1.setText("Transformer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (SyntaxeException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -100,11 +105,11 @@ public class UI extends JFrame{
         
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SyntaxeException {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    	Transformer transformer = new Transformer();
+    	Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
     	try {
-			Node N = transformer.TransformQuery(jTextField1.getText());
+			Node N = transformer.TransformQuery();
 			System.out.println("---------------------------------------------------------------------");
 			P = new Afficheur(N,this);
 			//P.printTree();

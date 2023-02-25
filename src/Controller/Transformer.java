@@ -13,11 +13,14 @@ import model.exception.SyntaxeException;
 import model.Node;
 
 public class Transformer {
-	
+
+	Query Q;
 	Map<Integer,Vector<Node>> trees = new HashMap<Integer,Vector<Node>>();
-	public Transformer() {}
+	public Transformer(Query Q) {
+		this.Q = Q;
+	}
 	
-	public Query SplitQuery(String query) throws SyntaxeException {
+	/*public Query SplitQuery(String query) throws SyntaxeException {
 
 		query = query.toUpperCase();
 		//String sql = "SELECT column1, column2 FROM table1 WHERE column3 = 'value'";
@@ -118,10 +121,10 @@ public class Transformer {
 		}
 
 		return new Query(columns,tables_alias,tables,or_oper);
-	}
+	}*/
 
-	public Node TransformQuery(String query) throws SyntaxeException, SemantiqueException {
-		Query Q = SplitQuery(query);
+	public Node TransformQuery() throws SyntaxeException, SemantiqueException {
+		//Query Q = Decomposer.SplitQuery(query);
 		return Q.buidTree();
 	}
 
@@ -197,23 +200,73 @@ public class Transformer {
 
 	}
 
-	public Node getRelationParent(Node root, String realation){
+	public void CSG(Node root){
+		//Vector<Node> nodes = new Vector<Node>();
+		if(root != null){
+			Node newTree = Node.copierNode(root);
+			//if(newTree.getName() == "Selection");
+		}
+	}
+
+	public Node getFirstSelection(Node root){
 		Node R = null;
 		if(root == null)
+			return null;
+		if(root.getName() == "Selection")
+			return root;
+		R = getFirstSelection(root.getLeftChild());
+		if(R != null)
+			return R;
+
+		R = getFirstSelection(root.getRightChild());
+		if(R != null)
+			return R;
+
+		return null;
+	}
+
+	public Node moveSelection(Node root) throws SyntaxeException, SemantiqueException {
+		int[] childType = {0};
+		Node relationParent, newRoot;
+
+		newRoot = root.getLeftChild();
+		relationParent = getRelationParent(root.getLeftChild(), Q.selectionRelation(root.getExpression()), childType);
+
+		if(childType[0] == 1){
+			root.setLeftChild(relationParent.getRightChild());
+			relationParent.setRightChild(root);
+		} else {
+			root.setLeftChild(relationParent.getLeftChild());
+			relationParent.setLeftChild(root);
+		}
+
+		return newRoot;
+	}
+
+	public Node getRelationParent(Node root, String realation, int[] childType){
+		Node R = null;
+
+		if(root == null)
 			return  null;
+
 		if(root.getExpression().equals(realation))
 			return root;
-		R = getRelationParent(root.getRightChild(), realation);
+
+		R = getRelationParent(root.getRightChild(), realation, childType);
 		if(R != null) {
-			if (R.getExpression().equals(realation))
+			if (R.getExpression().equals(realation)){
+				childType[0] = 1;
 				return root;
+			}
 			return R;
 		}
 
-		R = getRelationParent(root.getLeftChild(), realation);
+		R = getRelationParent(root.getLeftChild(), realation, childType);
 		if(R != null) {
-			if (R.getExpression().equals(realation))
+			if (R.getExpression().equals(realation)){
+				childType[0] = 0;
 				return root;
+			}
 			return R;
 		}
 

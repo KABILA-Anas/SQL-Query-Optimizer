@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Decomposer;
 import Controller.Transformer;
 import model.Node;
 import model.exception.SemantiqueException;
@@ -9,7 +10,7 @@ public class MainClass {
 
 	public static void main(String[] args) {
 		
-		Transformer transformer = new Transformer();
+
 		//Query Q = optimizer.SplitQuery("SELECT column1 C1, column2 FROM table t1,table t2 WHERE column = 'value' AND a = b OR C = D AND F = G");
 		//Query Q = optimizer.SplitQuery("SELECT Enom, Titre From Employe E, Projet P, Travaux T, C Where P.budget > 250  and E.Eid = T.Eid and T.budget like '250'");
 		//Query Q = optimizer.SplitQuery("SELECT Enom, Titre From Employe E, Projet P, Travaux T, C Where P.budget > 250 and P.Pid = T.Pid and E.Eid = T.Eid");
@@ -30,14 +31,19 @@ public class MainClass {
 			e.printStackTrace();
 		}*/
 
-		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
+		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.Pid = T.Pid and P.budget >= 250  and E.Eid = T.Eid and T.budget >= 250";
 		try {
 			/*transformer.TransformerTree(transformer.SplitQuery(query));
 			transformer.printTrees();*/
-			Node T = transformer.SplitQuery(query).buidTree();
+
+			Transformer transformer = new Transformer(Decomposer.SplitQuery(query));
+			Node T = transformer.TransformQuery();
 			T.print2DUtil(T,0);
 			System.out.println("\n-------------------------------\n");
-			System.out.println(transformer.getRelationParent(T, "PROJET").getExpression());
+			int[] childType = {0};
+			//System.out.println(transformer.getRelationParent(T, "TRAVAUX", childType).getExpression());
+			//System.out.println(childType[0]);
+			System.out.println(transformer.getFirstSelection(T).getExpression());
 			/*Node node = Node.copierNode(T);
 			node.setLeftChild(null);
 			node.print2DUtil(node,0);

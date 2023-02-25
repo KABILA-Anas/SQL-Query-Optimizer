@@ -154,12 +154,11 @@ public class Query {
 		return false;
 		
 	}
-	
-	//**Creer un operateur (Node) de selection
-	private boolean createSelection(String C, boolean relationCheck) throws SemantiqueException, SyntaxeException {
+
+	public String selectionRelation(String C) throws SyntaxeException, SemantiqueException {
 		StringTokenizer tokenizer;
 		String[] operands = null;
-		
+
 		switch(conditionType(C)) {
 			case "OneColSelection":
 				operands = C.split("<=|>=|<|>|=");
@@ -167,17 +166,25 @@ public class Query {
 			case "Like" :
 				operands = C.split(" LIKE ");
 				break;
-		
+
 		}
-		
+
 		tokenizer = new StringTokenizer(operands[0], ".");
 		String relation = tokenizer.nextToken().trim();
-		
+
 		if(tables_alias.containsKey(relation))
 			relation = tables_alias.get(relation);
 		else if(!tables.contains(relation)) { /// Il faut chercher dans le catalog
 			throw new SemantiqueException();
 		}
+
+		return relation;
+	}
+
+	//**Creer un operateur (Node) de selection
+	private boolean createSelection(String C, boolean relationCheck) throws SemantiqueException, SyntaxeException {
+
+		String relation = selectionRelation(C);
 		
 		if(root == null || !relationCheck) {
 			if(root == null)
