@@ -197,14 +197,27 @@ public class Transformer {
 
 	}
 
-	private Node getRelationParent(Node root, String realation){
+	public Node getRelationParent(Node root, String realation){
 		Node R = null;
 		if(root == null)
 			return  null;
 		if(root.getExpression().equals(realation))
 			return root;
+		R = getRelationParent(root.getRightChild(), realation);
+		if(R != null) {
+			if (R.getExpression().equals(realation))
+				return root;
+			return R;
+		}
+
 		R = getRelationParent(root.getLeftChild(), realation);
-		return getRelationParent(root.getRightChild(), realation);
+		if(R != null) {
+			if (R.getExpression().equals(realation))
+				return root;
+			return R;
+		}
+
+		return null;
 	}
 
 
