@@ -4,7 +4,7 @@ package model;
 
 public class Node {
 	private String name;
-	private String expression;
+	private String expression = "";
 	private Node leftChild;
 	private Node rightChild;
 

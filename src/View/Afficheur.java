@@ -4,28 +4,57 @@ import model.Node;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.*;
 
 
 public class Afficheur{
-	private Node tree;
+	//private Node tree;
+    private Map<Integer, Vector<Node>> trees;
 
     public Afficheur(Node tree,JFrame frame) {
-        this.tree = tree;
+        //this.tree = tree;
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        jDialog.setContentPane(new TreePanel());
+        jDialog.setContentPane(new JScrollPane(new TreePanel(tree)));
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(null);
+        jDialog.setVisible(true);
+    }
+
+    public Afficheur(Map<Integer, Vector<Node>> trees,JFrame frame) {
+        this.trees = trees;
+        JDialog jDialog = new JDialog(frame,"Relational Tree",true);
+        jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel JP = new JPanel();
+        JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
+        JScrollPane SP = new JScrollPane(JP);
+
+        for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
+            for (Node n : entry.getValue()) {
+                JP.add(new TreePanel(n));
+            }
+
+        jDialog.setContentPane(SP);
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
         jDialog.setVisible(true);
     }
 
     private class TreePanel extends JPanel {
+        private Node tree;
         private final int NODE_RADIUS = 20;
         private final int LEVEL_HEIGHT = 80;
         private final int HORIZONTAL_SPACING = 40;
         private final int VERTICAL_SPACING = 80;
+
+        public TreePanel(Node tree){
+            this.tree = tree;
+        }
+
 
         @Override
         public Dimension getPreferredSize() {

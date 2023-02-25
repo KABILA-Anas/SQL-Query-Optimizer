@@ -66,7 +66,7 @@ public class MainClass {
 
 
 
-		//UI.run();
+		UI.run();
 
 	}
 	

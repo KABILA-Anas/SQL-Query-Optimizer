@@ -19,7 +19,11 @@ public class Transformer {
 	public Transformer(Query Q) {
 		this.Q = Q;
 	}
-	
+
+	public Map<Integer, Vector<Node>> getTrees() {
+		return trees;
+	}
+
 	/*public Query SplitQuery(String query) throws SyntaxeException {
 
 		query = query.toUpperCase();
@@ -131,21 +135,22 @@ public class Transformer {
 	public void TransformerTree() throws SyntaxeException, SemantiqueException {
 
 		Vector<Vector<String>> conditions = Q.getConditions();
-		Vector<String> conditions1 = conditions.get(0);
+		if(conditions.size() != 0) {
+			Vector<String> conditions1 = conditions.get(0);
 
-		//System.out.println(conditions1);
+			//System.out.println(conditions1);
 
-		Vector<Vector<String>> combinations = vectorCombinations(conditions1);
-		Node tree = Q.buidTree();
-		for (Vector<String> v : combinations){
-			//System.out.println(v);
-			Vector<Vector<String>> cdts = new Vector<Vector<String>>();
-			cdts.add(v);
-			Query query = new Query(Q.getColumns(), Q.getTables_alias(), Q.getTables(), cdts);
-			Node T  = query.buidTree();
-			addTree(T);
+			Vector<Vector<String>> combinations = vectorCombinations(conditions1);
+			Node tree = Q.buidTree();
+			for (Vector<String> v : combinations) {
+				//System.out.println(v);
+				Vector<Vector<String>> cdts = new Vector<Vector<String>>();
+				cdts.add(v);
+				Query query = new Query(Q.getColumns(), Q.getTables_alias(), Q.getTables(), cdts);
+				Node T = query.buidTree();
+				addTree(T);
+			}
 		}
-
 
 		/*for(Vector<String> v : combinations){
 			System.out.println(v);
@@ -181,7 +186,7 @@ public class Transformer {
 		if(T1.height() != T2.height())
 			return false;
 
-		if(!T1.getExpression().equals(T2.getExpression()))
+		if(!T1.getExpression().equals(T2.getExpression()) || !T1.getName().equals(T2.getName()))
 				return false;
 
 		if(!compareTree(T1.getRightChild(), T2.getRightChild()) || !compareTree(T1.getLeftChild(), T2.getLeftChild()))

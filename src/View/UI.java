@@ -109,9 +109,11 @@ public class UI extends JFrame{
         // TODO add your handling code here:
     	Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
     	try {
-			Node N = transformer.TransformQuery();
+			/*Node N = transformer.TransformQuery();
 			System.out.println("---------------------------------------------------------------------");
-			P = new Afficheur(N,this);
+			P = new Afficheur(N,this);*/
+            transformer.TransformerTree();
+            P = new Afficheur(transformer.getTrees(),this);
 			//P.printTree();
 		} catch (SyntaxeException | SemantiqueException e) {
 			// TODO Auto-generated catch block
