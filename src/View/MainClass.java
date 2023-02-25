@@ -32,12 +32,13 @@ public class MainClass {
 
 		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where P.budget >= 250  and E.Eid = T.Eid and P.Pid = T.Pid";
 		try {
-			transformer.TransformerTree(transformer.SplitQuery(query));
-			transformer.printTrees();
-			/*Node T = transformer.SplitQuery(query).buidTree();
+			/*transformer.TransformerTree(transformer.SplitQuery(query));
+			transformer.printTrees();*/
+			Node T = transformer.SplitQuery(query).buidTree();
 			T.print2DUtil(T,0);
 			System.out.println("\n-------------------------------\n");
-			Node node = Node.copierNode(T);
+			System.out.println(transformer.getRelationParent(T, "PROJET").getExpression());
+			/*Node node = Node.copierNode(T);
 			node.setLeftChild(null);
 			node.print2DUtil(node,0);
 			System.out.println("\n-------------------------------\n");*/
