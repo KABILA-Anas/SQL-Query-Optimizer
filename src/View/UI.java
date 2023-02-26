@@ -113,6 +113,7 @@ public class UI extends JFrame{
 			System.out.println("---------------------------------------------------------------------");
 			P = new Afficheur(N,this);*/
             transformer.TransformerTree();
+            //transformer.JC(Decomposer.SplitQuery(jTextField1.getText()).buidTree(), 0);
             P = new Afficheur(transformer.getTrees(),this);
 			//P.printTree();
 		} catch (SyntaxeException | SemantiqueException e) {

@@ -56,7 +56,8 @@ public class MainClass {
 			node.setLeftChild(null);
 			node.print2DUtil(node,0);
 			System.out.println("\n-------------------------------\n");*/
-			transformer.CSG();
+			//transformer.CSG();
+			//transformer.CSG();
 		} catch (SyntaxeException | SemantiqueException e) {
 			e.printStackTrace();
 		}

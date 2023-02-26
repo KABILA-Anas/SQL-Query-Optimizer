@@ -75,8 +75,12 @@ public class Afficheur{
             
             g.drawString(node.toString(), x - node.toString().length()*2, y + 5);
 
+
+
             if (node.getLeftChild() != null) {
-                int childX = x - dx;
+                int childX = x;
+                if(node.getRightChild() != null)
+                    childX = x - dx;
                 int childY = y + LEVEL_HEIGHT;
                 g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
                 drawNode(g, node.getLeftChild(), childX, childY, dx / 2);
