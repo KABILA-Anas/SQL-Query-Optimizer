@@ -58,7 +58,7 @@ public class Afficheur{
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(800, 600);
+            return new Dimension(1300, 600);
         }
 
         @Override
@@ -66,7 +66,7 @@ public class Afficheur{
             super.paintComponent(g);
 
             if (tree != null) {
-                drawNode(g, tree, getWidth() / 2, NODE_RADIUS, getWidth() / 4);
+                drawNode(g, tree, getWidth() / 2, NODE_RADIUS, getWidth() / 2);
             }
         }
 

@@ -290,6 +290,7 @@ public class Query {
 		
 		String condition;
 		Node tmpNode  = null;
+		String projections = getProjections();
 
 		//Si il n'y a pas la partie where
 		//System.out.println(conditions.size());
@@ -300,7 +301,7 @@ public class Query {
 				else
 					tmpNode = new Node("Cartesien",tmpNode,new Node("Relation",t));
 			}
-			return tmpNode;
+			return new Node("Projection", projections, tmpNode);
 		}
 
 		for(Vector<String> V : conditions) {
@@ -379,10 +380,16 @@ public class Query {
 		}//end for pour les unions
 		
 		//tmpNode.print2DUtil(tmpNode, 0);
+
+		return new Node("Projection", projections, tmpNode);
 		
-		
-		return tmpNode;
-		
+	}
+
+	private String getProjections(){
+		String projections = "";
+		for (String element : columns.keySet())
+			projections += element + " ";
+		return projections;
 	}
 	
 	

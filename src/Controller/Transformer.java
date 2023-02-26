@@ -35,13 +35,14 @@ public class Transformer {
 	public void TransformerTree() throws SyntaxeException, SemantiqueException {
 
 		Vector<Vector<String>> conditions = Q.getConditions();
+		addTree(Q.buidTree());
 		if(conditions.size() != 0) {
 			Vector<String> conditions1 = conditions.get(0);
 
 			//System.out.println(conditions1);
 
 			Vector<Vector<String>> combinations = vectorCombinations(conditions1);
-			Node tree = Q.buidTree();
+			//Node tree = Q.buidTree();
 			for (Vector<String> v : combinations) {
 				//System.out.println(v);
 				Vector<Vector<String>> cdts = new Vector<Vector<String>>();
@@ -52,8 +53,10 @@ public class Transformer {
 			}
 
 			CSG();
-			JC();
+
 		}
+
+		JC();
 
 		/*for(Vector<String> v : combinations){
 			System.out.println(v);
@@ -227,12 +230,20 @@ public class Transformer {
 
 	}
 
+	private boolean checkSelection(Node N){
+		if(N.getName().equals("Relation"))
+			return true;
+		if(N.getRightChild() != null)
+			return false;
+		return checkSelection(N.getLeftChild());
+	}
+
 	public Node getFirstSelectionParent(Node root , int[] childType){
 		Node R = null;
 		if(root == null)
 			return null;
 		if(root.getName().equals("Selection")) {
-			if(root.getLeftChild().getName().equals("Relation")){
+			if(checkSelection(root.getLeftChild())){
 				return null;
 			}
 			return root;

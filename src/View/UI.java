@@ -22,6 +22,7 @@ public class UI extends JFrame{
         jTextField1 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -39,14 +40,19 @@ public class UI extends JFrame{
 
         jButton1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 153, 153));
-        jButton1.setText("Transformer");
+        jButton1.setText("Varier");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
                     jButton1ActionPerformed(evt);
-                } catch (SyntaxeException e) {
-                    throw new RuntimeException(e);
-                }
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 153, 153));
+        jButton3.setText("Transformer");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -71,7 +77,9 @@ public class UI extends JFrame{
                         .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
-                        .addGap(98, 98, 98))
+                        .addGap(10, 10, 10)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                            .addGap(98, 98, 98))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -88,7 +96,8 @@ public class UI extends JFrame{
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap(132, Short.MAX_VALUE))
         );
 
@@ -105,10 +114,10 @@ public class UI extends JFrame{
         
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SyntaxeException {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    	Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
     	try {
+            Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
 			/*Node N = transformer.TransformQuery();
 			System.out.println("---------------------------------------------------------------------");
 			P = new Afficheur(N,this);*/
@@ -126,6 +135,23 @@ public class UI extends JFrame{
 		}
     }
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+
+        try {
+            Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
+            P = new Afficheur(transformer.TransformQuery(),this);
+            //P.printTree();
+        } catch (SyntaxeException | SemantiqueException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    e,
+                    " titre ",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
    
     public static void run() {
         new UI().setVisible(true);
@@ -134,6 +160,7 @@ public class UI extends JFrame{
 
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextArea jTextField1;
     private Afficheur P;

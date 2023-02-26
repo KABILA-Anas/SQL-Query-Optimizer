@@ -89,6 +89,8 @@ public class Node {
 				return "∪";
 			case "intersection":
 				return "∩";
+			case "projection":
+				return "π (" + expression + ")";
 			case "relation":
 				return expression;
 		}
