@@ -32,11 +32,14 @@ public class Afficheur{
         JPanel JP = new JPanel();
         JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
         JScrollPane SP = new JScrollPane(JP);
-
+        int i = 0;
         for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
             for (Node n : entry.getValue()) {
                 JP.add(new TreePanel(n));
+                i++;
             }
+        System.out.println("==> " + i);
+        System.out.println("--------------------------------------------------------");
 
         jDialog.setContentPane(SP);
         jDialog.pack();
