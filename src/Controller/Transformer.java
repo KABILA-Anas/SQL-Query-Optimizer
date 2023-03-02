@@ -1,5 +1,6 @@
 package Controller;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -16,6 +17,7 @@ public class Transformer {
 
 	Query Q;
 	Map<Integer,Vector<Node>> trees = new HashMap<Integer,Vector<Node>>();
+	Map<Node, Vector<Node>> ptrees = new HashMap<>();
 	public Transformer(Query Q) {
 		this.Q = Q;
 	}
@@ -24,14 +26,125 @@ public class Transformer {
 		return trees;
 	}
 
-
+	public Map<Node, Vector<Node>> getPtrees() {
+		return ptrees;
+	}
 
 	public Node TransformQuery() throws SyntaxeException, SemantiqueException {
 		//Query Q = Decomposer.SplitQuery(query);
 		return Q.buidTree();
 	}
 
-	//******************Generate all variations ***************************//
+
+
+	//******************Generate all physical variations ***************************//
+	public void generatePTrees(){
+		Vector<Node> tempNodes = new Vector<Node>();
+		for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet()) {
+			for (Node n : entry.getValue()) {
+				//Vector<Node> nodes = new Vector<Node>();
+
+				generatePTrees(n, 0, n);
+
+			}
+		}
+
+
+
+
+
+	}
+
+
+	public void generatePTrees(Node root, int level, Node mainTree){
+		Vector<Node> nodes = new Vector<Node>();
+		int status;
+		status = generatePTrees(root, level, nodes);
+		if(status == 0){
+			//System.out.println("inserted");
+			if(ptrees.get(mainTree) == null)
+				ptrees.put(mainTree, new Vector<Node>());
+			ptrees.get(mainTree).add(root);
+			return;
+		}
+
+		for(Node n : nodes){
+			//System.out.println("hello");
+			generatePTrees(n, level+1, mainTree);
+		}
+		//for(Node n : nodes)
+
+	}
+
+
+	private int generatePTrees(Node root, int l, Vector<Node> nodes){
+		Vector<String> selection = new Vector<String >(Arrays.asList("FS", "IS", "HS"));
+		Vector<String> jointure = new Vector<String >(Arrays.asList("BIB", "BII", "JTF", "JH", "PJ"));
+		if(root == null)
+			return 0;
+		//while (true){
+			int[] level = {l};
+			Node node = getTargetNode(root, level);
+			//node.print2DUtil(node, 0);
+			if(node == null)
+				return 0;
+			if(node.getRightChild() != null){
+				//node.print2DUtil(node, 0);
+				for (String algo : jointure){
+					Node newTree = Node.copierNode(root);
+					getTargetNode(newTree, level).setName(algo);
+					//newTree.print2DUtil(newTree, 0);
+					nodes.add(newTree);
+				}
+			}
+			else if(node.getName().equals("Selection")){
+				//node.print2DUtil(node, 0);
+				for (String algo : selection){
+					Node newTree = Node.copierNode(root);
+					getTargetNode(newTree, level).setName(algo);
+					nodes.add(newTree);
+				}
+			}
+			else {
+				Node newTree = Node.copierNode(root);
+				nodes.add(newTree);
+			}
+			return 1;
+			//l++;
+			//generatePTrees(newTree, l, nodes);
+			//nodes.add(newTree);
+			/*newTree.print2DUtil(newTree, 0);
+			System.out.println("------------------------------------------------------------------");*/
+		//}
+	}
+
+
+	private Node getTargetNode(Node root, int[] level){
+		Node R = null;
+
+		if(root == null)
+			return null;
+
+		if(root.getLeftChild() != null){
+			if(level[0] == 0)
+				return root;
+			level[0]--;
+		}
+
+		R = getTargetNode(root.getLeftChild(), level);
+		if(R != null)
+			return R;
+
+		R = getTargetNode(root.getRightChild(), level);
+		if(R != null)
+			return R;
+
+		return null;
+	}
+
+
+
+	//******************Generate all logical variations ***************************//
 	public void TransformerTree() throws SyntaxeException, SemantiqueException {
 
 		Vector<Vector<String>> conditions = Q.getConditions();
@@ -57,6 +170,7 @@ public class Transformer {
 		}
 
 		JC();
+		generatePTrees();
 
 		/*for(Vector<String> v : combinations){
 			System.out.println(v);

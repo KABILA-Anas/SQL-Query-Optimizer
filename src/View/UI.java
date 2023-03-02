@@ -123,7 +123,7 @@ public class UI extends JFrame{
 			P = new Afficheur(N,this);*/
             transformer.TransformerTree();
             //transformer.JC(Decomposer.SplitQuery(jTextField1.getText()).buidTree(), 0);
-            P = new Afficheur(transformer.getTrees(),this);
+            P = new Afficheur(transformer.getPtrees(),this);
 			//P.printTree();
 		} catch (SyntaxeException | SemantiqueException e) {
 			// TODO Auto-generated catch block
