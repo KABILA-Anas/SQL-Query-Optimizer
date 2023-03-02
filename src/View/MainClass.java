@@ -33,7 +33,8 @@ public class MainClass {
 			e.printStackTrace();
 		}*/
 
-		String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where   E.Eid = T.Eid and T.budget >= 250 and P.budget >= 250 and P.Pid = T.Pid ";
+		//String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where   E.Eid = T.Eid and T.budget >= 250 and P.budget >= 250 and P.Pid = T.Pid ";
+		String query = "SELECT * from A, B where A.a=B.b";
 		try {
 			/*transformer.TransformerTree(transformer.SplitQuery(query));
 			transformer.printTrees();*/

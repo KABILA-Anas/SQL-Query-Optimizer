@@ -58,6 +58,7 @@ public class Transformer {
 
 	public void generatePTrees(Node root, int level, Node mainTree){
 		Vector<Node> nodes = new Vector<Node>();
+		//System.out.println(level);
 		int status;
 		status = generatePTrees(root, level, nodes);
 		if(status == 0){
@@ -90,7 +91,9 @@ public class Transformer {
 				return 0;
 			if(node.getRightChild() != null){
 				//node.print2DUtil(node, 0);
+				System.out.println("hellojointure");
 				for (String algo : jointure){
+					level[0] = l;
 					Node newTree = Node.copierNode(root);
 					getTargetNode(newTree, level).setName(algo);
 					//newTree.print2DUtil(newTree, 0);
@@ -99,7 +102,9 @@ public class Transformer {
 			}
 			else if(node.getName().equals("Selection")){
 				//node.print2DUtil(node, 0);
+				System.out.println("helloselection");
 				for (String algo : selection){
+					level[0] = l;
 					Node newTree = Node.copierNode(root);
 					getTargetNode(newTree, level).setName(algo);
 					nodes.add(newTree);
