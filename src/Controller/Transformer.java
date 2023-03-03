@@ -84,37 +84,37 @@ public class Transformer {
 		if(root == null)
 			return 0;
 		//while (true){
-			int[] level = {l};
-			Node node = getTargetNode(root, level);
+		int[] level = {l};
+		Node node = getTargetNode(root, level);
+		//node.print2DUtil(node, 0);
+		if(node == null)
+			return 0;
+		if(node.getRightChild() != null){
 			//node.print2DUtil(node, 0);
-			if(node == null)
-				return 0;
-			if(node.getRightChild() != null){
-				//node.print2DUtil(node, 0);
-				System.out.println("hellojointure");
-				for (String algo : jointure){
-					level[0] = l;
-					Node newTree = Node.copierNode(root);
-					getTargetNode(newTree, level).setName(algo);
-					//newTree.print2DUtil(newTree, 0);
-					nodes.add(newTree);
-				}
-			}
-			else if(node.getName().equals("Selection")){
-				//node.print2DUtil(node, 0);
-				System.out.println("helloselection");
-				for (String algo : selection){
-					level[0] = l;
-					Node newTree = Node.copierNode(root);
-					getTargetNode(newTree, level).setName(algo);
-					nodes.add(newTree);
-				}
-			}
-			else {
+			//System.out.println("hellojointure");
+			for (String algo : jointure){
+				level[0] = l;
 				Node newTree = Node.copierNode(root);
+				getTargetNode(newTree, level).setName(algo);
+				//newTree.print2DUtil(newTree, 0);
 				nodes.add(newTree);
 			}
-			return 1;
+		}
+		else if(node.getName().equals("Selection")){
+			//node.print2DUtil(node, 0);
+			//System.out.println("helloselection");
+			for (String algo : selection){
+				level[0] = l;
+				Node newTree = Node.copierNode(root);
+				getTargetNode(newTree, level).setName(algo);
+				nodes.add(newTree);
+			}
+		}
+		else {
+			Node newTree = Node.copierNode(root);
+			nodes.add(newTree);
+		}
+		return 1;
 			//l++;
 			//generatePTrees(newTree, l, nodes);
 			//nodes.add(newTree);
