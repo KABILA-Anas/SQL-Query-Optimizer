@@ -2,8 +2,7 @@ package View;
 
 import model.Node;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Map;
 import java.util.Vector;
 
@@ -57,11 +56,16 @@ public class Afficheur{
         JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
         JScrollPane SP = new JScrollPane(JP);
         int i = 0;
-        for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet())
+        TreePanel mainTree;
+        for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()){
+            mainTree = new TreePanel(entry.getKey());
+            mainTree.setBackground(Color.PINK);
+            JP.add(mainTree);
             for (Node n : entry.getValue()) {
                 JP.add(new TreePanel(n));
                 i++;
             }
+        }
         System.out.println("==> " + i);
         System.out.println("--------------------------------------------------------");
 
@@ -85,7 +89,7 @@ public class Afficheur{
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(1300, 600);
+            return new Dimension(1300, 500);
         }
 
         @Override
