@@ -3,8 +3,10 @@ package View;
 import javax.swing.*;
 
 import Controller.Decomposer;
+import Controller.Optimizer;
 import Controller.Transformer;
 import model.Node;
+import model.Query;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
@@ -117,11 +119,14 @@ public class UI extends JFrame{
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     	try {
-            Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
+            Query query = Decomposer.SplitQuery(jTextField1.getText());
+            Transformer transformer = new Transformer(query);
 			/*Node N = transformer.TransformQuery();
 			System.out.println("---------------------------------------------------------------------");
 			P = new Afficheur(N,this);*/
             transformer.TransformerTree();
+            Optimizer optimizer = new Optimizer(transformer.getPtrees() ,query);
+            optimizer.estimatePtrees();
             //transformer.JC(Decomposer.SplitQuery(jTextField1.getText()).buidTree(), 0);
             P = new Afficheur(transformer.getPtrees(),this);
 			//P.printTree();

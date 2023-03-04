@@ -75,7 +75,10 @@ public class Afficheur{
             mainTree = new TreePanel(entry.getKey());
             mainTree.setBackground(Color.PINK);
             mainTree.setBorder(BorderFactory.createLoweredBevelBorder());
-            JButton B = new JButton("Afficher les arbres physiques");
+            //JButton B = new Button("Afficher les arbres physiques");
+            JToggleButton B = new JToggleButton("Afficher les arbres physiques");
+            B.setBackground(Color.BLACK);
+            B.setForeground(Color.WHITE);
             mainTree.setLayout(new FlowLayout(FlowLayout.LEFT));
             mainTree.add(B, FlowLayout.LEFT);
             JP.add(mainTree);

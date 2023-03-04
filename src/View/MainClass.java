@@ -2,6 +2,7 @@ package View;
 
 import Controller.Decomposer;
 import Controller.Estimator;
+import Controller.Optimizer;
 import Controller.Transformer;
 import model.Node;
 import model.Query;
@@ -36,7 +37,7 @@ public class MainClass {
 		}*/
 
 		//String query = "SELECT Enom, Titre From Employe E, Projet P, Travaux T Where   E.Eid = T.Eid and T.budget >= 250 and P.budget >= 250 and P.Pid = T.Pid ";
-		String query = "SELECT * from A, B where A.col1>0 and B.col1=A.col1";
+		String query = "SELECT * from A, B where A.col1>0 and A.col1=B.col1";
 		try {
 			/*transformer.TransformerTree(transformer.SplitQuery(query));
 			transformer.printTrees();*/
@@ -45,8 +46,10 @@ public class MainClass {
 			Transformer transformer = new Transformer(Q);
 			Node T = transformer.TransformQuery();
 			//T.print2DUtil(T, 0);
-			Estimator estimator = new Estimator(T, Q);
-			estimator.estimate();
+			//Estimator estimator = new Estimator(T, Q);
+			//estimator.estimate();
+			Optimizer optimizer = new Optimizer(transformer.getPtrees() , Q);
+			optimizer.estimatePtrees();
 			//transformer.TransformerTree();
 
 			System.out.println("\n-------------------------------\n");

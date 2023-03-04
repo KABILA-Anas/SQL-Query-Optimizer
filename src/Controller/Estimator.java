@@ -16,6 +16,7 @@ public class Estimator {
     private final double TempsTrans = 0.1;
     private final double TempsPosDébut = 1;
     private final double TR = 0.8;
+    private final double M = 50;
 
     public Estimator(Node tree, Query query) {
         this.tree = tree;
@@ -32,11 +33,16 @@ public class Estimator {
 
     public double estimate(){
         estimate(tree.getLeftChild());
+        //we should move this section later !!!
+        double[] pipeline_cout = {0};
+        calculCoutTot(tree,pipeline_cout);
+        tree.setCout(pipeline_cout[0]);
+        //
         return 0;
     }
 
     private int estimate(Node N){
-        int left, right = 0;
+        int left=0, right = 0;
 
         if (N.getLeftChild() == null)
             return nbrLines.get(N.getExpression());
@@ -47,25 +53,49 @@ public class Estimator {
         if (N.getRightChild() != null){
             right = estimate(N.getRightChild());
             //BIB(N,4000,1000000);
-            BII(N,4000,1000000);
+            //PJ(N,1000000,4000);
+            switch (N.getName()){
+                case "BIB" :
+                    return BIB(N,left,right);
+                case "BII" :
+                    return BII(N,left,right);
+                case "JTF" :
+                    return JTF(N,left,right);
+                case "JH" :
+                    return JH(N,left,right);
+                case "PJ" :
+                    return PJ(N,left,right);
+            }
+
             /*for (Decomposer.MyPair<String, String> pair : Decomposer.joinSplit(N.getExpression())){
                 System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
             }*/
-        } /*else {
+        } else {
             switch (N.getName()){
                 case "FS" :
-                    N.setCout(FS(N.getExpression()));
-                    break;
+                    return FS(N,left);
                 case "IS" :
-                    N.setCout(IS(N.getExpression()));
-                    break;
+                    return IS(N,left);
                 case "HS" :
-                    N.setCout(HS(N.getExpression()));
-                    break;
+                    return HS(N,left);
             }
-        }*/
+        }
 
-        return left + right;
+        return (left + right)/2;
+    }
+
+    private double calculCoutTot(Node node , double[] pipeline_cout ){
+        double left=0,right =0;
+        if(node.getLeftChild() == null)
+            return 0;
+
+        left = calculCoutTot(node.getLeftChild(),pipeline_cout);
+        if(node.getRightChild() != null ) {
+            right = calculCoutTot(node.getRightChild(), pipeline_cout);
+            pipeline_cout[0] = left + right + node.getCout();
+        }
+        return left + right + node.getCout();
+
     }
 
     //Jointure Algorithmes
@@ -81,9 +111,9 @@ public class Estimator {
         double Bl = left/FBM.get(tableL);
         double Br = right/FBM.get(tableR);
 
-        node.setCout(Bl*((TempsTrans+TempsPosDébut)+(Br*TempsTrans)+TempsPosDébut));
+        node.setCout(Math.round(Bl*((TempsTrans+TempsPosDébut)+(Br*TempsTrans)+TempsPosDébut) + 0.5));
         //System.out.println(node.getCout());
-        return (left * right)/2;
+        return (left + right)/2;
     }
 
     public int BII(Node node , int left , int right){
@@ -107,7 +137,7 @@ public class Estimator {
             Tsecondaire = Math.round(((hauteur-1) + sel + sel/orderMoyen) * (TempsTrans + TempsPosDébut) + 0.5);
         }
         //
-        node.setCout( Bl * (TempsTrans + TempsPosDébut) + left * Tsecondaire );
+        node.setCout( Math.round(Bl * (TempsTrans + TempsPosDébut) + left * Tsecondaire +0.5));
         //System.out.println(node.getCout());
         //System.out.println(Tsecondaire);
 
@@ -123,14 +153,64 @@ public class Estimator {
         tableR = query.getAliasTable(pairs.get(1).getSecond());
         columnR = pairs.get(1).getFirst();
 
-        double Bl,Br;
+        double Bl,Br,TempEsL,TempEsR,cout;
+
         Bl = left / FBM.get(tableL);
         Br = right / FBM.get(tableR);
+        TempEsL = 2*((Bl/M)*TempsPosDébut + Bl*TempsTrans) + Bl*(2*(Math.log(Bl/M)/Math.log(M-1)) - 1)*(TempsTrans+TempsPosDébut);
+        TempEsR = 2*((Br/M)*TempsPosDébut + Br*TempsTrans) + Br*(2*(Math.log(Br/M)/Math.log(M-1)) - 1)*(TempsTrans+TempsPosDébut);
 
-
-        return 0;
+        cout = TempEsL+TempEsR+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
+        node.setCout(Math.round(cout+0.5));
+        System.out.println(cout);
+        return (left+right)/2;
     }
 
+    public int JH(Node node, int left, int right){
+
+        Vector<Decomposer.MyPair<String,String>> pairs = Decomposer.joinSplit(node.getExpression());
+        String tableL, columnL, tableR, columnR;
+        tableL = query.getAliasTable(pairs.get(0).getSecond());
+        columnL = pairs.get(0).getFirst();
+        tableR = query.getAliasTable(pairs.get(1).getSecond());
+        columnR = pairs.get(1).getFirst();
+
+        double Bl,Br,Bal_l,Bal_r,cout;
+
+        Bl = left / FBM.get(tableL);
+        Br = right / FBM.get(tableR);
+        Bal_l = Bl * TempsTrans;
+        Bal_r = Br * TempsTrans;
+
+        //cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
+        cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
+        node.setCout(Math.round(cout+0.5));
+        System.out.println(cout);
+        return (left+right)/2;
+    }
+
+    public int PJ(Node node, int left, int right){
+
+        Vector<Decomposer.MyPair<String,String>> pairs = Decomposer.joinSplit(node.getExpression());
+        String tableL, columnL, tableR, columnR;
+        tableL = query.getAliasTable(pairs.get(0).getSecond());
+        columnL = pairs.get(0).getFirst();
+        tableR = query.getAliasTable(pairs.get(1).getSecond());
+        columnR = pairs.get(1).getFirst();
+
+        double Bl,Br,Bal_l,Bal_r,cout;
+
+        Bl = left / FBM.get(tableL);
+        Br = right / FBM.get(tableR);
+        Bal_l = Bl * TempsTrans;
+        Bal_r = Br * TempsTrans;
+
+        //cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
+        cout = Bal_l+Bal_r;
+        node.setCout(Math.round(cout+0.5));
+        System.out.println(cout);
+        return (left+right)/2;
+    }
     //Selection Algorithmes
 
     public int FS(Node node , int nbrLigne){
