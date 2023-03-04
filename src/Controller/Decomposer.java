@@ -1,6 +1,7 @@
 package Controller;
 
 import model.Query;
+import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
 import java.util.HashMap;
@@ -113,6 +114,121 @@ public class Decomposer {
         }
 
         return new Query(columns,tables_alias,tables,or_oper);
+    }
+
+
+    public static MyPair<String, String> selectionSplit(String C) {
+        StringTokenizer tokenizer;
+        String[] operands = null;
+        Vector<MyPair<String, String>> elements = new Vector<MyPair<String, String>>();
+
+        try{
+            switch(conditionType(C)) {
+                case "OneColSelection":
+                    operands = C.split("<=|>=|<|>|=");
+                    break;
+                case "Like" :
+                    operands = C.split(" LIKE ");
+                    break;
+
+            }
+        } catch (SyntaxeException e) {
+            System.out.println("Condition Type in Estimator");
+        }
+
+        tokenizer = new StringTokenizer(operands[0], ".");
+        String firstElement = tokenizer.nextToken().trim();
+        if(tokenizer.hasMoreTokens()){
+            return (new MyPair<String, String>(tokenizer.nextToken(), firstElement));
+        } else {
+            return (new MyPair<String, String>(tokenizer.nextToken(), null)); ///check the catalog
+        }
+
+    }
+
+    public static Vector<MyPair<String, String>> joinSplit(String C) {
+        StringTokenizer tokenizer;
+        Vector<MyPair<String, String>> elements = new Vector<MyPair<String, String>>();
+        String relation1, relation2;
+        String[] relations = C.split("<=|>=|<|>|=");
+
+
+        tokenizer = new StringTokenizer(relations[0], ".");
+        relation1 = tokenizer.nextToken(); //** check if it's a column or a table
+
+        if(tokenizer.hasMoreTokens()){
+            elements.add(new MyPair<String, String>(tokenizer.nextToken(), relation1));
+        } else {
+            elements.add(new MyPair<String, String>(tokenizer.nextToken(), null)); ///check the catalog
+        }
+
+
+        tokenizer = new StringTokenizer(relations[1], ".");
+        relation2 = tokenizer.nextToken();
+
+        if(tokenizer.hasMoreTokens()){
+            elements.add(new MyPair<String, String>(tokenizer.nextToken(), relation2));
+        } else {
+            elements.add(new MyPair<String, String>(tokenizer.nextToken(), null)); ///check the catalog
+        }
+
+
+        return elements;
+    }
+
+
+    public static String conditionType(String condition) throws SyntaxeException {
+
+        Matcher matcher;
+        Pattern pattern;
+
+
+
+        //** One Column Selection **//
+        pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s*(<|>|<=|>=|=)\\s*(([0-9]+)|('\\w+'))");
+        matcher = pattern.matcher(condition);
+        if(matcher.matches())
+            return "OneColSelection";
+
+        //** Like Selection **//
+        pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s+LIKE\\s+('\\%?(\\w+\\%?)*')");
+        matcher = pattern.matcher(condition);
+        if(matcher.matches())
+            return "Like";
+
+        //** Between Selection **//
+        pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s+BETWEEN\\s+(([0-9]+)|('\\w+'))\\s+AND\\s+(([0-9]+)|('\\w+'))");
+        matcher = pattern.matcher(condition);
+        if(matcher.matches())
+            return "Between";
+
+        //** Jointure **//
+        pattern = Pattern.compile("(\\w+)(\\.\\w+)?\\s*(<|>|<=|>=|=)\\s*(\\w+)(\\.\\w+)?");
+        matcher = pattern.matcher(condition);
+        if(matcher.matches())
+            return "Jointure";
+
+        throw new SyntaxeException();
+
+    }
+
+
+    public static class MyPair<A, B> {
+        private A first;
+        private B second;
+
+        public MyPair(A first, B second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public A getFirst() {
+            return first;
+        }
+
+        public B getSecond() {
+            return second;
+        }
     }
 
 }

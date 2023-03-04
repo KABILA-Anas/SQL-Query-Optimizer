@@ -5,6 +5,7 @@ package model;
 public class Node {
 	private String name;
 	private String expression = "";
+	private double cout;
 	private Node leftChild;
 	private Node rightChild;
 
@@ -29,6 +30,7 @@ public class Node {
 		this.name = name;
 		this.expression = expression;
 	}
+
 	public static Node copierNode(Node node){
 		if (node == null) {
 			return null;
@@ -50,6 +52,14 @@ public class Node {
 
 	public void setExpression(String expression) {
 		this.expression = expression;
+	}
+
+	public double getCout() {
+		return cout;
+	}
+
+	public void setCout(double cout) {
+		this.cout = cout;
 	}
 
 	public String getName() {

@@ -1,12 +1,12 @@
 #
-table1;100;FB;TL;FBM
-col1;2
+A;1000000;FB;TL;20
+col1;4000
 col2;5
 #
-table2;200;FB;FBM
+B;200;FB;TL;20
 col1;10
 col2;20
 #
-table3;300;FB;FBM
+C;300;FB;TL;20
 col1;30
 col2;40

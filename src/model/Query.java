@@ -47,6 +47,12 @@ public class Query {
 		return "Query [columns=" + columns + ", tables_alias=" + tables_alias + ", tables=" + tables + ", conditions="
 				+ conditions + "]";
 	}
+
+	public String getAliasTable(String alias){
+		if(tables_alias.containsKey(alias))
+			return tables_alias.get(alias);
+		return alias;
+	}
 	
 	
 	//** return type of condition **//
@@ -98,7 +104,7 @@ public class Query {
 		
 		StringTokenizer tokenizer;
 		String relation1, relation2;
-		String[] relations = C.split("=");
+		String[] relations = C.split("<=|>=|<|>|=");
 		tokenizer = new StringTokenizer(relations[0], ".");
 		relation1 = tokenizer.nextToken(); //** check if it's a column or a table
 		tokenizer = new StringTokenizer(relations[1], ".");
@@ -202,70 +208,7 @@ public class Query {
 		return false;
 	}
 	
-	//**//**Creer un operateur (Node) de jointure
-		/*private boolean createTwoColSelection(String C, boolean relationCheck) throws SemantiqueException {
-			
-			StringTokenizer tokenizer;
-			String relation1, relation2;
-			String[] relations = C.split("<=|>=|<|>");
-			tokenizer = new StringTokenizer(relations[0], ".");
-			relation1 = tokenizer.nextToken(); //** check if it's a column or a table
-			tokenizer = new StringTokenizer(relations[1], ".");
-			relation2 = tokenizer.nextToken();
-			
-			if(tables_alias.containsKey(relation1))
-				relation1 = tables_alias.get(relation1);
-			else if(!tables.contains(relation1)) { /// Il faut chercher dans le catalog
-				throw new SemantiqueException();
-			}
-				
-			if(tables_alias.containsKey(relation2))
-				relation2 = tables_alias.get(relation2);
-			else if(!tables.contains(relation2)) { /// Il faut chercher dans le catalog
-				throw new SemantiqueException();
-			}
-			//System.out.println(relation1 + "---" + relation2);
-			
-			if(root == null || !relationCheck) {
-				
-				if(root == null)
-					root = new Selection(new Cartesien(new Relation(relation1), new Relation(relation2)), C);
-				
-				if(!relationCheck)
-					root = new Cartesien(root, new Selection(new Cartesien(new Relation(relation1), new Relation(relation2)), C));
-				
-				visitedTables.add(relation1);
-				visitedTables.add(relation2);
-				
-				return true;
-			}
-			
-			if(visitedTables.contains(relation1) && visitedTables.contains(relation2)) {
-				root = new Intersection(root, new Selection(new Cartesien(new Relation(relation1), new Relation(relation2)), C));
-				return true;
-			}
-			
-			if(visitedTables.contains(relation1)) {
-				
-				root = new Selection(new Cartesien(root, new Relation(relation2)), C);
-				visitedTables.add(relation2);
-				
-				return true;
-			}
-			
-			if(visitedTables.contains(relation2)) {
-				
-				root = new Selection(new Cartesien(root, new Relation(relation1)), C);
-				visitedTables.add(relation1);
-				
-				return true;
-			}
-			
-			
-			return false;
-			
-		}
-	*/
+
 	//** relationCheck ? Tester si les tables necessaires sont deja viste : creer directement le noeud
 	public boolean createNode(String C, boolean relationCheck) throws SemantiqueException, SyntaxeException {
 		
