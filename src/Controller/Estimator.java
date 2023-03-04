@@ -48,11 +48,19 @@ public class Estimator {
             /*for (Decomposer.MyPair<String, String> pair : Decomposer.joinSplit(N.getExpression())){
                 System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
             }*/
-        } else {
-            N.setCout(HS(N.getExpression()));
-        }
-        //System.out.println(left + right);
-        //for (Object o : Decomposer.selectionSplit())
+        } /*else {
+            switch (N.getName()){
+                case "FS" :
+                    N.setCout(FS(N.getExpression()));
+                    break;
+                case "IS" :
+                    N.setCout(IS(N.getExpression()));
+                    break;
+                case "HS" :
+                    N.setCout(HS(N.getExpression()));
+                    break;
+            }
+        }*/
 
         return left + right;
     }
@@ -61,7 +69,7 @@ public class Estimator {
     public double FS(String expression){
 
         Decomposer.MyPair<String, String> pair = Decomposer.selectionSplit(expression);
-        double cout = (nbrLines.get(pair.getSecond())/FBM.get(pair.getSecond()) * TempsTrans);
+        double cout = (nbrLines.get(query.getAliasTable(pair.getSecond()))/FBM.get(pair.getSecond()) * TempsTrans);
         //System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
         System.out.println("Cout = " + cout);
         return cout;
@@ -72,7 +80,7 @@ public class Estimator {
 
         String table, column;
         Decomposer.MyPair<String, String> pair = Decomposer.selectionSplit(expression);
-        table = pair.getSecond();
+        table = query.getAliasTable(pair.getSecond());
         column = pair.getFirst();
         int orderMoyen = Catalog.getColumnDesc(table, column, 2);
         double hauteur, cout = 0;
@@ -86,7 +94,7 @@ public class Estimator {
 
         } else {
 
-            double sel = nbrLines.get(pair.getSecond()) / Catalog.getColumnCard(column, table);
+            double sel = nbrLines.get(table) / Catalog.getColumnCard(column, table);
             cout = Math.round(((hauteur -1) + sel + sel/orderMoyen) * (TempsTrans + TempsPosDébut) + 0.5);
 
         }
@@ -101,7 +109,7 @@ public class Estimator {
         String table, column;
         double FB, TH, cout = 0;
         Decomposer.MyPair<String, String> pair = Decomposer.selectionSplit(expression);
-        table = pair.getSecond();
+        table = query.getAliasTable(pair.getSecond());
         column = pair.getFirst();
         int NL = nbrLines.get(table);
 
