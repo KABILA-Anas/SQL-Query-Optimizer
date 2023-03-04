@@ -49,22 +49,49 @@ public class Afficheur{
 
     public Afficheur(Map<Node, Vector<Node>> ptrees, JFrame frame) {
         this.ptrees = ptrees;
+
+        int nrbLtrees, nbrPtrees = 0;
+        nrbLtrees = ptrees.size();
+        for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()){
+            nbrPtrees = entry.getValue().size();
+            break;
+        }
+
+        //JPanel
+
+        System.out.println("nrbLtrees " + nrbLtrees + "  nbrPtrees " + nbrPtrees);
+        TitlePanel titlePanel = new TitlePanel("Nombre des arbres logiques : " + nrbLtrees, "Nombre des arbres physiques : " + nbrPtrees);
+
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel JP = new JPanel();
         JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
         JScrollPane SP = new JScrollPane(JP);
+        JP.add(titlePanel);
         int i = 0;
         TreePanel mainTree;
         for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()){
             mainTree = new TreePanel(entry.getKey());
             mainTree.setBackground(Color.PINK);
+            mainTree.setBorder(BorderFactory.createLoweredBevelBorder());
+            JButton B = new JButton("Afficher les arbres physiques");
+            mainTree.setLayout(new FlowLayout(FlowLayout.LEFT));
+            mainTree.add(B, FlowLayout.LEFT);
             JP.add(mainTree);
+
+            JPanel JPI = new JPanel();
+            JPI.setLayout(new BoxLayout(JPI, BoxLayout.Y_AXIS));
             for (Node n : entry.getValue()) {
-                JP.add(new TreePanel(n));
+                JPI.add(new TreePanel(n));
                 i++;
             }
+            JPI.setVisible(false);
+            JP.add(JPI);
+            B.addActionListener(e -> {
+                // Toggle the visibility of the panel
+                JPI.setVisible(!JPI.isVisible());
+            });
         }
         System.out.println("==> " + i);
         System.out.println("--------------------------------------------------------");
@@ -124,6 +151,46 @@ public class Afficheur{
                 drawNode(g, node.getRightChild(), childX, childY, dx / 2);
             }
         }
+    }
+
+
+
+    private class TitlePanel extends JPanel {
+
+        public TitlePanel(String title1, String title2) {
+            // Set the layout of the panel
+            setLayout(new BorderLayout());
+
+            // Create the two labels
+            JLabel label1 = new JLabel(title1);
+            label1.setFont(new Font("Arial", Font.BOLD, 24));
+            label1.setForeground(Color.black);
+            JLabel label2 = new JLabel(title2);
+            label2.setFont(new Font("Arial", Font.BOLD, 24));
+            label2.setForeground(Color.black);
+
+            // Create a panel to hold the labels
+            JPanel titlePanel = new JPanel(new GridLayout(1, 2));
+            titlePanel.add(label1);
+            titlePanel.add(label2);
+
+            // Add the title panel to the top of the main panel
+            add(titlePanel, BorderLayout.NORTH);
+        }
+
+        /*public static void main(String[] args) {
+            JFrame frame = new JFrame("TitlePanel Example");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setPreferredSize(new Dimension(400, 300));
+
+            JPanel contentPane = new JPanel(new BorderLayout());
+            TitlePanel titlePanel = new TitlePanel("Title 1", "Title 2");
+            contentPane.add(titlePanel, BorderLayout.NORTH);
+
+            frame.setContentPane(contentPane);
+            frame.pack();
+            frame.setVisible(true);
+        }*/
     }
 	
 	

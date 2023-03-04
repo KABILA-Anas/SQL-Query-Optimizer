@@ -82,7 +82,7 @@ public class Estimator {
         double Br = right/FBM.get(tableR);
 
         node.setCout(Bl*((TempsTrans+TempsPosDébut)+(Br*TempsTrans)+TempsPosDébut));
-        System.out.println(node.getCout());
+        //System.out.println(node.getCout());
         return (left * right)/2;
     }
 
@@ -108,8 +108,8 @@ public class Estimator {
         }
         //
         node.setCout( Bl * (TempsTrans + TempsPosDébut) + left * Tsecondaire );
-        System.out.println(node.getCout());
-        System.out.println(Tsecondaire);
+        //System.out.println(node.getCout());
+        //System.out.println(Tsecondaire);
 
         return (left+right)/2;
     }
