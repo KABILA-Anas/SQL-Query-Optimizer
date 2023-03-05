@@ -100,11 +100,11 @@ public class Node {
 			case "intersection":
 				return "∩";
 			case "projection":
-				return "π (" + expression + ")+cout : "+cout;
+				return "π (" + expression + ")";
 			case "relation":
 				return expression;
 		}
-		return name+" "+cout;
+		return name;
 	}
 
 

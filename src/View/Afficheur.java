@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Optimizer;
 import model.Node;
 
 import java.awt.*;
@@ -13,12 +14,13 @@ public class Afficheur{
 	//private Node tree;
     private Map<Integer, Vector<Node>> trees;
     private Map<Node, Vector<Node>> ptrees;
+    private boolean printCout;
 
     public Afficheur(Node tree,JFrame frame) {
         //this.tree = tree;
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        jDialog.setContentPane(new JScrollPane(new TreePanel(tree)));
+        jDialog.setContentPane(new JScrollPane(new TreePanel(tree, false)));
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
         jDialog.setVisible(true);
@@ -47,8 +49,9 @@ public class Afficheur{
         jDialog.setVisible(true);
     }*/
 
-    public Afficheur(Map<Node, Vector<Node>> ptrees, JFrame frame) {
+    public Afficheur(Map<Node, Vector<Node>> ptrees, JFrame frame, boolean printCout) {
         this.ptrees = ptrees;
+        this.printCout = printCout;
 
         int nrbLtrees, nbrPtrees = 0;
         nrbLtrees = ptrees.size();
@@ -59,7 +62,7 @@ public class Afficheur{
 
         //JPanel
 
-        System.out.println("nrbLtrees " + nrbLtrees + "  nbrPtrees " + nbrPtrees);
+        //System.out.println("nrbLtrees " + nrbLtrees + "  nbrPtrees " + nbrPtrees);
         TitlePanel titlePanel = new TitlePanel("Nombre des arbres logiques : " + nrbLtrees, "Nombre des arbres physiques : " + nbrPtrees);
 
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
@@ -69,10 +72,10 @@ public class Afficheur{
         JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
         JScrollPane SP = new JScrollPane(JP);
         JP.add(titlePanel);
-        int i = 0;
+        //int i = 0;
         TreePanel mainTree;
         for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()){
-            mainTree = new TreePanel(entry.getKey());
+            mainTree = new TreePanel(entry.getKey(), false);
             mainTree.setBackground(Color.PINK);
             mainTree.setBorder(BorderFactory.createLoweredBevelBorder());
             //JButton B = new Button("Afficher les arbres physiques");
@@ -86,8 +89,8 @@ public class Afficheur{
             JPanel JPI = new JPanel();
             JPI.setLayout(new BoxLayout(JPI, BoxLayout.Y_AXIS));
             for (Node n : entry.getValue()) {
-                JPI.add(new TreePanel(n));
-                i++;
+                JPI.add(new TreePanel(n, printCout));
+                //i++;
             }
             JPI.setVisible(false);
             JP.add(JPI);
@@ -96,7 +99,7 @@ public class Afficheur{
                 JPI.setVisible(!JPI.isVisible());
             });
         }
-        System.out.println("==> " + i);
+        //System.out.println("==> " + i);
         System.out.println("--------------------------------------------------------");
 
         jDialog.setContentPane(SP);
@@ -107,13 +110,18 @@ public class Afficheur{
 
     private class TreePanel extends JPanel {
         private Node tree;
+        private boolean pCout;
         private final int NODE_RADIUS = 20;
         private final int LEVEL_HEIGHT = 80;
         private final int HORIZONTAL_SPACING = 40;
         private final int VERTICAL_SPACING = 80;
 
-        public TreePanel(Node tree){
+        public TreePanel(Node tree, boolean pCout){
             this.tree = tree;
+            this.pCout = pCout;
+            setLayout(new FlowLayout(FlowLayout.LEFT));
+            if(pCout)
+                add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
         }
 
 
@@ -133,8 +141,12 @@ public class Afficheur{
 
         private void drawNode(Graphics g, Node node, int x, int y, int dx) {
             //g.drawOval(x - NODE_RADIUS, y - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2);
-            
-            g.drawString(node.toString(), x - node.toString().length()*2, y + 5);
+
+            String nodeLabel = node.toString();
+            if(pCout && !node.getName().equals("Relation"))
+                nodeLabel += " (" + node.getCout() + ")";
+
+            g.drawString(nodeLabel, x - node.toString().length()*2, y + 5);
 
 
 

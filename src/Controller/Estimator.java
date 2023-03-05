@@ -31,12 +31,11 @@ public class Estimator {
     }
 
 
-    public double estimate(){
+    public double estimate(double[] pipeline_cout){
         estimate(tree.getLeftChild());
         //we should move this section later !!!
-        double[] pipeline_cout = {0};
-        calculCoutTot(tree,pipeline_cout);
-        tree.setCout(pipeline_cout[0]);
+        calculCoutTot(tree, pipeline_cout);
+        tree.setCout(1.1);
         //
         return 0;
     }
@@ -162,7 +161,7 @@ public class Estimator {
 
         cout = TempEsL+TempEsR+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         node.setCout(Math.round(cout+0.5));
-        System.out.println(cout);
+        //System.out.println(cout);
         return (left+right)/2;
     }
 
@@ -185,7 +184,7 @@ public class Estimator {
         //cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         node.setCout(Math.round(cout+0.5));
-        System.out.println(cout);
+        //System.out.println(cout);
         return (left+right)/2;
     }
 
@@ -208,7 +207,7 @@ public class Estimator {
         //cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         cout = Bal_l+Bal_r;
         node.setCout(Math.round(cout+0.5));
-        System.out.println(cout);
+        //System.out.println(cout);
         return (left+right)/2;
     }
     //Selection Algorithmes
@@ -219,7 +218,7 @@ public class Estimator {
         double cout = (nbrLigne/FBM.get(pair.getSecond()) * TempsTrans);
         //System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
         node.setCout(cout);
-        System.out.println("Cout = " + cout);
+        //System.out.println("Cout = " + cout);
         return nbrLigne/2;
 
     }
@@ -248,7 +247,7 @@ public class Estimator {
         }
 
         node.setCout(cout);
-        System.out.println("Cout = " + cout);
+        //System.out.println("Cout = " + cout);
 
         return nbrLigne/2;
 
@@ -267,7 +266,7 @@ public class Estimator {
         TH = NL / FB;
         cout = (NL / (TH * FB)) * (TempsTrans + TempsPosDébut);
         node.setCout(cout);
-        System.out.println("Cout = " + cout);
+        //System.out.println("Cout = " + cout);
         return nbrLigne/2;
 
     }

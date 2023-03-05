@@ -25,6 +25,7 @@ public class UI extends JFrame{
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,6 +47,15 @@ public class UI extends JFrame{
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                     jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 153, 153));
+        jButton4.setText("Estimer");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -78,6 +88,8 @@ public class UI extends JFrame{
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                         .addGap(10, 10, 10)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
@@ -99,7 +111,8 @@ public class UI extends JFrame{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addContainerGap(132, Short.MAX_VALUE))
         );
 
@@ -125,10 +138,10 @@ public class UI extends JFrame{
 			System.out.println("---------------------------------------------------------------------");
 			P = new Afficheur(N,this);*/
             transformer.TransformerTree();
-            Optimizer optimizer = new Optimizer(transformer.getPtrees() ,query);
-            optimizer.estimatePtrees();
+            //Optimizer optimizer = new Optimizer(transformer.getPtrees() ,query);
+            //optimizer.estimatePtrees();
             //transformer.JC(Decomposer.SplitQuery(jTextField1.getText()).buidTree(), 0);
-            P = new Afficheur(transformer.getPtrees(),this);
+            P = new Afficheur(transformer.getPtrees(),this, false);
 			//P.printTree();
 		} catch (SyntaxeException | SemantiqueException e) {
 			// TODO Auto-generated catch block
@@ -138,6 +151,25 @@ public class UI extends JFrame{
 			         " titre ",
 			         JOptionPane.WARNING_MESSAGE);
 		}
+    }
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            Query query = Decomposer.SplitQuery(jTextField1.getText());
+            Transformer transformer = new Transformer(query);
+            transformer.TransformerTree();
+            Optimizer optimizer = new Optimizer(transformer.getPtrees(), query);
+            optimizer.estimatePtrees();
+            P = new Afficheur(transformer.getPtrees(),this, true);
+        } catch (SyntaxeException | SemantiqueException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    e,
+                    " titre ",
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -166,6 +198,7 @@ public class UI extends JFrame{
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextArea jTextField1;
     private Afficheur P;
