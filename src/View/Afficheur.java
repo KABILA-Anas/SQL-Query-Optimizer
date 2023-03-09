@@ -20,6 +20,8 @@ public class Afficheur{
         //this.tree = tree;
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Container content = jDialog.getContentPane();
+        content.setLayout(new FlowLayout(FlowLayout.RIGHT));
         jDialog.setContentPane(new JScrollPane(new TreePanel(tree, false)));
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
@@ -124,6 +126,7 @@ public class Afficheur{
                 //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
                 add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree)) + "  Cout totale = " + Double.toString(Optimizer.getCoutTotale(tree))), FlowLayout.LEFT);
             }
+            add(new Button("HELLO WORLD"));
         }
 
 
@@ -135,7 +138,8 @@ public class Afficheur{
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-
+            g.setFont(new Font("",Font.BOLD,14));
+            ((Graphics2D)g).setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));;
             if (tree != null) {
                 drawNode(g, tree, getWidth() / 2, NODE_RADIUS, getWidth() / 2);
             }
