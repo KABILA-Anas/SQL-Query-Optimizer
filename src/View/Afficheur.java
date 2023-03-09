@@ -120,8 +120,10 @@ public class Afficheur{
             this.tree = tree;
             this.pCout = pCout;
             setLayout(new FlowLayout(FlowLayout.LEFT));
-            if(pCout)
-                add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
+            if(pCout){
+                //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
+                add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree)) + "  Cout totale = " + Double.toString(Optimizer.getCoutTotale(tree))), FlowLayout.LEFT);
+            }
         }
 
 

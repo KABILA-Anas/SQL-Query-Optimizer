@@ -34,10 +34,10 @@ public class Estimator {
     public double estimate(double[] pipeline_cout){
         estimate(tree.getLeftChild());
         //we should move this section later !!!
-        calculCoutTot(tree, pipeline_cout);
+        double ct = calculCoutTot(tree, pipeline_cout);
         tree.setCout(1.1);
         //
-        return 0;
+        return ct;
     }
 
     private int estimate(Node N){
@@ -215,7 +215,7 @@ public class Estimator {
     public int FS(Node node , int nbrLigne){
 
         Decomposer.MyPair<String, String> pair = Decomposer.selectionSplit(node.getExpression());
-        double cout = (nbrLigne/FBM.get(pair.getSecond()) * TempsTrans);
+        double cout = (nbrLigne/FBM.get(query.getAliasTable(pair.getSecond())) * TempsTrans);
         //System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
         node.setCout(cout);
         //System.out.println("Cout = " + cout);

@@ -1,11 +1,11 @@
 #
-A;1000000;FB;TL;20
-col1;4000
-col2;5
+Projet;1000000;FB;TL;20
+budget;4000
+Pid;5000
 #
-B;200;FB;TL;40
-col1;10
-col2;20
+Travaux;200;FB;TL;40
+Tid;10
+col2;5
 #
 C;300;FB;TL;20
 col1;30

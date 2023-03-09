@@ -1,10 +1,10 @@
 #
-A;col2
-col1;1;66
-col2;2;66
+Projet;Pid
+budget;1;66
+Pid;2;66
 #
-B;col1
-col1;3;66
+Travaux;Tid
+Tid;3;66
 col2;4;66
 #
 C;col1
