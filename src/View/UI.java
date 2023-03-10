@@ -180,7 +180,10 @@ public class UI extends JFrame{
 
         try {
             Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
-            P = new Afficheur(transformer.TransformQuery(),this);
+            //P = new Afficheur(transformer.TransformQuery(),this);
+            Node node = transformer.TransformQuery();
+            transformer.TransformerTree();
+            P = new Afficheur(node, this, transformer.getTrees());
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {
             // TODO Auto-generated catch block

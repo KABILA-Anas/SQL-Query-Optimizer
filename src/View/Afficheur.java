@@ -1,6 +1,7 @@
 package View;
 
 import Controller.Optimizer;
+import Controller.Transformer;
 import model.Node;
 
 import java.awt.*;
@@ -16,13 +17,57 @@ public class Afficheur{
     private Map<Node, Vector<Node>> ptrees;
     private boolean printCout;
 
-    public Afficheur(Node tree,JFrame frame) {
+    public Afficheur(Node tree,JFrame frame, Map<Integer, Vector<Node>> trees) {
         //this.tree = tree;
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container content = jDialog.getContentPane();
-        content.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        jDialog.setContentPane(new JScrollPane(new TreePanel(tree, false)));
+        //content.setLayout(new BoxLayout(jDialog, BoxLayout.X_AXIS));
+
+        //JPanel mainPanel = new JPanel();
+        TreePanel treePanel = new TreePanel(tree, false);
+
+        JButton B1 = new JButton("Afficher les variantes logiques");
+        JButton B2 = new JButton("Afficher les variantes physiques");
+        B1.setBackground(Color.BLACK);
+        B1.setForeground(Color.WHITE);
+        //mainTree.setLayout(new FlowLayout(FlowLayout.LEFT));
+        treePanel.add(B1, FlowLayout.LEFT);
+        treePanel.add(B2, FlowLayout.LEFT);
+
+        content.add(treePanel);
+
+        B1.addActionListener(e -> {
+            // Toggle the visibility of the panel
+            new LogicalTrees(trees, jDialog);
+        });
+
+        B2.addActionListener(e -> {
+            // Toggle the visibility of the panel
+            Transformer transformer = new Transformer();
+            new PhysicalTrees(transformer.generatePTrees(tree), jDialog);
+        });
+
+        /*JPanel jp = new JPanel();
+        JScrollPane jScrollPane = new JScrollPane(jp);
+        //jp.setLayout(new BoxLayout(jp, BoxLayout.X_AXIS));
+        TreePanel treePanel = new TreePanel(tree, false);
+        treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+        jp.add(treePanel);
+        treePanel = new TreePanel(tree, false);
+        treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+        jp.add(treePanel);*/
+
+
+        /*jp.add(new TreePanel(tree, false));
+        jp.add(new TreePanel(tree, false));
+        jp.add(new TreePanel(tree, false));
+        jp.add(new TreePanel(tree, false));
+        jp.add(new TreePanel(tree, false));*/
+        //content.add(jp);
+        //jScrollPane.add(jp);
+
+        //jDialog.setContentPane(jScrollPane);
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
         jDialog.setVisible(true);
@@ -110,6 +155,66 @@ public class Afficheur{
         jDialog.setVisible(true);
     }
 
+    private class LogicalTrees {
+
+        public LogicalTrees(Map<Integer, Vector<Node>> trees, JDialog jDialog) {
+
+            //this.trees = trees;
+            //JDialog jDialog = new JDialog(frame,"Relational Tree",true);
+            //jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+            JPanel JP = new JPanel();
+            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
+            JScrollPane SP = new JScrollPane(JP);
+            TreePanel treePanel;
+            for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
+                for (Node n : entry.getValue()) {
+                    treePanel = new TreePanel(n, false);
+                    treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+                    JP.add(treePanel);
+                }
+
+            JDialog jd = new JDialog(jDialog, "test", true);
+            Container content = jd.getContentPane();
+            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //TreePanel treePanel = new TreePanel(tree, false);
+            content.add(SP);
+            jd.pack();
+            jd.setLocationRelativeTo(jDialog);
+            jd.setVisible(true);
+        }
+    }
+
+
+    private class PhysicalTrees {
+
+        public PhysicalTrees(Vector<Node> nodes, JDialog jDialog) {
+
+            //this.trees = trees;
+            //JDialog jDialog = new JDialog(frame,"Relational Tree",true);
+            //jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+            JPanel JP = new JPanel();
+            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
+            JScrollPane SP = new JScrollPane(JP);
+            TreePanel treePanel;
+            for (Node n : nodes) {
+                treePanel = new TreePanel(n, false);
+                treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+                JP.add(treePanel);
+            }
+
+            JDialog jd = new JDialog(jDialog, "test", true);
+            Container content = jd.getContentPane();
+            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //TreePanel treePanel = new TreePanel(tree, false);
+            content.add(SP);
+            jd.pack();
+            jd.setLocationRelativeTo(jDialog);
+            jd.setVisible(true);
+        }
+    }
+
     private class TreePanel extends JPanel {
         private Node tree;
         private boolean pCout;
@@ -126,13 +231,12 @@ public class Afficheur{
                 //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
                 add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree)) + "  Cout totale = " + Double.toString(Optimizer.getCoutTotale(tree))), FlowLayout.LEFT);
             }
-            add(new Button("HELLO WORLD"));
         }
 
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(1300, 500);
+            return new Dimension(1000, 600);
         }
 
         @Override
@@ -155,6 +259,12 @@ public class Afficheur{
             g.drawString(nodeLabel, x - node.toString().length()*2, y + 5);
 
 
+            if (node.getRightChild() != null) {
+                int childX = x + dx;
+                int childY = y + LEVEL_HEIGHT;
+                g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
+                drawNode(g, node.getRightChild(), childX, childY, dx / 2);
+            }
 
             if (node.getLeftChild() != null) {
                 int childX = x;
@@ -165,12 +275,7 @@ public class Afficheur{
                 drawNode(g, node.getLeftChild(), childX, childY, dx / 2);
             }
 
-            if (node.getRightChild() != null) {
-                int childX = x + dx;
-                int childY = y + LEVEL_HEIGHT;
-                g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
-                drawNode(g, node.getRightChild(), childX, childY, dx / 2);
-            }
+
         }
     }
 

@@ -18,6 +18,10 @@ public class Transformer {
 	Query Q;
 	Map<Integer,Vector<Node>> trees = new HashMap<Integer,Vector<Node>>();
 	Map<Node, Vector<Node>> ptrees = new HashMap<>();
+
+	public Transformer() {
+
+	}
 	public Transformer(Query Q) {
 		this.Q = Q;
 	}
@@ -49,10 +53,11 @@ public class Transformer {
 			}
 		}
 
+	}
 
-
-
-
+	public Vector<Node> generatePTrees(Node n){
+		generatePTrees(n, 0, n);
+		return ptrees.get(n);
 	}
 
 
@@ -153,7 +158,8 @@ public class Transformer {
 	public void TransformerTree() throws SyntaxeException, SemantiqueException {
 
 		Vector<Vector<String>> conditions = Q.getConditions();
-		addTree(Q.buidTree());
+		Node mainTree = Q.buidTree();
+		addTree(mainTree);
 		if(conditions.size() != 0) {
 			Vector<String> conditions1 = conditions.get(0);
 
@@ -175,7 +181,9 @@ public class Transformer {
 		}
 
 		JC();
-		generatePTrees();
+
+		trees.get(mainTree.height()).remove(0);
+		//generatePTrees();
 
 		/*for(Vector<String> v : combinations){
 			System.out.println(v);
