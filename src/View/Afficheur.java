@@ -411,7 +411,7 @@ public class Afficheur{
             g.setFont(new Font("",Font.BOLD,14));
             ((Graphics2D)g).setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));;
             if (tree != null) {
-                drawNode(g, tree, getWidth() / 2, NODE_RADIUS, getWidth() / 2);
+                drawNode(g, tree, getWidth() / 2, NODE_RADIUS, getWidth() / 4);
             }
         }
 
@@ -433,12 +433,17 @@ public class Afficheur{
             }
 
             if (node.getLeftChild() != null) {
-                int childX = x;
-                if(node.getRightChild() != null)
-                    childX = x - dx;
                 int childY = y + LEVEL_HEIGHT;
-                g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
-                drawNode(g, node.getLeftChild(), childX, childY, dx / 2);
+                int childX = x;
+                if(node.getRightChild() != null){
+                    childX = x - dx;
+                    g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
+                    drawNode(g, node.getLeftChild(), childX, childY, dx / 2);
+                }
+                else {
+                    g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
+                    drawNode(g, node.getLeftChild(), childX, childY, dx);
+                }
             }
 
 
