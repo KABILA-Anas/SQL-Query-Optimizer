@@ -1,10 +1,16 @@
 package View;
 
+import Controller.Estimator;
 import Controller.Optimizer;
 import Controller.Transformer;
 import model.Node;
+import model.Query;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,10 +21,12 @@ public class Afficheur{
 	//private Node tree;
     private Map<Integer, Vector<Node>> trees;
     private Map<Node, Vector<Node>> ptrees;
+    Query query;
     private boolean printCout;
 
-    public Afficheur(Node tree,JFrame frame, Map<Integer, Vector<Node>> trees) {
+    public Afficheur(Node tree, JFrame frame, Map<Integer, Vector<Node>> trees, Query query) {
         //this.tree = tree;
+        this.query = query;
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container content = jDialog.getContentPane();
@@ -45,6 +53,7 @@ public class Afficheur{
         B2.addActionListener(e -> {
             // Toggle the visibility of the panel
             Transformer transformer = new Transformer();
+            //Transformer transformer = new Transformer();
             new PhysicalTrees(transformer.generatePTrees(tree), jDialog);
         });
 
@@ -155,7 +164,7 @@ public class Afficheur{
         jDialog.setVisible(true);
     }
 
-    private class LogicalTrees {
+    /*private class LogicalTrees {
 
         public LogicalTrees(Map<Integer, Vector<Node>> trees, JDialog jDialog) {
 
@@ -183,28 +192,127 @@ public class Afficheur{
             jd.setLocationRelativeTo(jDialog);
             jd.setVisible(true);
         }
-    }
+    }*/
 
+    private class LogicalTrees implements ActionListener {
+        JPanel cardPanel;
+        JButton nextButton, prevButton;
+
+        public LogicalTrees(Map<Integer, Vector<Node>> trees, JDialog jDialog) {
+            JDialog jd = new JDialog(jDialog, "Physical trees", true);
+            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            Container container = jd.getContentPane();
+
+            cardPanel = new JPanel(new CardLayout());
+            TreePanel treePanel;
+            for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
+                for (Node n : entry.getValue()) {
+                    JButton B2 = new JButton("Afficher les variantes physiques");
+                    B2.setFocusable(false);
+                    treePanel = new TreePanel(n, false);
+                    treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+                    treePanel.add(B2, FlowLayout.LEFT);
+                    B2.addActionListener(e -> {
+                        // Toggle the visibility of the panel
+                        Transformer transformer = new Transformer();
+                        //Transformer transformer = new Transformer();
+                        new PhysicalTrees(transformer.generatePTrees(n), jd);
+                    });
+                    cardPanel.add(treePanel);
+                }
+            /*cardPanel.add(new JLabel("Card 1"), "card1");
+            cardPanel.add(new JLabel("Card 2"), "card2");
+            cardPanel.add(new JLabel("Card 3"), "card3");*/
+
+            nextButton = new JButton("Next");
+            nextButton.addActionListener(this);
+
+            prevButton = new JButton("Previous");
+            prevButton.addActionListener(this);
+
+            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+            buttonPanel.add(prevButton);
+            buttonPanel.add(nextButton);
+
+            container.add(cardPanel, BorderLayout.CENTER);
+            container.add(buttonPanel, BorderLayout.SOUTH);
+
+            jd.addKeyListener(new KeyAdapter() {
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                        CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                        cardLayout.previous(cardPanel);
+                    } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                        cardLayout.next(cardPanel);
+                    }
+                }
+            });
+
+            jd.pack();
+            jd.setLocationRelativeTo(null);
+            jd.setVisible(true);
+        }
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == nextButton) {
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.next(cardPanel);
+            } else if (e.getSource() == prevButton) {
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.previous(cardPanel);
+            }
+        }
+    }
 
     private class PhysicalTrees {
 
-        public PhysicalTrees(Vector<Node> nodes, JDialog jDialog) {
-
-            //this.trees = trees;
-            //JDialog jDialog = new JDialog(frame,"Relational Tree",true);
-            //jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        public PhysicalTrees(Node node, JDialog jDialog) {
             JPanel JP = new JPanel();
             JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
             JScrollPane SP = new JScrollPane(JP);
+            JDialog jd = new JDialog(jDialog, "test", true);
+
+            TreePanel treePanel;
+            Estimator estimator = new Estimator(node, query);
+            double[] pipeline = {0};
+            estimator.estimate(pipeline);
+            treePanel = new TreePanel(node, true);
+            treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+
+            JP.add(treePanel);
+
+            Container content = jd.getContentPane();
+            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //TreePanel treePanel = new TreePanel(tree, false);
+            content.add(SP);
+            jd.pack();
+            jd.setLocationRelativeTo(jDialog);
+            jd.setVisible(true);
+        }
+
+        public PhysicalTrees(Vector<Node> nodes, JDialog jDialog) {
+            JPanel JP = new JPanel();
+            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
+            JScrollPane SP = new JScrollPane(JP);
+            JDialog jd = new JDialog(jDialog, "test", true);
             TreePanel treePanel;
             for (Node n : nodes) {
                 treePanel = new TreePanel(n, false);
                 treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+                JButton B2 = new JButton("Calculer le cout");
+                B2.setFocusable(false);
+                treePanel.add(B2, FlowLayout.LEFT);
+                B2.addActionListener(e -> {
+                    // Toggle the visibility of the panel
+                    Transformer transformer = new Transformer();
+                    //Transformer transformer = new Transformer();
+                    new PhysicalTrees(n, jd);
+                });
                 JP.add(treePanel);
             }
-
-            JDialog jd = new JDialog(jDialog, "test", true);
             Container content = jd.getContentPane();
             jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             //TreePanel treePanel = new TreePanel(tree, false);
@@ -227,10 +335,10 @@ public class Afficheur{
             this.tree = tree;
             this.pCout = pCout;
             setLayout(new FlowLayout(FlowLayout.LEFT));
-            if(pCout){
+            /*if(pCout){
                 //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
                 add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree)) + "  Cout totale = " + Double.toString(Optimizer.getCoutTotale(tree))), FlowLayout.LEFT);
-            }
+            }*/
         }
 
 

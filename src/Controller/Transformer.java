@@ -22,6 +22,11 @@ public class Transformer {
 	public Transformer() {
 
 	}
+
+	public Query getQ() {
+		return Q;
+	}
+
 	public Transformer(Query Q) {
 		this.Q = Q;
 	}

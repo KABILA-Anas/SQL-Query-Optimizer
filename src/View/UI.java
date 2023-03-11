@@ -47,20 +47,12 @@ public class UI extends JFrame{
         jButton1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 153, 153));
         jButton1.setText("Varier");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jButton1ActionPerformed(evt);
-            }
-        });
+
 
         jButton4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 153, 153));
         jButton4.setText("Estimer");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+
 
         jButton3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 153, 153));
@@ -132,58 +124,20 @@ public class UI extends JFrame{
         
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    	try {
-            Query query = Decomposer.SplitQuery(jTextField1.getText());
-            Transformer transformer = new Transformer(query);
-			/*Node N = transformer.TransformQuery();
-			System.out.println("---------------------------------------------------------------------");
-			P = new Afficheur(N,this);*/
-            transformer.TransformerTree();
-            //Optimizer optimizer = new Optimizer(transformer.getPtrees() ,query);
-            //optimizer.estimatePtrees();
-            //transformer.JC(Decomposer.SplitQuery(jTextField1.getText()).buidTree(), 0);
-            P = new Afficheur(transformer.getPtrees(),this, false);
-			//P.printTree();
-		} catch (SyntaxeException | SemantiqueException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, 
-			         e,
-			         " titre ",
-			         JOptionPane.WARNING_MESSAGE);
-		}
-    }
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        try {
-            Query query = Decomposer.SplitQuery(jTextField1.getText());
-            Transformer transformer = new Transformer(query);
-            transformer.TransformerTree();
-            Optimizer optimizer = new Optimizer(transformer.getPtrees(), query);
-            optimizer.estimatePtrees();
-            P = new Afficheur(transformer.getPtrees(),this, true);
-        } catch (SyntaxeException | SemantiqueException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    e,
-                    " titre ",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-    }
+
+
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 
         try {
-            Transformer transformer = new Transformer(Decomposer.SplitQuery(jTextField1.getText()));
+            Query query = Decomposer.SplitQuery(jTextField1.getText());
+            Transformer transformer = new Transformer(query);
             //P = new Afficheur(transformer.TransformQuery(),this);
             Node node = transformer.TransformQuery();
             transformer.TransformerTree();
-            P = new Afficheur(node, this, transformer.getTrees());
+            P = new Afficheur(node, this, transformer.getTrees(), query);
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {
             // TODO Auto-generated catch block
