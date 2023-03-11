@@ -27,22 +27,81 @@ public class Afficheur{
     public Afficheur(Node tree, JFrame frame, Map<Integer, Vector<Node>> trees, Query query) {
         //this.tree = tree;
         this.query = query;
-        JDialog jDialog = new JDialog(frame,"Relational Tree",true);
+        JDialog jDialog = new JDialog(frame,"L'arbre algébrique initiale",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container content = jDialog.getContentPane();
         //content.setLayout(new BoxLayout(jDialog, BoxLayout.X_AXIS));
 
         //JPanel mainPanel = new JPanel();
+        int nrbLtrees = 0;
+        for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
+            nrbLtrees += ((Vector<Node>)entry.getValue()).size();
+
+        Transformer transformer = new Transformer();
+        Vector<Node> initptrees = transformer.generatePTrees(tree);
+        int nbrPtrees = initptrees.size();
+
+        //TitlePanel titlePanel = new TitlePanel();
+
+        JButton B1 = new JButton("Afficher les variantes logiques");
+        B1.setFocusable(false);
+        JButton B2 = new JButton("Afficher les variantes physiques");
+        B2.setFocusable(false);
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        // Create the two labels
+        JPanel title1 = new JPanel();
+        title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
+        JLabel label1 = new JLabel("Nombre des arbres logiques : " + nrbLtrees);
+        label1.setFont(new Font("Arial", Font.BOLD, 20));
+        label1.setForeground(Color.black);
+        title1.add(Box.createVerticalStrut(25));
+        title1.add(label1);
+        title1.add(Box.createVerticalStrut(10));
+        title1.add(B1);
+        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        B1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //title1.setBackground(Color.red);
+        //
+        JPanel title2 = new JPanel();
+        title2.setLayout(new BoxLayout(title2,BoxLayout.Y_AXIS));
+        JLabel label2 = new JLabel("Nombre des arbres physiques : " + nbrPtrees);
+        label2.setFont(new Font("Arial", Font.BOLD, 20));
+        label2.setForeground(Color.black);
+        title2.add(Box.createVerticalStrut(25));
+        title2.add(label2);
+        title2.add(Box.createVerticalStrut(10));
+        title2.add(B2);
+        title2.setBackground(Color.green);
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        B2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Create a panel to hold the labels
+        JPanel titlePanel1 = new JPanel(new GridLayout(1, 2));
+        titlePanel1.add(title1);
+        titlePanel1.add(title2);
+
+        // Add the title panel to the top of the main panel
+        titlePanel.add(titlePanel1, BorderLayout.NORTH);
+
         TreePanel treePanel = new TreePanel(tree, false);
 
+        /*JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BoxLayout(btnPanel,BoxLayout.Y_AXIS));
         JButton B1 = new JButton("Afficher les variantes logiques");
         JButton B2 = new JButton("Afficher les variantes physiques");
         B1.setBackground(Color.BLACK);
         B1.setForeground(Color.WHITE);
+        btnPanel.add(B1);
+        btnPanel.add(B2);*/
         //mainTree.setLayout(new FlowLayout(FlowLayout.LEFT));
-        treePanel.add(B1, FlowLayout.LEFT);
+        /*treePanel.add(B1, FlowLayout.LEFT);
         treePanel.add(B2, FlowLayout.LEFT);
+        */
 
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.add(titlePanel);
+        content.add(Box.createVerticalStrut(35));
+        //treePanel.add(titlePanel,FlowLayout.LEFT);
         content.add(treePanel);
 
         B1.addActionListener(e -> {
@@ -52,9 +111,8 @@ public class Afficheur{
 
         B2.addActionListener(e -> {
             // Toggle the visibility of the panel
-            Transformer transformer = new Transformer();
             //Transformer transformer = new Transformer();
-            new PhysicalTrees(transformer.generatePTrees(tree), jDialog);
+            new PhysicalTrees(initptrees, jDialog);
         });
 
         /*JPanel jp = new JPanel();
@@ -397,10 +455,10 @@ public class Afficheur{
 
             // Create the two labels
             JLabel label1 = new JLabel(title1);
-            label1.setFont(new Font("Arial", Font.BOLD, 24));
+            label1.setFont(new Font("Arial", Font.BOLD, 20));
             label1.setForeground(Color.black);
             JLabel label2 = new JLabel(title2);
-            label2.setFont(new Font("Arial", Font.BOLD, 24));
+            label2.setFont(new Font("Arial", Font.BOLD, 20));
             label2.setForeground(Color.black);
 
             // Create a panel to hold the labels
