@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 
 
 public class Afficheur{
@@ -24,6 +26,12 @@ public class Afficheur{
     Query query;
     Transformer transformer;
     private boolean printCout;
+    private static Color title2_color = new Color(104, 131, 186);
+    private static Color title1_color = new Color(61, 59, 142);
+    private static Color button_color = new Color(249, 249, 249);
+    private static Color rules_box_color = new Color(104, 131, 186);
+    private static Color rules_title_color = new Color(249,249,249);
+    private static Color rules_color = new Color(249,249,249);
 
     public Afficheur(Node tree, JFrame frame, Transformer transformer, Query query) {
         //this.tree = tree;
@@ -47,19 +55,23 @@ public class Afficheur{
 
         JButton B1 = new JButton("Afficher les variantes logiques");
         B1.setFocusable(false);
+        B1.setBackground(button_color);
         JButton B2 = new JButton("Afficher les variantes physiques");
         B2.setFocusable(false);
+        B2.setBackground(button_color);
         JPanel titlePanel = new JPanel(new BorderLayout());
         // Create the two labels
         JPanel title1 = new JPanel();
         title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
         JLabel label1 = new JLabel("Nombre des arbres logiques : " + nrbLtrees);
         label1.setFont(new Font("Arial", Font.BOLD, 20));
-        label1.setForeground(Color.black);
+        label1.setForeground(Color.WHITE);
         title1.add(Box.createVerticalStrut(25));
         title1.add(label1);
         title1.add(Box.createVerticalStrut(10));
         title1.add(B1);
+        title1.add(Box.createVerticalStrut(10));
+        title1.setBackground(title1_color);
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
         B1.setAlignmentX(Component.CENTER_ALIGNMENT);
         //title1.setBackground(Color.red);
@@ -68,12 +80,12 @@ public class Afficheur{
         title2.setLayout(new BoxLayout(title2,BoxLayout.Y_AXIS));
         JLabel label2 = new JLabel("Nombre des arbres physiques : " + nbrPtrees);
         label2.setFont(new Font("Arial", Font.BOLD, 20));
-        label2.setForeground(Color.black);
+        label2.setForeground(Color.WHITE);
         title2.add(Box.createVerticalStrut(25));
         title2.add(label2);
         title2.add(Box.createVerticalStrut(10));
         title2.add(B2);
-        title2.setBackground(Color.green);
+        title2.setBackground(title2_color);
         label2.setAlignmentX(Component.CENTER_ALIGNMENT);
         B2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -84,7 +96,7 @@ public class Afficheur{
 
         // Add the title panel to the top of the main panel
         titlePanel.add(titlePanel1, BorderLayout.NORTH);
-
+        //tree panel
         TreePanel treePanel = new TreePanel(tree, false);
 
         /*JPanel btnPanel = new JPanel();
@@ -103,6 +115,7 @@ public class Afficheur{
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(titlePanel);
         content.add(Box.createVerticalStrut(35));
+        content.setBackground(Color.white);
         //treePanel.add(titlePanel,FlowLayout.LEFT);
         content.add(treePanel);
 
@@ -272,13 +285,32 @@ public class Afficheur{
                     mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
 
                     JPanel rulesPanel = new JPanel();
-                    rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
-
+                    //rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
+                    //rulesPanel.setLayout(new FlowLayout());
+                    Box box = Box.createVerticalBox();
                     Vector<String> rules = transformer.getRules(n);
+                    JLabel rules_title = new JLabel(" Les règles appliquées : ");
+                    rules_title.setFont(new Font("Arial",Font.BOLD,22));
+                    JPanel rules_title_panel = new JPanel();
+                    rules_title_panel.setBackground(rules_title_color);
+                    rules_title_panel.add(rules_title);
+                    box.add(rules_title_panel);
+                    //box.add(rules_title);
+                    box.add(Box.createVerticalStrut(15));
+
+                    int etape = 0;
                     if(rules != null) {
-                        for (String rule : rules)
-                            rulesPanel.add(new JLabel(rule));
+                        JLabel rule_label;
+                        for (String rule : rules) {
+                            rule_label = new JLabel(""+(++etape)+"-"+rule);
+                            //rule_label.setFont(new Font("Arial",Font.BOLD,16));
+                            //rule_label.setForeground(rules_color);
+                            box.add(rule_label);
+                            box.add(Box.createVerticalStrut(10));
+                        }
                     }
+                    rulesPanel.setBackground(rules_box_color);
+                    rulesPanel.add(box);
 
 
                     JButton B2 = new JButton("Afficher les variantes physiques");
@@ -411,6 +443,7 @@ public class Afficheur{
             this.tree = tree;
             this.pCout = pCout;
             setLayout(new FlowLayout(FlowLayout.LEFT));
+            setBackground(Color.WHITE);
             /*if(pCout){
                 //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
                 add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree)) + "  Cout totale = " + Double.toString(Optimizer.getCoutTotale(tree))), FlowLayout.LEFT);
