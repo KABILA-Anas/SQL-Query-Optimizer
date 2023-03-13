@@ -17,6 +17,7 @@ public class Transformer {
 
 	Query Q;
 	Map<Integer,Vector<Node>> trees = new HashMap<Integer,Vector<Node>>();
+	Map<Node, Vector<String>> regles = new HashMap<>();
 	Map<Node, Vector<Node>> ptrees = new HashMap<>();
 
 	public Transformer() {
@@ -25,6 +26,10 @@ public class Transformer {
 
 	public Query getQ() {
 		return Q;
+	}
+
+	public Vector<String> getRules(Node node) {
+		return regles.get(node);
 	}
 
 	public Transformer(Query Q) {
@@ -160,6 +165,7 @@ public class Transformer {
 
 
 	//******************Generate all logical variations ***************************//
+	Vector<String> rulesVector;
 	public void TransformerTree() throws SyntaxeException, SemantiqueException {
 
 		Vector<Vector<String>> conditions = Q.getConditions();
@@ -178,14 +184,20 @@ public class Transformer {
 				cdts.add(v);
 				Query query = new Query(Q.getColumns(), Q.getTables_alias(), Q.getTables(), cdts);
 				Node T = query.buidTree();
+
+				//Vector<>
+				rulesVector = new Vector<String>();
+				compareTree(mainTree, T, rulesVector);
+				regles.put(T, rulesVector);
+
 				addTree(T);
 			}
 
-			CSG();
+			//CSG();
 
 		}
 
-		JC();
+		//JC();
 
 		trees.get(mainTree.height()).remove(0);
 		//generatePTrees();
@@ -225,6 +237,35 @@ public class Transformer {
 
 	}
 
+	private boolean compareTree(Node T1, Node T2, Vector<String> rules){
+		if(T1 == null && T2 == null)
+			return true;
+		if(T1 == null || T2 == null)
+			return false;
+		if(T1.height() != T2.height())
+			return false;
+
+		/*if(!T1.getExpression().equals(T2.getExpression()) || !T1.getName().equals(T2.getName()))
+			return false;*/
+		if(!T1.getName().equals(T2.getName())){
+			rules.add("CSJ");
+			return false;
+		}
+		else {
+			if(!T1.getExpression().equals(T2.getExpression())){
+				if(T1.getName().equals("Jointure"))
+					rules.add("JA");
+				if (T1.getName().equals("Selection"))
+					rules.add("SC");
+				return false;
+			}
+		}
+
+		if(!compareTree(T1.getLeftChild(), T2.getLeftChild(), rules))
+			return false;
+		return true;
+	}
+
 
 	private boolean compareTree(Node T1, Node T2){
 		if(T1 == null && T2 == null)
@@ -258,6 +299,9 @@ public class Transformer {
 		for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet()) {
 			for (Node n : entry.getValue()) {
 				Vector<Node> nodes = new Vector<Node>();
+				rulesVector = getRules(n);
+				if(rulesVector == null)
+					rulesVector = new Vector<String>();
 				JC(n,0, nodes);
 				for(Node temp : nodes)
 					tempNodes.add(temp);
@@ -266,11 +310,13 @@ public class Transformer {
 
 		for(Node n : tempNodes)
 			addTree(n);
+
 	}
 
 	private void JC(Node root, int l, Vector<Node> nodes){
 		if(root == null)
 			return;
+		rulesVector.add("JC");
 		while (true){
 			int[] level = {l};
 			Node newTree = Node.copierNode(root);
@@ -279,8 +325,10 @@ public class Transformer {
 				break;
 			swapChilds(binaryNode);
 			l++;
+			regles.put(newTree, (Vector<String>) rulesVector.clone());
 			JC(newTree, l, nodes);
 			nodes.add(newTree);
+			rulesVector.remove(rulesVector.size() - 1);
 			/*newTree.print2DUtil(newTree, 0);
 			System.out.println("------------------------------------------------------------------");*/
 		}
@@ -323,6 +371,7 @@ public class Transformer {
 	private void CSG(Node root , Vector<Node> nodes) throws SyntaxeException, SemantiqueException {
 		if(root != null){
 			int[] childType = {-1};
+			rulesVector.add("CSJ");
 			Node newTree = Node.copierNode(root);
 			Node firstSelectionParent = getFirstSelectionParent(newTree,childType);
 			if(firstSelectionParent != null) {
@@ -339,6 +388,8 @@ public class Transformer {
 				}
 				nodes.add(newTree);
 
+				regles.put(newTree, (Vector<String>) rulesVector.clone());
+
 				CSG(newTree,nodes);
 			}
 
@@ -351,6 +402,9 @@ public class Transformer {
 		for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet()) {
 			for (Node n : entry.getValue()) {
 				Vector<Node> nodes = new Vector<Node>();
+				rulesVector = getRules(n);
+				if(rulesVector == null)
+					rulesVector = new Vector<String>();
 				CSG(n , nodes);
 				for(Node temp : nodes)
 					tempNodes.add(temp);

@@ -137,7 +137,7 @@ public class UI extends JFrame{
             //P = new Afficheur(transformer.TransformQuery(),this);
             Node node = transformer.TransformQuery();
             transformer.TransformerTree();
-            P = new Afficheur(node, this, transformer.getTrees(), query);
+            P = new Afficheur(node, this, transformer, query);
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {
             // TODO Auto-generated catch block

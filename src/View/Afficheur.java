@@ -22,11 +22,13 @@ public class Afficheur{
     private Map<Integer, Vector<Node>> trees;
     private Map<Node, Vector<Node>> ptrees;
     Query query;
+    Transformer transformer;
     private boolean printCout;
 
-    public Afficheur(Node tree, JFrame frame, Map<Integer, Vector<Node>> trees, Query query) {
+    public Afficheur(Node tree, JFrame frame, Transformer transformer, Query query) {
         //this.tree = tree;
         this.query = query;
+        this.transformer = transformer;
         JDialog jDialog = new JDialog(frame,"L'arbre algébrique initiale",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container content = jDialog.getContentPane();
@@ -34,10 +36,10 @@ public class Afficheur{
 
         //JPanel mainPanel = new JPanel();
         int nrbLtrees = 0;
-        for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
+        for (Map.Entry<Integer, Vector<Node>> entry : transformer.getTrees().entrySet())
             nrbLtrees += ((Vector<Node>)entry.getValue()).size();
 
-        Transformer transformer = new Transformer();
+        //Transformer transformer = new Transformer();
         Vector<Node> initptrees = transformer.generatePTrees(tree);
         int nbrPtrees = initptrees.size();
 
@@ -106,7 +108,7 @@ public class Afficheur{
 
         B1.addActionListener(e -> {
             // Toggle the visibility of the panel
-            new LogicalTrees(trees, jDialog);
+            new LogicalTrees(transformer.getTrees(), jDialog);
         });
 
         B2.addActionListener(e -> {
@@ -265,6 +267,20 @@ public class Afficheur{
             TreePanel treePanel;
             for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
                 for (Node n : entry.getValue()) {
+
+                    JPanel mainPanel = new JPanel();
+                    mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
+
+                    JPanel rulesPanel = new JPanel();
+                    rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
+
+                    Vector<String> rules = transformer.getRules(n);
+                    if(rules != null) {
+                        for (String rule : rules)
+                            rulesPanel.add(new JLabel(rule));
+                    }
+
+
                     JButton B2 = new JButton("Afficher les variantes physiques");
                     B2.setFocusable(false);
                     treePanel = new TreePanel(n, false);
@@ -276,7 +292,9 @@ public class Afficheur{
                         //Transformer transformer = new Transformer();
                         new PhysicalTrees(transformer.generatePTrees(n), jd);
                     });
-                    cardPanel.add(treePanel);
+                    mainPanel.add(treePanel);
+                    mainPanel.add(rulesPanel);
+                    cardPanel.add(mainPanel);
                 }
             /*cardPanel.add(new JLabel("Card 1"), "card1");
             cardPanel.add(new JLabel("Card 2"), "card2");
