@@ -301,11 +301,15 @@ public class Afficheur{
                     int etape = 0;
                     if(rules != null) {
                         JLabel rule_label;
+                        JPanel rule_panel = new JPanel();
+                        rule_panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                        rule_panel.setBackground(rules_box_color);
                         for (String rule : rules) {
-                            rule_label = new JLabel(""+(++etape)+"-"+rule);
-                            //rule_label.setFont(new Font("Arial",Font.BOLD,16));
-                            //rule_label.setForeground(rules_color);
-                            box.add(rule_label);
+                            rule_label = new JLabel("     "+(++etape)+" - "+rule);
+                            rule_label.setFont(new Font("Arial",Font.BOLD,16));
+                            rule_label.setForeground(rules_color);
+                            rule_panel.add(rule_label);
+                            box.add(rule_panel);
                             box.add(Box.createVerticalStrut(10));
                         }
                     }
