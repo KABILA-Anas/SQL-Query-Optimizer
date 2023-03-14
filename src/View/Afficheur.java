@@ -272,7 +272,7 @@ public class Afficheur{
         JButton nextButton, prevButton;
 
         public LogicalTrees(Map<Integer, Vector<Node>> trees, JDialog jDialog) {
-            JDialog jd = new JDialog(jDialog, "Physical trees", true);
+            JDialog jd = new JDialog(jDialog, "Les arbres logiques", true);
             jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             Container container = jd.getContentPane();
 
@@ -301,10 +301,12 @@ public class Afficheur{
                     int etape = 0;
                     if(rules != null) {
                         JLabel rule_label;
-                        JPanel rule_panel = new JPanel();
-                        rule_panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-                        rule_panel.setBackground(rules_box_color);
+
                         for (String rule : rules) {
+                            JPanel rule_panel = new JPanel();
+                            rule_panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                            rule_panel.setBackground(rules_box_color);
+
                             rule_label = new JLabel("     "+(++etape)+" - "+rule);
                             rule_label.setFont(new Font("Arial",Font.BOLD,16));
                             rule_label.setForeground(rules_color);
@@ -319,6 +321,8 @@ public class Afficheur{
 
                     JButton B2 = new JButton("Afficher les variantes physiques");
                     B2.setFocusable(false);
+                    B2.setForeground(rules_title_color);
+                    B2.setBackground(rules_box_color);
                     treePanel = new TreePanel(n, false);
                     treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
                     treePanel.add(B2, FlowLayout.LEFT);
@@ -336,10 +340,14 @@ public class Afficheur{
             cardPanel.add(new JLabel("Card 2"), "card2");
             cardPanel.add(new JLabel("Card 3"), "card3");*/
 
-            nextButton = new JButton("Next");
+            nextButton = new JButton("→");
+            nextButton.setFont(new Font("",Font.BOLD,22));
+            nextButton.setBackground(new Color(176, 226, 152));
             nextButton.addActionListener(this);
 
-            prevButton = new JButton("Previous");
+            prevButton = new JButton("←");
+            prevButton.setFont(new Font("",Font.BOLD,22));
+            prevButton.setBackground(new Color(176, 226, 152));
             prevButton.addActionListener(this);
 
             JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
@@ -385,7 +393,7 @@ public class Afficheur{
             JPanel JP = new JPanel();
             JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
             JScrollPane SP = new JScrollPane(JP);
-            JDialog jd = new JDialog(jDialog, "test", true);
+            JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
 
             TreePanel treePanel;
             Estimator estimator = new Estimator(node, query);
@@ -409,13 +417,14 @@ public class Afficheur{
             JPanel JP = new JPanel();
             JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
             JScrollPane SP = new JScrollPane(JP);
-            JDialog jd = new JDialog(jDialog, "test", true);
+            JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
             TreePanel treePanel;
             for (Node n : nodes) {
                 treePanel = new TreePanel(n, false);
                 treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
                 JButton B2 = new JButton("Calculer le cout");
                 B2.setFocusable(false);
+                B2.setBackground(new Color(176, 226, 152));
                 treePanel.add(B2, FlowLayout.LEFT);
                 B2.addActionListener(e -> {
                     // Toggle the visibility of the panel

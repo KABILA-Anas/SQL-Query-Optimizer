@@ -193,11 +193,11 @@ public class Transformer {
 				addTree(T);
 			}
 
-			//CSG();
+			CSG();
 
 		}
 
-		//JC();
+		JC();
 
 		trees.get(mainTree.height()).remove(0);
 		//generatePTrees();

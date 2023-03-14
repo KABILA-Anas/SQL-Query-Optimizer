@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 
 import Controller.Decomposer;
 import Controller.Optimizer;
@@ -9,6 +10,8 @@ import model.Node;
 import model.Query;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
+
+import java.awt.*;
 
 public class UI extends JFrame{
 
@@ -33,8 +36,8 @@ public class UI extends JFrame{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("SimSun-ExtB", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 51, 102));
+        jLabel1.setFont(new java.awt.Font("Bold", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(104, 131, 186));
         jLabel1.setText("Optimiseur de requete ");
 
         jTextField1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
@@ -55,7 +58,8 @@ public class UI extends JFrame{
 
 
         jButton3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 153, 153));
+        jButton3.setForeground(new java.awt.Color(255,255,255));
+        jButton3.setBackground(new java.awt.Color(104, 131, 186));
         jButton3.setText("Génerer l'arbre algébrique");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -63,9 +67,9 @@ public class UI extends JFrame{
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(255, 153, 153));
+        jButton2.setBackground(new java.awt.Color(255,255,255));
         jButton2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setForeground(new java.awt.Color(104, 131, 186));
         jButton2.setText("Réinitialiser");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
