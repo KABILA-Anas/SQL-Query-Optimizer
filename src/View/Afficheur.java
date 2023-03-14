@@ -97,7 +97,7 @@ public class Afficheur{
         // Add the title panel to the top of the main panel
         titlePanel.add(titlePanel1, BorderLayout.NORTH);
         //tree panel
-        TreePanel treePanel = new TreePanel(tree, false);
+        TreePanel treePanel = new TreePanel(tree, false, 0);
 
         /*JPanel btnPanel = new JPanel();
         btnPanel.setLayout(new BoxLayout(btnPanel,BoxLayout.Y_AXIS));
@@ -204,7 +204,7 @@ public class Afficheur{
         //int i = 0;
         TreePanel mainTree;
         for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()){
-            mainTree = new TreePanel(entry.getKey(), false);
+            mainTree = new TreePanel(entry.getKey(), false, 0);
             mainTree.setBackground(Color.PINK);
             mainTree.setBorder(BorderFactory.createLoweredBevelBorder());
             //JButton B = new Button("Afficher les arbres physiques");
@@ -218,7 +218,7 @@ public class Afficheur{
             JPanel JPI = new JPanel();
             JPI.setLayout(new BoxLayout(JPI, BoxLayout.Y_AXIS));
             for (Node n : entry.getValue()) {
-                JPI.add(new TreePanel(n, printCout));
+                JPI.add(new TreePanel(n, printCout, 0));
                 //i++;
             }
             JPI.setVisible(false);
@@ -323,7 +323,7 @@ public class Afficheur{
                     B2.setFocusable(false);
                     B2.setForeground(rules_title_color);
                     B2.setBackground(rules_box_color);
-                    treePanel = new TreePanel(n, false);
+                    treePanel = new TreePanel(n, false, 0);
                     treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
                     treePanel.add(B2, FlowLayout.LEFT);
                     B2.addActionListener(e -> {
@@ -389,7 +389,7 @@ public class Afficheur{
 
     private class PhysicalTrees {
 
-        public PhysicalTrees(Node node, JDialog jDialog) {
+        public PhysicalTrees(Node node, JDialog jDialog, int type) {
             JPanel JP = new JPanel();
             JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
             JScrollPane SP = new JScrollPane(JP);
@@ -399,7 +399,7 @@ public class Afficheur{
             Estimator estimator = new Estimator(node, query);
             double[] pipeline = {0};
             estimator.estimate(pipeline);
-            treePanel = new TreePanel(node, true);
+            treePanel = new TreePanel(node, true, type);
             treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
             JP.add(treePanel);
@@ -420,18 +420,33 @@ public class Afficheur{
             JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
             TreePanel treePanel;
             for (Node n : nodes) {
-                treePanel = new TreePanel(n, false);
+                treePanel = new TreePanel(n, false, 0);
                 treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-                JButton B2 = new JButton("Calculer le cout");
+                JButton B2 = new JButton("     Calculer le cout avec pipeline      ");
                 B2.setFocusable(false);
                 B2.setBackground(new Color(176, 226, 152));
-                treePanel.add(B2, FlowLayout.LEFT);
+                JPanel bPanel = new JPanel();
+                bPanel.setLayout(new BoxLayout(bPanel, BoxLayout.Y_AXIS));
+                bPanel.setBackground(Color.white);
+                bPanel.add(B2);
                 B2.addActionListener(e -> {
                     // Toggle the visibility of the panel
                     Transformer transformer = new Transformer();
                     //Transformer transformer = new Transformer();
-                    new PhysicalTrees(n, jd);
+                    new PhysicalTrees(n, jd, 0);
                 });
+                JButton B3 = new JButton("Calculer le cout avec materialisation");
+                B3.setFocusable(false);
+                B3.setBackground(new Color(176, 226, 152));
+                bPanel.add(Box.createVerticalStrut(5));
+                bPanel.add(B3);
+                B3.addActionListener(e -> {
+                    // Toggle the visibility of the panel
+                    Transformer transformer = new Transformer();
+                    //Transformer transformer = new Transformer();
+                    new PhysicalTrees(n, jd, 1);
+                });
+                treePanel.add(bPanel, FlowLayout.LEFT);
                 JP.add(treePanel);
             }
             Container content = jd.getContentPane();
@@ -447,20 +462,28 @@ public class Afficheur{
     private class TreePanel extends JPanel {
         private Node tree;
         private boolean pCout;
+        int type;
         private final int NODE_RADIUS = 20;
         private final int LEVEL_HEIGHT = 80;
         private final int HORIZONTAL_SPACING = 40;
         private final int VERTICAL_SPACING = 80;
 
-        public TreePanel(Node tree, boolean pCout){
+        public TreePanel(Node tree, boolean pCout, int type){
             this.tree = tree;
             this.pCout = pCout;
+            this.type = type;
             setLayout(new FlowLayout(FlowLayout.LEFT));
             setBackground(Color.WHITE);
-            /*if(pCout){
+            if(pCout){
                 //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
-                add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree)) + "  Cout totale = " + Double.toString(Optimizer.getCoutTotale(tree))), FlowLayout.LEFT);
-            }*/
+                double[] pipeline_cout = {0};
+                Estimator estimator = new Estimator(tree,query);
+                double totalCout = estimator.estimate(pipeline_cout);
+                if(type == 0)
+                    add(new JLabel("==> Cout avec Pipeline = " + pipeline_cout[0]));
+                else
+                    add(new JLabel("==> Cout avec materialisation = " + totalCout, FlowLayout.LEFT));
+            }
         }
 
 
@@ -493,6 +516,10 @@ public class Afficheur{
                 int childX = x + dx;
                 int childY = y + LEVEL_HEIGHT;
                 g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
+                if(pCout){
+                    if(type == 1)
+                        g.drawString("(1.1)", (x + childX)/2, (y + childY)/2);
+                }
                 drawNode(g, node.getRightChild(), childX, childY, dx / 2);
             }
 
@@ -502,10 +529,20 @@ public class Afficheur{
                 if(node.getRightChild() != null){
                     childX = x - dx;
                     g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
+                    if(pCout){
+                        if(type == 1)
+                            g.drawString("(1.1)", (x + childX)/2, (y + childY)/2);
+                    }
                     drawNode(g, node.getLeftChild(), childX, childY, dx / 2);
                 }
                 else {
                     g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
+                    if(node.getLeftChild().getLeftChild() != null){
+                        if(pCout){
+                            if(type == 1)
+                                g.drawString("(1.1)", (x + childX)/2, (y + childY)/2);
+                        }
+                    }
                     drawNode(g, node.getLeftChild(), childX, childY, dx);
                 }
             }

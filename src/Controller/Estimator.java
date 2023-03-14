@@ -91,8 +91,10 @@ public class Estimator {
         left = calculCoutTot(node.getLeftChild(),pipeline_cout);
         if(node.getRightChild() != null ) {
             right = calculCoutTot(node.getRightChild(), pipeline_cout);
-            pipeline_cout[0] = left + right + node.getCout();
+            pipeline_cout[0] = node.getCout();
         }
+        if(node.getLeftChild().getLeftChild() != null)
+            return left + right + node.getCout() + 1.1;
         return left + right + node.getCout();
 
     }
