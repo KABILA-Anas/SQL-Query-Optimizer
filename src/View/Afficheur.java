@@ -99,18 +99,6 @@ public class Afficheur{
         //tree panel
         TreePanel treePanel = new TreePanel(tree, false, 0);
 
-        /*JPanel btnPanel = new JPanel();
-        btnPanel.setLayout(new BoxLayout(btnPanel,BoxLayout.Y_AXIS));
-        JButton B1 = new JButton("Afficher les variantes logiques");
-        JButton B2 = new JButton("Afficher les variantes physiques");
-        B1.setBackground(Color.BLACK);
-        B1.setForeground(Color.WHITE);
-        btnPanel.add(B1);
-        btnPanel.add(B2);*/
-        //mainTree.setLayout(new FlowLayout(FlowLayout.LEFT));
-        /*treePanel.add(B1, FlowLayout.LEFT);
-        treePanel.add(B2, FlowLayout.LEFT);
-        */
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(titlePanel);
@@ -127,27 +115,8 @@ public class Afficheur{
         B2.addActionListener(e -> {
             // Toggle the visibility of the panel
             //Transformer transformer = new Transformer();
-            new PhysicalTrees(initptrees, jDialog);
+            new PhysicalTrees(initptrees, (JPanel) content, jDialog);
         });
-
-        /*JPanel jp = new JPanel();
-        JScrollPane jScrollPane = new JScrollPane(jp);
-        //jp.setLayout(new BoxLayout(jp, BoxLayout.X_AXIS));
-        TreePanel treePanel = new TreePanel(tree, false);
-        treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-        jp.add(treePanel);
-        treePanel = new TreePanel(tree, false);
-        treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-        jp.add(treePanel);*/
-
-
-        /*jp.add(new TreePanel(tree, false));
-        jp.add(new TreePanel(tree, false));
-        jp.add(new TreePanel(tree, false));
-        jp.add(new TreePanel(tree, false));
-        jp.add(new TreePanel(tree, false));*/
-        //content.add(jp);
-        //jScrollPane.add(jp);
 
         //jDialog.setContentPane(jScrollPane);
         jDialog.pack();
@@ -155,28 +124,6 @@ public class Afficheur{
         jDialog.setVisible(true);
     }
 
-    /*public Afficheur(Map<Integer, Vector<Node>> trees, JFrame frame) {
-        this.trees = trees;
-        JDialog jDialog = new JDialog(frame,"Relational Tree",true);
-        jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JPanel JP = new JPanel();
-        JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
-        JScrollPane SP = new JScrollPane(JP);
-        int i = 0;
-        for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
-            for (Node n : entry.getValue()) {
-                JP.add(new TreePanel(n));
-                i++;
-            }
-        System.out.println("==> " + i);
-        System.out.println("--------------------------------------------------------");
-
-        jDialog.setContentPane(SP);
-        jDialog.pack();
-        jDialog.setLocationRelativeTo(null);
-        jDialog.setVisible(true);
-    }*/
 
     public Afficheur(Map<Node, Vector<Node>> ptrees, JFrame frame, boolean printCout) {
         this.ptrees = ptrees;
@@ -237,36 +184,6 @@ public class Afficheur{
         jDialog.setVisible(true);
     }
 
-    /*private class LogicalTrees {
-
-        public LogicalTrees(Map<Integer, Vector<Node>> trees, JDialog jDialog) {
-
-            //this.trees = trees;
-            //JDialog jDialog = new JDialog(frame,"Relational Tree",true);
-            //jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-            JPanel JP = new JPanel();
-            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
-            JScrollPane SP = new JScrollPane(JP);
-            TreePanel treePanel;
-            for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
-                for (Node n : entry.getValue()) {
-                    treePanel = new TreePanel(n, false);
-                    treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-                    JP.add(treePanel);
-                }
-
-            JDialog jd = new JDialog(jDialog, "test", true);
-            Container content = jd.getContentPane();
-            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //TreePanel treePanel = new TreePanel(tree, false);
-            content.add(SP);
-            jd.pack();
-            jd.setLocationRelativeTo(jDialog);
-            jd.setVisible(true);
-        }
-    }*/
-
     private class LogicalTrees implements ActionListener {
         JPanel cardPanel;
         JButton nextButton, prevButton;
@@ -319,6 +236,8 @@ public class Afficheur{
                     rulesPanel.add(box);
 
 
+                    JPanel groupPanel = new JPanel();
+                    groupPanel.setLayout(new BoxLayout(groupPanel, BoxLayout.Y_AXIS));
                     JButton B2 = new JButton("Afficher les variantes physiques");
                     B2.setFocusable(false);
                     B2.setForeground(rules_title_color);
@@ -330,11 +249,15 @@ public class Afficheur{
                         // Toggle the visibility of the panel
                         Transformer transformer = new Transformer();
                         //Transformer transformer = new Transformer();
-                        new PhysicalTrees(transformer.generatePTrees(n), jd);
+                        new PhysicalTrees(transformer.generatePTrees(n), groupPanel, jd);
                     });
                     mainPanel.add(treePanel);
                     mainPanel.add(rulesPanel);
-                    cardPanel.add(mainPanel);
+                    groupPanel.add(mainPanel);
+                    //groupPanel.setVisible(true);
+                    //JScrollPane groupPanelSp = new JScrollPane(groupPanel);
+                    //groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    cardPanel.add(groupPanel);
                 }
             /*cardPanel.add(new JLabel("Card 1"), "card1");
             cardPanel.add(new JLabel("Card 2"), "card2");
@@ -356,6 +279,9 @@ public class Afficheur{
 
             container.add(cardPanel, BorderLayout.CENTER);
             container.add(buttonPanel, BorderLayout.SOUTH);
+
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            container.setPreferredSize(new Dimension((int) screenSize.getWidth(), (int) (screenSize.getHeight() - screenSize.getHeight()*0.1)));
 
             jd.addKeyListener(new KeyAdapter() {
                 public void keyPressed(KeyEvent e) {
@@ -387,6 +313,120 @@ public class Afficheur{
         }
     }
 
+    private class PhysicalTrees {
+
+        public PhysicalTrees(Node node, JDialog jDialog, int type) {
+            JPanel JP = new JPanel();
+            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
+            JScrollPane SP = new JScrollPane(JP);
+            JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
+
+            TreePanel treePanel1, treePanel2;
+            //Estimator estimator = new Estimator(node, query);
+            //double[] pipeline = {0};
+            //estimator.estimate(pipeline);
+            treePanel1 = new TreePanel(node, true, 0);
+            treePanel1.setBorder(BorderFactory.createLoweredBevelBorder());
+
+            JP.add(treePanel1);
+
+            treePanel2 = new TreePanel(node, true, 1);
+            treePanel1.setBorder(BorderFactory.createLoweredBevelBorder());
+            treePanel2.setBorder(BorderFactory.createLoweredBevelBorder());
+
+            JP.add(treePanel2);
+
+            JPanel buttonsPanel = new JPanel();
+            buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+
+            JRadioButton radioButton1, radioButton2;
+            ButtonGroup buttonGroup;
+
+            radioButton1 = new JRadioButton("Cout avec pipeline");
+            radioButton2 = new JRadioButton("Cout avec materialisation");
+
+            radioButton1.setSelected(true);
+
+            buttonGroup = new ButtonGroup();
+            buttonGroup.add(radioButton1);
+            buttonGroup.add(radioButton2);
+
+            buttonsPanel.add(radioButton1);
+            buttonsPanel.add(radioButton2);
+
+            treePanel1.setVisible(true);
+            treePanel2.setVisible(false);
+
+            radioButton1.addActionListener(e -> {
+                treePanel1.setVisible(true);
+                treePanel2.setVisible(false);
+            });
+
+            radioButton2.addActionListener(e -> {
+                treePanel1.setVisible(false);
+                treePanel2.setVisible(true);
+            });
+
+            JP.add(buttonsPanel);
+
+            Container content = jd.getContentPane();
+            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //TreePanel treePanel = new TreePanel(tree, false);
+            content.add(SP);
+            jd.pack();
+            jd.setLocationRelativeTo(jDialog);
+            jd.setVisible(true);
+        }
+
+        public PhysicalTrees(Vector<Node> nodes, JPanel panel, JDialog jd) {
+            JPanel JP = new JPanel();
+            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
+            JScrollPane SP = new JScrollPane(JP);
+            //JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
+            TreePanel treePanel;
+            for (Node n : nodes) {
+                treePanel = new TreePanel(n, false, 0);
+                treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+                JButton B2 = new JButton("     Calculer le cout      ");
+                B2.setFocusable(false);
+                B2.setBackground(new Color(176, 226, 152));
+                JPanel bPanel = new JPanel();
+                bPanel.setLayout(new BoxLayout(bPanel, BoxLayout.Y_AXIS));
+                bPanel.setBackground(Color.white);
+                bPanel.add(B2);
+                B2.addActionListener(e -> {
+                    // Toggle the visibility of the panel
+                    Transformer transformer = new Transformer();
+                    //Transformer transformer = new Transformer();
+                    new PhysicalTrees(n, jd, 0);
+                });
+                /*JButton B3 = new JButton("Calculer le cout avec materialisation");
+                B3.setFocusable(false);
+                B3.setBackground(new Color(176, 226, 152));
+                bPanel.add(Box.createVerticalStrut(5));
+                bPanel.add(B3);
+                B3.addActionListener(e -> {
+                    // Toggle the visibility of the panel
+                    Transformer transformer = new Transformer();
+                    //Transformer transformer = new Transformer();
+                    new PhysicalTrees(n, jd, 1);
+                });*/
+                treePanel.add(bPanel, FlowLayout.LEFT);
+                JP.add(treePanel);
+            }
+            //Container content = jd.getContentPane();
+            //jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //TreePanel treePanel = new TreePanel(tree, false);
+            JP.setSize(panel.getSize());
+            panel.add(SP);
+            jd.pack();
+            //jd.setLocationRelativeTo(jDialog);
+            //jd.setVisible(true);
+        }
+    }
+
+
+    /*
     private class PhysicalTrees {
 
         public PhysicalTrees(Node node, JDialog jDialog, int type) {
@@ -458,6 +498,7 @@ public class Afficheur{
             jd.setVisible(true);
         }
     }
+     */
 
     private class TreePanel extends JPanel {
         private Node tree;
