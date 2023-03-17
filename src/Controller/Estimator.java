@@ -199,7 +199,7 @@ public class Estimator {
         tableR = query.getAliasTable(pairs.get(1).getSecond());
         columnR = pairs.get(1).getFirst();
 
-        double Bl,Br,Bal_l,Bal_r,cout;
+        double Bl,Br,Bal_l,Bal_r, cout;
 
         Bl = left / FBM.get(tableL);
         Br = right / FBM.get(tableR);

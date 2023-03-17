@@ -242,14 +242,15 @@ public class Transformer {
 			return true;
 		if(T1 == null || T2 == null)
 			return false;
-		if(T1.height() != T2.height())
-			return false;
+		/*if(T1.height() != T2.height())
+			return false;*/
 
 		/*if(!T1.getExpression().equals(T2.getExpression()) || !T1.getName().equals(T2.getName()))
 			return false;*/
 		if(!T1.getName().equals(T2.getName())){
 			rules.add("CSJ");
-			return false;
+			return (compareTree(T1, T2.getLeftChild(), rules));
+			//return false;
 		}
 		else {
 			if(!T1.getExpression().equals(T2.getExpression())){
@@ -302,7 +303,8 @@ public class Transformer {
 				rulesVector = getRules(n);
 				if(rulesVector == null)
 					rulesVector = new Vector<String>();
-				JC(n,0, nodes);
+				Vector<String> rulesVectorCopy = (Vector<String>) rulesVector.clone();
+				JC(n,0, nodes, rulesVectorCopy);
 				for(Node temp : nodes)
 					tempNodes.add(temp);
 			}
@@ -313,10 +315,10 @@ public class Transformer {
 
 	}
 
-	private void JC(Node root, int l, Vector<Node> nodes){
+	private void JC(Node root, int l, Vector<Node> nodes, Vector<String> rulesVectorCopy){
 		if(root == null)
 			return;
-		rulesVector.add("JC");
+		rulesVectorCopy.add("JC");
 		while (true){
 			int[] level = {l};
 			Node newTree = Node.copierNode(root);
@@ -325,10 +327,10 @@ public class Transformer {
 				break;
 			swapChilds(binaryNode);
 			l++;
-			regles.put(newTree, (Vector<String>) rulesVector.clone());
-			JC(newTree, l, nodes);
+			regles.put(newTree, (Vector<String>) rulesVectorCopy.clone());
+			JC(newTree, l, nodes, rulesVectorCopy);
 			nodes.add(newTree);
-			rulesVector.remove(rulesVector.size() - 1);
+			rulesVectorCopy.remove(rulesVectorCopy.size() - 1);
 			/*newTree.print2DUtil(newTree, 0);
 			System.out.println("------------------------------------------------------------------");*/
 		}
@@ -368,10 +370,10 @@ public class Transformer {
 
 
 	//** Variate one tree
-	private void CSG(Node root , Vector<Node> nodes) throws SyntaxeException, SemantiqueException {
+	private void CSG(Node root , Vector<Node> nodes, Vector<String> rulesVectorCopy) throws SyntaxeException, SemantiqueException {
 		if(root != null){
 			int[] childType = {-1};
-			rulesVector.add("CSJ");
+			rulesVectorCopy.add("CSJ");
 			Node newTree = Node.copierNode(root);
 			Node firstSelectionParent = getFirstSelectionParent(newTree,childType);
 			if(firstSelectionParent != null) {
@@ -388,9 +390,9 @@ public class Transformer {
 				}
 				nodes.add(newTree);
 
-				regles.put(newTree, (Vector<String>) rulesVector.clone());
+				regles.put(newTree, (Vector<String>) rulesVectorCopy.clone());
 
-				CSG(newTree,nodes);
+				CSG(newTree,nodes, rulesVectorCopy);
 			}
 
 		}
@@ -405,7 +407,8 @@ public class Transformer {
 				rulesVector = getRules(n);
 				if(rulesVector == null)
 					rulesVector = new Vector<String>();
-				CSG(n , nodes);
+				Vector<String> rulesVectorCopy = (Vector<String>) rulesVector.clone();
+				CSG(n , nodes, rulesVectorCopy);
 				for(Node temp : nodes)
 					tempNodes.add(temp);
 			}

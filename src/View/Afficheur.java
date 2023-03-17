@@ -516,9 +516,11 @@ public class Afficheur{
                 int childX = x + dx;
                 int childY = y + LEVEL_HEIGHT;
                 g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
-                if(pCout){
-                    if(type == 1)
-                        g.drawString("(1.1)", (x + childX)/2, (y + childY)/2);
+                if(node.getLeftChild().getLeftChild() != null) {
+                    if (pCout) {
+                        if (type == 1)
+                            g.drawString("(1.1)", (x + childX) / 2, (y + childY) / 2);
+                    }
                 }
                 drawNode(g, node.getRightChild(), childX, childY, dx / 2);
             }
@@ -529,9 +531,11 @@ public class Afficheur{
                 if(node.getRightChild() != null){
                     childX = x - dx;
                     g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
-                    if(pCout){
-                        if(type == 1)
-                            g.drawString("(1.1)", (x + childX)/2, (y + childY)/2);
+                    if(node.getLeftChild().getLeftChild() != null) {
+                        if (pCout) {
+                            if (type == 1)
+                                g.drawString("(1.1)", (x + childX) / 2, (y + childY) / 2);
+                        }
                     }
                     drawNode(g, node.getLeftChild(), childX, childY, dx / 2);
                 }
