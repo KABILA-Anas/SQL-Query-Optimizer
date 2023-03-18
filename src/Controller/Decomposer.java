@@ -177,6 +177,17 @@ public class Decomposer {
     }
 
 
+    public static String joinSwap(String C) {
+        String expression = "";
+        Vector<MyPair<String, String>> elements = new Vector<MyPair<String, String>>();
+        String[] relations = C.split("<=|>=|<|>|=");
+
+        expression += relations[1] + "=" + relations[0];
+
+        return expression;
+    }
+
+
     public static String conditionType(String condition) throws SyntaxeException {
 
         Matcher matcher;

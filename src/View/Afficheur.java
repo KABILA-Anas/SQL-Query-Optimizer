@@ -125,6 +125,50 @@ public class Afficheur{
     }
 
 
+    public Afficheur(Node logicalTree, Node physicalTree, JFrame frame, Query query) {
+        //this.tree = tree;
+        this.query = query;
+        JDialog jDialog = new JDialog(frame,"L'arbre algébrique optimale",true);
+        jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Container content = jDialog.getContentPane();
+        //content.setLayout(new BoxLayout(jDialog, BoxLayout.X_AXIS));
+
+        JButton B2 = new JButton("Afficher les variantes physiques");
+        B2.setFocusable(false);
+        B2.setBackground(button_color);
+        // Create the two labels
+        //title1.setBackground(Color.red);
+        //
+        B2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Create a panel to hold the labels
+
+        // Add the title panel to the top of the main panel
+        //tree panel
+        TreePanel treePanel = new TreePanel(logicalTree, false, 0);
+
+
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.add(Box.createVerticalStrut(35));
+        content.setBackground(Color.white);
+        //treePanel.add(titlePanel,FlowLayout.LEFT);
+        content.add(treePanel);
+
+        B2.addActionListener(e -> {
+            // Toggle the visibility of the panel
+            //Transformer transformer = new Transformer();
+            new PhysicalTrees(physicalTree, jDialog, 0);
+        });
+
+        treePanel.add(B2, FlowLayout.LEFT);
+
+        //jDialog.setContentPane(jScrollPane);
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(null);
+        jDialog.setVisible(true);
+    }
+
+
     public Afficheur(Map<Node, Vector<Node>> ptrees, JFrame frame, boolean printCout) {
         this.ptrees = ptrees;
         this.printCout = printCout;
@@ -337,7 +381,7 @@ public class Afficheur{
             JP.add(treePanel2);
 
             JPanel buttonsPanel = new JPanel();
-            buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+            //buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
             JRadioButton radioButton1, radioButton2;
             ButtonGroup buttonGroup;
@@ -351,8 +395,12 @@ public class Afficheur{
             buttonGroup.add(radioButton1);
             buttonGroup.add(radioButton2);
 
-            buttonsPanel.add(radioButton1);
-            buttonsPanel.add(radioButton2);
+            Box box = Box.createVerticalBox();
+
+            box.add(radioButton1);
+            box.add(radioButton2);
+
+            buttonsPanel.add(box);
 
             treePanel1.setVisible(true);
             treePanel2.setVisible(false);

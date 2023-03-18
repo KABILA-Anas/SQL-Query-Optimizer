@@ -40,7 +40,7 @@ public class MainClass {
 		String query = "SELECT * from A, B where A.col1>0 and A.col1=B.col1";
 		//String query = "SELECT * from Projet P, Travaux T where P.budget>0 and P.budget=T.col1";
 		//String query = "SELECT * from Projet P, Travaux T where P.budget>0 and P.Pid=T.Tid";
-		//SELECT * from Projet P, Travaux T, Employer E where P.budget>0 and P.Pid=T.Tid and T.Tid=E.Eid;
+		//SELECT * from Projet P, Travaux T, Employer E where P.Pid=T.Tid and T.Tid=E.Eid and P.budget>0 and E.Prenom = 'Anas';
 		try {
 			/*transformer.TransformerTree(transformer.SplitQuery(query));
 			transformer.printTrees();*/

@@ -53,14 +53,15 @@ public class UI extends JFrame{
 
 
         jButton4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 153, 153));
-        jButton4.setText("Estimer");
+        jButton4.setForeground(new java.awt.Color(255,255,255));
+        jButton4.setBackground(new java.awt.Color(104, 131, 186));
+        jButton4.setText("Generer l'arbre optimale");
 
 
         jButton3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255,255,255));
         jButton3.setBackground(new java.awt.Color(104, 131, 186));
-        jButton3.setText("Génerer l'arbre algébrique");
+        jButton3.setText("Génerer l'arbre initiale");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -77,6 +78,12 @@ public class UI extends JFrame{
             }
         });
 
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -87,8 +94,8 @@ public class UI extends JFrame{
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        //.addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
-                        //.addGap(10, 10, 10)
+                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
                         //.addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                         //.addGap(10, 10, 10)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
@@ -110,6 +117,7 @@ public class UI extends JFrame{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     //.addComponent(jButton1)
                     .addComponent(jButton2)
+                    .addComponent(jButton4)
                     .addComponent(jButton3))
                     //.addComponent(jButton4))
                 .addContainerGap(132, Short.MAX_VALUE))
@@ -142,6 +150,31 @@ public class UI extends JFrame{
             Node node = transformer.TransformQuery();
             transformer.TransformerTree();
             P = new Afficheur(node, this, transformer, query);
+            //P.printTree();
+        } catch (SyntaxeException | SemantiqueException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    e,
+                    " titre ",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+
+        try {
+            Query query = Decomposer.SplitQuery(jTextField1.getText());
+            Transformer transformer = new Transformer(query);
+            //P = new Afficheur(transformer.TransformQuery(),this);
+            Node node = transformer.TransformQuery();
+            transformer.TransformerTree();
+            transformer.generatePTrees();
+            Optimizer optimizer = new Optimizer(transformer.getPtrees(), transformer.getQ());
+            Decomposer.MyPair<Node, Node> optimalTree = optimizer.getOptimalTree();
+            P = new Afficheur(optimalTree.getFirst(), optimalTree.getSecond(), this, transformer.getQ());
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {
             // TODO Auto-generated catch block

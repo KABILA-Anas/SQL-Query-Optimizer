@@ -258,13 +258,25 @@ public class Transformer {
 					rules.add("JA");
 				if (T1.getName().equals("Selection"))
 					rules.add("SC");
-				return false;
+				//return false;
+				return (compareTree(T1, T2.getLeftChild(), rules));
 			}
 		}
 
-		if(!compareTree(T1.getLeftChild(), T2.getLeftChild(), rules))
-			return false;
-		return true;
+		int height = T1.height() - T2.height();
+		if(height > 0) {
+			Node tmp = T1.getLeftChild();
+			while (height > 0) {
+				tmp = tmp.getLeftChild();
+				height--;
+			}
+			//if (T1.getLeftChild() != null)
+			//System.out.println(tmp.getExpression() + "  " + T2.getExpression());
+			return (compareTree(tmp, T2.getLeftChild(), rules));
+		}
+
+		return (compareTree(T1.getLeftChild(), T2.getLeftChild(), rules));
+		//return true;
 	}
 
 
@@ -363,6 +375,7 @@ public class Transformer {
 		Node tmp = N.getLeftChild();
 		N.setLeftChild(N.getRightChild());
 		N.setRightChild(tmp);
+		N.setExpression(Decomposer.joinSwap(N.getExpression()));
 	}
 
 	//******************************** CSG ********************************//
@@ -373,10 +386,10 @@ public class Transformer {
 	private void CSG(Node root , Vector<Node> nodes, Vector<String> rulesVectorCopy) throws SyntaxeException, SemantiqueException {
 		if(root != null){
 			int[] childType = {-1};
-			rulesVectorCopy.add("CSJ");
 			Node newTree = Node.copierNode(root);
 			Node firstSelectionParent = getFirstSelectionParent(newTree,childType);
 			if(firstSelectionParent != null) {
+				rulesVectorCopy.add("CSJ");
 				switch (childType[0]) {
 					case -1:
 						newTree = moveSelection(firstSelectionParent);
@@ -392,7 +405,7 @@ public class Transformer {
 
 				regles.put(newTree, (Vector<String>) rulesVectorCopy.clone());
 
-				CSG(newTree,nodes, rulesVectorCopy);
+				CSG(newTree,nodes, (Vector<String>) rulesVectorCopy.clone());
 			}
 
 		}

@@ -41,7 +41,7 @@ public class Estimator {
     }
 
     private int estimate(Node N){
-        int left=0, right = 0;
+        int left, right = 0;
 
         if (N.getLeftChild() == null)
             return nbrLines.get(N.getExpression());
@@ -80,7 +80,7 @@ public class Estimator {
             }
         }
 
-        return (left + right)/2;
+        return (int) ((left + right)*0.7);
     }
 
     private double calculCoutTot(Node node , double[] pipeline_cout ){
@@ -91,7 +91,8 @@ public class Estimator {
         left = calculCoutTot(node.getLeftChild(),pipeline_cout);
         if(node.getRightChild() != null ) {
             right = calculCoutTot(node.getRightChild(), pipeline_cout);
-            pipeline_cout[0] = node.getCout();
+            if(pipeline_cout[0] < node.getCout())
+                pipeline_cout[0] = node.getCout();
         }
         if(node.getLeftChild().getLeftChild() != null)
             return left + right + node.getCout() + 1.1;
@@ -114,7 +115,7 @@ public class Estimator {
 
         node.setCout(Math.round(Bl*((TempsTrans+TempsPosDébut)+(Br*TempsTrans)+TempsPosDébut) + 0.5));
         //System.out.println(node.getCout());
-        return (left + right)/2;
+        return (int) ((left + right)*0.7);
     }
 
     public int BII(Node node , int left , int right){
@@ -129,7 +130,7 @@ public class Estimator {
         //
         int orderMoyen = Catalog.getColumnDesc(tableR, columnR, 2);
         double hauteur, Tsecondaire = 0;
-        hauteur = (int) Math.round(Math.log(right) / Math.log(orderMoyen) + 0.5);
+        hauteur = (double) Math.round(Math.log(right) / Math.log(orderMoyen) + 0.5);
 
         if(Catalog.isPrimaryKey(tableR, columnR)){
             Tsecondaire = (hauteur + 1) * (TempsTrans + TempsPosDébut);
@@ -138,11 +139,11 @@ public class Estimator {
             Tsecondaire = Math.round(((hauteur-1) + sel + sel/orderMoyen) * (TempsTrans + TempsPosDébut) + 0.5);
         }
         //
-        node.setCout( Math.round(Bl * (TempsTrans + TempsPosDébut) + left * Tsecondaire +0.5));
+        node.setCout( Math.round(Bl * (TempsTrans + TempsPosDébut) + (left * Tsecondaire) +0.5));
         //System.out.println(node.getCout());
         //System.out.println(Tsecondaire);
 
-        return (left+right)/2;
+        return (int) ((left + right)*0.7);
     }
 
     public int JTF(Node node, int left, int right){
@@ -164,7 +165,7 @@ public class Estimator {
         cout = TempEsL+TempEsR+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         node.setCout(Math.round(cout+0.5));
         //System.out.println(cout);
-        return (left+right)/2;
+        return (int) ((left + right)*0.7);
     }
 
     public int JH(Node node, int left, int right){
@@ -187,17 +188,15 @@ public class Estimator {
         cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         node.setCout(Math.round(cout+0.5));
         //System.out.println(cout);
-        return (left+right)/2;
+        return (int) ((left + right)*0.7);
     }
 
     public int PJ(Node node, int left, int right){
 
         Vector<Decomposer.MyPair<String,String>> pairs = Decomposer.joinSplit(node.getExpression());
-        String tableL, columnL, tableR, columnR;
+        String tableL, tableR;
         tableL = query.getAliasTable(pairs.get(0).getSecond());
-        columnL = pairs.get(0).getFirst();
         tableR = query.getAliasTable(pairs.get(1).getSecond());
-        columnR = pairs.get(1).getFirst();
 
         double Bl,Br,Bal_l,Bal_r, cout;
 
@@ -210,7 +209,7 @@ public class Estimator {
         cout = Bal_l+Bal_r;
         node.setCout(Math.round(cout+0.5));
         //System.out.println(cout);
-        return (left+right)/2;
+        return (int) ((left + right)*0.7);
     }
     //Selection Algorithmes
 
@@ -221,7 +220,7 @@ public class Estimator {
         //System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
         node.setCout(cout);
         //System.out.println("Cout = " + cout);
-        return nbrLigne/2;
+        return (int) (nbrLigne*0.7);
 
     }
 
@@ -233,7 +232,7 @@ public class Estimator {
         column = pair.getFirst();
         int orderMoyen = Catalog.getColumnDesc(table, column, 2);
         double hauteur, cout = 0;
-        hauteur = (int) Math.round(Math.log(nbrLigne) / Math.log(orderMoyen) + 0.5);
+        hauteur = (double) Math.round(Math.log(nbrLigne) / Math.log(orderMoyen) + 0.5);
 
 
 
@@ -251,8 +250,7 @@ public class Estimator {
         node.setCout(cout);
         //System.out.println("Cout = " + cout);
 
-        return nbrLigne/2;
-
+        return (int) (nbrLigne*0.7);
     }
 
     public int HS(Node node , int nbrLigne){
@@ -269,12 +267,7 @@ public class Estimator {
         cout = (NL / (TH * FB)) * (TempsTrans + TempsPosDébut);
         node.setCout(cout);
         //System.out.println("Cout = " + cout);
-        return nbrLigne/2;
-
+        return (int) (nbrLigne*0.7);
     }
-
-
-
-
 
 }
