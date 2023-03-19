@@ -171,16 +171,14 @@ public class Estimator {
     public int JH(Node node, int left, int right){
 
         Vector<Decomposer.MyPair<String,String>> pairs = Decomposer.joinSplit(node.getExpression());
-        String tableL, columnL, tableR, columnR;
+        String tableL, tableR;
         tableL = query.getAliasTable(pairs.get(0).getSecond());
-        columnL = pairs.get(0).getFirst();
         tableR = query.getAliasTable(pairs.get(1).getSecond());
-        columnR = pairs.get(1).getFirst();
 
         double Bl,Br,Bal_l,Bal_r,cout;
 
-        Bl = left / FBM.get(tableL);
-        Br = right / FBM.get(tableR);
+        Bl = (double)left / FBM.get(tableL);
+        Br = (double)right / FBM.get(tableR);
         Bal_l = Bl * TempsTrans;
         Bal_r = Br * TempsTrans;
 

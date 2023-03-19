@@ -12,4 +12,4 @@ Eid;20000
 Nom;17000
 Prenom;200
 Cin;20000
-Sex;2
+Sexe;2

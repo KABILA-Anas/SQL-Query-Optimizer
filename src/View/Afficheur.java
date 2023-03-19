@@ -181,6 +181,7 @@ public class Afficheur{
         box.add(Box.createVerticalStrut(15));
 
 
+        //1
         JLabel rule_label;
 
         JPanel rule_panel = new JPanel();
@@ -192,6 +193,20 @@ public class Afficheur{
         rule_label.setForeground(rules_color);
         rule_panel.add(rule_label);
         box.add(rule_panel);
+        box.add(Box.createVerticalStrut(10));
+        //2
+        JLabel rule_label2;
+
+        JPanel rule_panel2 = new JPanel();
+        rule_panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        rule_panel2.setBackground(rules_box_color);
+
+        rule_label2 = new JLabel(" hhhhhhhhh");
+        rule_label2.setFont(new Font("Arial",Font.BOLD,16));
+        rule_label2.setForeground(rules_color);
+        rule_panel2.add(rule_label2);
+        box.add(rule_panel2);
+        rule_panel2.setVisible(false);
         box.add(Box.createVerticalStrut(10));
 
 
@@ -220,19 +235,31 @@ public class Afficheur{
 
         buttonsPanel.add(box1);
         //
-        JPanel right_panel = new JPanel();
+        Box right_box = Box.createVerticalBox();
+        right_box.add(buttonsPanel);
+        right_box.add(Box.createVerticalStrut(15));
+        right_box.add(explications);
 
+        JPanel right_panel = new JPanel();
+        right_panel.setBackground(rules_box_color);
+        //right_panel.setLayout(new BoxLayout(right_panel,BoxLayout.Y_AXIS));
+        //buttonsPanel.setPreferredSize(new Dimension(right_panel.getPreferredSize().width, (int) (0.2*right_panel.getPreferredSize().height)));
+        right_panel.add(right_box);
         //
         pipe_panel.setVisible(true);
         mat_panel.setVisible(false);
         radioButton1.addActionListener(e -> {
             pipe_panel.setVisible(true);
             mat_panel.setVisible(false);
+            rule_panel2.setVisible(false);
+            rule_panel.setVisible(true);
         });
 
         radioButton2.addActionListener(e -> {
             pipe_panel.setVisible(false);
             mat_panel.setVisible(true);
+            rule_panel2.setVisible(true);
+            rule_panel.setVisible(false);
         });
         ///
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
@@ -386,19 +413,25 @@ public class Afficheur{
                     treePanel = new TreePanel(n, false, 0);
                     treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
                     treePanel.add(B2, FlowLayout.LEFT);
+                    mainPanel.add(treePanel);
+                    mainPanel.add(rulesPanel);
+
+                    groupPanel.setPreferredSize(new Dimension(cardPanel.getPreferredSize().width,mainPanel.getPreferredSize().height*2));
                     B2.addActionListener(e -> {
                         // Toggle the visibility of the panel
                         Transformer transformer = new Transformer();
                         //Transformer transformer = new Transformer();
                         new PhysicalTrees(transformer.generatePTrees(n), groupPanel, jd);
                     });
-                    mainPanel.add(treePanel);
-                    mainPanel.add(rulesPanel);
                     groupPanel.add(mainPanel);
+                    JScrollPane groupPanelSp = new JScrollPane(groupPanel);
+                    groupPanelSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
                     //groupPanel.setVisible(true);
                     //JScrollPane groupPanelSp = new JScrollPane(groupPanel);
                     //groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                    cardPanel.add(groupPanel);
+                    cardPanel.add(groupPanelSp);
                 }
             /*cardPanel.add(new JLabel("Card 1"), "card1");
             cardPanel.add(new JLabel("Card 2"), "card2");
@@ -569,7 +602,9 @@ public class Afficheur{
             //Container content = jd.getContentPane();
             //jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             //TreePanel treePanel = new TreePanel(tree, false);
-            JP.setSize(panel.getSize());
+            //JP.setSize(panel.getSize());
+            SP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            SP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
             panel.add(SP);
             jd.pack();
             //jd.setLocationRelativeTo(jDialog);
