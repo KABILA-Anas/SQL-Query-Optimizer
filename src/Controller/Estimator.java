@@ -264,7 +264,7 @@ public class Estimator {
 
         FB = FBM.get(table) * TR;
         TH = NL / FB;
-        cout = (NL / (TH * FB)) * (TempsTrans + TempsPosDébut);
+        cout = (NL / (TH)) * (TempsTrans + TempsPosDébut);
         node.setCout(cout);
         //System.out.println("Cout = " + cout);
         return (int) (nbrLigne*0.7);

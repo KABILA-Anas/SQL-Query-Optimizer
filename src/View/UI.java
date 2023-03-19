@@ -173,8 +173,8 @@ public class UI extends JFrame{
             transformer.TransformerTree();
             transformer.generatePTrees();
             Optimizer optimizer = new Optimizer(transformer.getPtrees(), transformer.getQ());
-            Decomposer.MyPair<Node, Node> optimalTree = optimizer.getOptimalTree();
-            P = new Afficheur(optimalTree.getFirst(), optimalTree.getSecond(), this, transformer.getQ());
+            Decomposer.MyPair<Node, Node> optimalTree[] = optimizer.getOptimalTree();
+            P = new Afficheur(optimalTree, this, transformer.getQ());
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {
             // TODO Auto-generated catch block
