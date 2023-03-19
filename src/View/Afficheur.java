@@ -150,7 +150,23 @@ public class Afficheur{
         /*JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));*/
 
-        TreePanel treePanel = new TreePanel(optimalTree[0].getFirst(), false, 0);
+        //Pipeline
+        TreePanel logictree1 = new TreePanel(optimalTree[0].getFirst(), false, 0);
+        TreePanel physicaltree1 = new TreePanel(optimalTree[0].getSecond(),true,0);
+        JPanel pipe_panel = new JPanel();
+        pipe_panel.setLayout(new BoxLayout(pipe_panel,BoxLayout.Y_AXIS));
+        JScrollPane pipe_sp  = new JScrollPane(pipe_panel);
+        pipe_panel.add(logictree1);
+        pipe_panel.add(physicaltree1);
+        //Materialisation
+        TreePanel logictree2 = new TreePanel(optimalTree[1].getFirst(), false, 0);
+        TreePanel physicaltree2 = new TreePanel(optimalTree[1].getSecond(),true,1);
+        JPanel mat_panel = new JPanel();
+        mat_panel.setLayout(new BoxLayout(mat_panel,BoxLayout.Y_AXIS));
+        JScrollPane mat_sp  = new JScrollPane(mat_panel);
+
+        mat_panel.add(logictree2);
+        mat_panel.add(physicaltree2);
 
         JPanel explications = new JPanel();
 
@@ -181,22 +197,67 @@ public class Afficheur{
 
         explications.setBackground(rules_box_color);
         explications.add(box, FlowLayout.LEFT);
+        //RadioButtons
+        JPanel buttonsPanel = new JPanel();
+        //buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
+        JRadioButton radioButton1, radioButton2;
+        ButtonGroup buttonGroup;
 
+        radioButton1 = new JRadioButton("Cout avec pipeline");
+        radioButton2 = new JRadioButton("Cout avec materialisation");
+
+        radioButton1.setSelected(true);
+
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(radioButton1);
+        buttonGroup.add(radioButton2);
+
+        Box box1 = Box.createVerticalBox();
+
+        box1.add(radioButton1);
+        box1.add(radioButton2);
+
+        buttonsPanel.add(box1);
+        //
+        JPanel right_panel = new JPanel();
+
+        //
+        pipe_panel.setVisible(true);
+        mat_panel.setVisible(false);
+        radioButton1.addActionListener(e -> {
+            pipe_panel.setVisible(true);
+            mat_panel.setVisible(false);
+        });
+
+        radioButton2.addActionListener(e -> {
+            pipe_panel.setVisible(false);
+            mat_panel.setVisible(true);
+        });
+        ///
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
         content.add(Box.createVerticalStrut(35));
         content.setBackground(Color.white);
         //treePanel.add(titlePanel,FlowLayout.LEFT);
-        content.add(treePanel);
-        content.add(explications);
+        JPanel mainPanel = new JPanel();
+        JScrollPane mainpanel_sp = new JScrollPane(mainPanel);
+        mainPanel.add(pipe_panel);
+        mainPanel.add(mat_panel);
+        //mainPanel.add(buttonsPanel,FlowLayout.LEFT);
+        content.add(mainpanel_sp);
+        content.add(right_panel);
+        /*content.add(pipe_sp);
+        content.add(mat_sp);*/
 
-        B2.addActionListener(e -> {
+
+
+        /*B2.addActionListener(e -> {
             // Toggle the visibility of the panel
             //Transformer transformer = new Transformer();
             new PhysicalTrees(optimalTree[0].getSecond(), jDialog, 3);
-        });
+        });*/
 
-        treePanel.add(B2, FlowLayout.LEFT);
+        //logictree1.add(B2, FlowLayout.LEFT);
 
         //jDialog.setContentPane(jScrollPane);
         jDialog.pack();
