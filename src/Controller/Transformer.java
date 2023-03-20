@@ -248,16 +248,16 @@ public class Transformer {
 		/*if(!T1.getExpression().equals(T2.getExpression()) || !T1.getName().equals(T2.getName()))
 			return false;*/
 		if(!T1.getName().equals(T2.getName())){
-			rules.add("CSJ");
+			rules.add("Commutativité restreinte de la sélection et de la jointure");
 			return (compareTree(T1, T2.getLeftChild(), rules));
 			//return false;
 		}
 		else {
 			if(!T1.getExpression().equals(T2.getExpression())){
 				if(T1.getName().equals("Jointure"))
-					rules.add("JA");
+					rules.add("Associativité de la jointure");
 				if (T1.getName().equals("Selection"))
-					rules.add("SC");
+					rules.add("Commutativité de la sélection");
 				//return false;
 				return (compareTree(T1, T2.getLeftChild(), rules));
 			}
@@ -330,7 +330,7 @@ public class Transformer {
 	private void JC(Node root, int l, Vector<Node> nodes, Vector<String> rulesVectorCopy){
 		if(root == null)
 			return;
-		rulesVectorCopy.add("JC");
+		rulesVectorCopy.add("Commutativité de la jointure");
 		while (true){
 			int[] level = {l};
 			Node newTree = Node.copierNode(root);
@@ -389,7 +389,7 @@ public class Transformer {
 			Node newTree = Node.copierNode(root);
 			Node firstSelectionParent = getFirstSelectionParent(newTree,childType);
 			if(firstSelectionParent != null) {
-				rulesVectorCopy.add("CSJ");
+				rulesVectorCopy.add("Commutativité restreinte de la sélection et de la jointure");
 				switch (childType[0]) {
 					case -1:
 						newTree = moveSelection(firstSelectionParent);
