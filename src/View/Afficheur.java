@@ -402,6 +402,7 @@ public class Afficheur{
 
         //optimale query
         JButton B = new JButton("Afficher la requete optimale");
+        B.setAlignmentX(Component.CENTER_ALIGNMENT);
         B.setFocusable(false);
         B.setBackground(button_color);
         B.addActionListener(e -> {
@@ -409,9 +410,22 @@ public class Afficheur{
             String optimalQuery = queryPart + Optimizer.getEquivQuery(optimalTree[0].getSecond());
             new Afficheur(jDialog, optimalQuery);
         });
-        //
 
-        right_box.add(B);
+        JButton B1 = new JButton("Afficher la requete optimale");
+        B1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        B1.setFocusable(false);
+        B1.setBackground(button_color);
+        B1.addActionListener(e -> {
+            // Toggle the visibility of the panel
+            String optimalQuery = queryPart + Optimizer.getEquivQuery(optimalTree[1].getSecond());
+            new Afficheur(jDialog, optimalQuery);
+        });
+        //
+        title1.add(B);
+        title1.add(Box.createVerticalStrut(15));
+        title3.add(B1);
+        title3.add(Box.createVerticalStrut(15));
+        //right_box.add(B);
         right_box.add(Box.createVerticalStrut(15));
         right_box.add(explications);
 
@@ -945,10 +959,20 @@ public class Afficheur{
                 double[] pipeline_cout = {0};
                 Estimator estimator = new Estimator(tree,query);
                 double totalCout = estimator.estimate(pipeline_cout);
-                if(type == 0)
-                    add(new JLabel("==> Cout avec Pipeline = " + pipeline_cout[0]));
-                else
-                    add(new JLabel("==> Cout avec materialisation = " + totalCout, FlowLayout.LEFT));
+                JPanel coutPanel = new JPanel();
+                coutPanel.setBackground(new Color(176, 226, 152));
+                JLabel coutLabel = new JLabel();
+                coutLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                coutLabel.setForeground(Color.BLACK);
+
+                if(type == 0) {
+                    coutLabel.setText("Cout avec Pipeline = " + pipeline_cout[0]);
+                    coutPanel.add(coutLabel);
+                }else{
+                    coutLabel.setText("Cout avec materialisation = " + totalCout);
+                    coutPanel.add(coutLabel);
+                }
+                add(coutPanel);
             }
         }
 
