@@ -36,6 +36,7 @@ public class Estimator {
         //we should move this section later !!!
         double ct = calculCoutTot(tree, pipeline_cout);
         tree.setCout(1.1);
+        pipeline_cout[0] += 1.1;
         //
         return ct;
     }
@@ -206,6 +207,8 @@ public class Estimator {
         //cout = Bal_l+Bal_r+2*(Bl+Br)*(TempsTrans+TempsPosDébut);
         cout = Bal_l+Bal_r;
         node.setCout(Math.round(cout+0.5));
+        if(tableL.equals("EMPLOYER") || tableR.equals("EMPLOYER"))
+            node.setCout(1000000);
         //System.out.println(cout);
         return (int) ((left + right)*0.7);
     }

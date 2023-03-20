@@ -2,6 +2,7 @@
 Projet;500000;FB;TL;20
 Budget;4000
 Pid;500000
+Did;10
 #
 Travaux;100000;FB;TL;40
 Tid;30000
@@ -13,3 +14,8 @@ Nom;17000
 Prenom;200
 Cin;20000
 Sexe;2
+#
+Department;15;FB;TL;5
+Did;15
+Nom;15
+Chef;15

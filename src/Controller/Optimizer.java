@@ -60,6 +60,25 @@ public class Optimizer {
             }
         }
     }
+    
+    public static String getEquivQuery(Node N) {
+        String[] equivQuery = new String[1];
+        equivQuery[0] = "";
+        getEquivQuery(N.getLeftChild(), equivQuery);
+        return equivQuery[0].substring(0, equivQuery[0].length() - 5);
+    }
+
+    public static void getEquivQuery(Node N, String[] equivQuery) {
+        if(N.getLeftChild() == null)
+            return;
+        getEquivQuery(N.getLeftChild(), equivQuery);
+        if(N.getRightChild() != null)
+            getEquivQuery(N.getRightChild(), equivQuery);
+        equivQuery[0] += N.getExpression() + " and ";
+    }
+
+
+
 
 
     /*public void getOptimalTree() {

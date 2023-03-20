@@ -24,6 +24,7 @@ public class Afficheur{
 	//private Node tree;
     private Map<Integer, Vector<Node>> trees;
     private Map<Node, Vector<Node>> ptrees;
+    Node tree;
     Query query;
     Transformer transformer;
     private boolean printCout;
@@ -35,7 +36,7 @@ public class Afficheur{
     private static Color rules_color = new Color(249,249,249);
 
     public Afficheur(Node tree, JFrame frame, Transformer transformer, Query query) {
-        //this.tree = tree;
+        this.tree = tree;
         this.query = query;
         this.transformer = transformer;
         JDialog jDialog = new JDialog(frame,"L'arbre algébrique initiale",true);
@@ -85,7 +86,7 @@ public class Afficheur{
         title2.add(Box.createVerticalStrut(25));
         title2.add(label2);
         title2.add(Box.createVerticalStrut(10));
-        title2.add(B2);
+        //title2.add(B2);
         title2.setBackground(title2_color);
         label2.setAlignmentX(Component.CENTER_ALIGNMENT);
         B2.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -126,7 +127,87 @@ public class Afficheur{
     }
 
 
-    public Afficheur(Decomposer.MyPair<Node, Node> optimalTree[], JFrame frame, Query query) {
+
+    public Afficheur(JDialog frame, String optimaleQuery) {
+
+        JDialog jDialog = new JDialog(frame,"La requete optimale",true);
+        jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Container content = jDialog.getContentPane();
+
+
+
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        // Create the two labels
+        JPanel title1 = new JPanel();
+        title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
+        JLabel label1 = new JLabel(optimaleQuery);
+        label1.setFont(new Font("Arial", Font.BOLD, 20));
+        label1.setForeground(Color.WHITE);
+        title1.add(Box.createVerticalStrut(25));
+        title1.add(label1);
+        title1.add(Box.createVerticalStrut(10));
+        title1.add(Box.createVerticalStrut(10));
+        title1.setBackground(title1_color);
+        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //title1.setBackground(Color.red);
+        //
+
+
+        // Create a panel to hold the labels
+        JPanel titlePanel1 = new JPanel(new GridLayout(1, 2));
+        titlePanel1.add(title1);
+
+        // Add the title panel to the top of the main panel
+        titlePanel.add(titlePanel1, BorderLayout.NORTH);
+        //tree panel
+
+
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.add(titlePanel);
+        content.add(Box.createVerticalStrut(35));
+        content.setBackground(Color.white);
+        //treePanel.add(titlePanel,FlowLayout.LEFT);
+
+        //jDialog.setContentPane(jScrollPane);
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(null);
+        jDialog.setVisible(true);
+    }
+
+
+    private JTextArea adjustLabel(String label) {
+        JTextArea textArea = new JTextArea(4, 36);
+        textArea.setText(label);
+        textArea.setWrapStyleWord(true);
+        textArea.setLineWrap(true);
+        textArea.setOpaque(false);
+        textArea.setEditable(false);
+        textArea.setFocusable(false);
+        textArea.setForeground(rules_color);
+        textArea.setBackground(UIManager.getColor("Label.background"));
+        return textArea;
+    }
+
+    public void GenererConseils(Node node , Vector<String> conseils){
+        if(node.getLeftChild() == null)
+            return;
+        switch (node.getName()) {
+            case "FS" -> conseils.add("FS");
+            case "HS" -> conseils.add("HS");
+            case "IS" -> conseils.add("IS");
+            case "JTF" -> conseils.add("JTF");
+            case "BIB" -> conseils.add("BIB");
+            case "BII" -> conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
+            case "HJ" -> conseils.add("HJ");
+            case "PJ" -> conseils.add("PJ");
+        }
+        GenererConseils(node.getLeftChild(),conseils);
+        if(node.getRightChild() != null )
+            GenererConseils(node.getRightChild(),conseils);
+    }
+
+
+    public Afficheur(Decomposer.MyPair<Node, Node> optimalTree[], JFrame frame, Query query, String queryPart) {
         //this.tree = tree;
         this.query = query;
         JDialog jDialog = new JDialog(frame,"L'arbre algébrique optimale",true);
@@ -150,22 +231,76 @@ public class Afficheur{
         /*JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));*/
 
+        //
+        JPanel title1 = new JPanel();
+        title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
+        JLabel label1 = new JLabel("L'arbre algebrique le plus optimale");
+        label1.setFont(new Font("Arial", Font.BOLD, 20));
+        label1.setForeground(Color.WHITE);
+        title1.add(Box.createVerticalStrut(25));
+        title1.add(label1);
+        title1.add(Box.createVerticalStrut(10));
+        title1.add(Box.createVerticalStrut(10));
+        title1.setBackground(title1_color);
+        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //title1.setBackground(Color.red);
+        //
+        JPanel title2 = new JPanel();
+        title2.setLayout(new BoxLayout(title2,BoxLayout.Y_AXIS));
+        JLabel label2 = new JLabel("Le meilleur plan physique");
+        label2.setFont(new Font("Arial", Font.BOLD, 20));
+        label2.setForeground(Color.WHITE);
+        title2.add(Box.createVerticalStrut(25));
+        title2.add(label2);
+        title2.add(Box.createVerticalStrut(10));
+        title2.setBackground(title2_color);
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel title3 = new JPanel();
+        title3.setLayout(new BoxLayout(title3,BoxLayout.Y_AXIS));
+        JLabel label3 = new JLabel("L'arbre algebrique le plus optimale");
+        label3.setFont(new Font("Arial", Font.BOLD, 20));
+        label3.setForeground(Color.WHITE);
+        title3.add(Box.createVerticalStrut(25));
+        title3.add(label3);
+        title3.add(Box.createVerticalStrut(10));
+        title3.add(Box.createVerticalStrut(10));
+        title3.setBackground(title1_color);
+        label3.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //title1.setBackground(Color.red);
+        //
+        JPanel title4 = new JPanel();
+        title4.setLayout(new BoxLayout(title4,BoxLayout.Y_AXIS));
+        JLabel label4 = new JLabel("Le meilleur plan physique");
+        label4.setFont(new Font("Arial", Font.BOLD, 20));
+        label4.setForeground(Color.WHITE);
+        title4.add(Box.createVerticalStrut(25));
+        title4.add(label4);
+        title4.add(Box.createVerticalStrut(10));
+        title4.setBackground(title2_color);
+        label4.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         //Pipeline
         TreePanel logictree1 = new TreePanel(optimalTree[0].getFirst(), false, 0);
         TreePanel physicaltree1 = new TreePanel(optimalTree[0].getSecond(),true,0);
         JPanel pipe_panel = new JPanel();
         pipe_panel.setLayout(new BoxLayout(pipe_panel,BoxLayout.Y_AXIS));
-        JScrollPane pipe_sp  = new JScrollPane(pipe_panel);
+        //JScrollPane pipe_sp  = new JScrollPane(pipe_panel);
+
+        pipe_panel.add(title1);
         pipe_panel.add(logictree1);
+        pipe_panel.add(title2);
         pipe_panel.add(physicaltree1);
         //Materialisation
         TreePanel logictree2 = new TreePanel(optimalTree[1].getFirst(), false, 0);
         TreePanel physicaltree2 = new TreePanel(optimalTree[1].getSecond(),true,1);
         JPanel mat_panel = new JPanel();
         mat_panel.setLayout(new BoxLayout(mat_panel,BoxLayout.Y_AXIS));
-        JScrollPane mat_sp  = new JScrollPane(mat_panel);
+        //JScrollPane mat_sp  = new JScrollPane(mat_panel);
 
+        mat_panel.add(title3);
         mat_panel.add(logictree2);
+        mat_panel.add(title4);
         mat_panel.add(physicaltree2);
 
         JPanel explications = new JPanel();
@@ -181,39 +316,62 @@ public class Afficheur{
         box.add(Box.createVerticalStrut(15));
 
 
+
+        Vector<String> conseils = new Vector<>();
+        /*conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
+        conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
+        conseils.add("Lor");*/
+        GenererConseils(optimalTree[0].getSecond(), conseils);
+
         //1
-        JLabel rule_label;
 
         JPanel rule_panel = new JPanel();
-        rule_panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        rule_panel.setLayout(new BoxLayout(rule_panel, BoxLayout.Y_AXIS));
         rule_panel.setBackground(rules_box_color);
+        for (String rule : conseils) {
+            JTextArea rule_label;
 
-        rule_label = new JLabel(" adfjkkaajkfb");
-        rule_label.setFont(new Font("Arial",Font.BOLD,16));
-        rule_label.setForeground(rules_color);
-        rule_panel.add(rule_label);
-        box.add(rule_panel);
-        box.add(Box.createVerticalStrut(10));
-        //2
-        JLabel rule_label2;
+
+            rule_label = adjustLabel(rule);
+            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
+            rule_label.setFont(new Font("Arial",Font.BOLD,16));
+            rule_label.setForeground(rules_color);
+            rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
+            rule_panel.add(rule_label);
+            rule_panel.setPreferredSize(new Dimension(100,rule_panel.getPreferredSize().height));
+            box.add(rule_panel);
+            box.add(Box.createVerticalStrut(5));
+        }
+
+
+        conseils = new Vector<>();
+        GenererConseils(optimalTree[1].getSecond(), conseils);
 
         JPanel rule_panel2 = new JPanel();
-        rule_panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        rule_panel2.setLayout(new BoxLayout(rule_panel2, BoxLayout.Y_AXIS));
         rule_panel2.setBackground(rules_box_color);
-
-        rule_label2 = new JLabel(" hhhhhhhhh");
-        rule_label2.setFont(new Font("Arial",Font.BOLD,16));
-        rule_label2.setForeground(rules_color);
-        rule_panel2.add(rule_label2);
-        box.add(rule_panel2);
         rule_panel2.setVisible(false);
-        box.add(Box.createVerticalStrut(10));
+        for (String rule : conseils) {
+            JTextArea rule_label;
+
+
+            rule_label = adjustLabel(rule);
+            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
+            rule_label.setFont(new Font("Arial",Font.BOLD,16));
+            rule_label.setForeground(rules_color);
+            rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
+            rule_panel2.add(rule_label);
+            rule_panel2.setPreferredSize(new Dimension(100,rule_panel2.getPreferredSize().height));
+            box.add(rule_panel2);
+            box.add(Box.createVerticalStrut(5));
+        }
 
 
         explications.setBackground(rules_box_color);
         explications.add(box, FlowLayout.LEFT);
         //RadioButtons
         JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setBackground(new Color(176, 226, 152));
         //buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
         JRadioButton radioButton1, radioButton2;
@@ -221,6 +379,9 @@ public class Afficheur{
 
         radioButton1 = new JRadioButton("Cout avec pipeline");
         radioButton2 = new JRadioButton("Cout avec materialisation");
+
+        radioButton1.setBackground(new Color(176, 226, 152));
+        radioButton2.setBackground(new Color(176, 226, 152));
 
         radioButton1.setSelected(true);
 
@@ -238,6 +399,20 @@ public class Afficheur{
         Box right_box = Box.createVerticalBox();
         right_box.add(buttonsPanel);
         right_box.add(Box.createVerticalStrut(15));
+
+        //optimale query
+        JButton B = new JButton("Afficher la requete optimale");
+        B.setFocusable(false);
+        B.setBackground(button_color);
+        B.addActionListener(e -> {
+            // Toggle the visibility of the panel
+            String optimalQuery = queryPart + Optimizer.getEquivQuery(optimalTree[0].getSecond());
+            new Afficheur(jDialog, optimalQuery);
+        });
+        //
+
+        right_box.add(B);
+        right_box.add(Box.createVerticalStrut(15));
         right_box.add(explications);
 
         JPanel right_panel = new JPanel();
@@ -245,6 +420,9 @@ public class Afficheur{
         //right_panel.setLayout(new BoxLayout(right_panel,BoxLayout.Y_AXIS));
         //buttonsPanel.setPreferredSize(new Dimension(right_panel.getPreferredSize().width, (int) (0.2*right_panel.getPreferredSize().height)));
         right_panel.add(right_box);
+        //explications.setPreferredSize(new Dimension(500, explications.getPreferredSize().height));
+        box.setPreferredSize(new Dimension(485, box.getPreferredSize().height));
+        right_panel.setPreferredSize(new Dimension(500, right_panel.getPreferredSize().height));
         //
         pipe_panel.setVisible(true);
         mat_panel.setVisible(false);
@@ -267,10 +445,12 @@ public class Afficheur{
         content.setBackground(Color.white);
         //treePanel.add(titlePanel,FlowLayout.LEFT);
         JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.white);
         JScrollPane mainpanel_sp = new JScrollPane(mainPanel);
         mainPanel.add(pipe_panel);
         mainPanel.add(mat_panel);
         //mainPanel.add(buttonsPanel,FlowLayout.LEFT);
+        content.setBackground(Color.white);
         content.add(mainpanel_sp);
         content.add(right_panel);
         /*content.add(pipe_sp);
@@ -363,20 +543,75 @@ public class Afficheur{
 
             cardPanel = new JPanel(new CardLayout());
             TreePanel treePanel;
+
+            //
+            JPanel mainPanel = new JPanel();
+            mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
+
+            JPanel rulesPanel = new JPanel();
+            //rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
+            //rulesPanel.setLayout(new FlowLayout());
+            Box box = Box.createVerticalBox();
+            Vector<String> rules;
+            JLabel rules_title = new JLabel("L'arbre algebrique initiale");
+            rules_title.setFont(new Font("Arial",Font.BOLD,22));
+            JPanel rules_title_panel = new JPanel();
+            rules_title_panel.setBackground(rules_title_color);
+            rules_title_panel.add(rules_title);
+            box.add(rules_title_panel);
+            //box.add(rules_title);
+            box.add(Box.createVerticalStrut(15));
+
+
+            rulesPanel.setBackground(rules_box_color);
+            rulesPanel.add(box);
+
+
+            JPanel groupPanel1 = new JPanel();
+            groupPanel1.setLayout(new BoxLayout(groupPanel1, BoxLayout.Y_AXIS));
+            JButton B2 = new JButton("Afficher les variantes physiques");
+            B2.setFocusable(false);
+            B2.setForeground(rules_title_color);
+            B2.setBackground(rules_box_color);
+            treePanel = new TreePanel(tree, false, 0);
+            treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+            treePanel.add(B2, FlowLayout.LEFT);
+            mainPanel.add(treePanel);
+            mainPanel.add(rulesPanel);
+
+            groupPanel1.setPreferredSize(new Dimension(cardPanel.getPreferredSize().width,mainPanel.getPreferredSize().height*2));
+            B2.addActionListener(e -> {
+                // Toggle the visibility of the panel
+                Transformer transformer = new Transformer();
+                //Transformer transformer = new Transformer();
+                new PhysicalTrees(transformer.generatePTrees(tree), groupPanel1, jd);
+            });
+            groupPanel1.add(mainPanel);
+            JScrollPane groupPanelSp = new JScrollPane(groupPanel1);
+            groupPanelSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+            //groupPanel.setVisible(true);
+            //JScrollPane groupPanelSp = new JScrollPane(groupPanel);
+            //groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            cardPanel.add(groupPanelSp);
+            //
+
+
             for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
                 for (Node n : entry.getValue()) {
 
-                    JPanel mainPanel = new JPanel();
+                    mainPanel = new JPanel();
                     mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
 
-                    JPanel rulesPanel = new JPanel();
+                    rulesPanel = new JPanel();
                     //rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
                     //rulesPanel.setLayout(new FlowLayout());
-                    Box box = Box.createVerticalBox();
-                    Vector<String> rules = transformer.getRules(n);
-                    JLabel rules_title = new JLabel(" Les règles appliquées : ");
+                    box = Box.createVerticalBox();
+                    rules = transformer.getRules(n);
+                    rules_title = new JLabel(" Les règles appliquées : ");
                     rules_title.setFont(new Font("Arial",Font.BOLD,22));
-                    JPanel rules_title_panel = new JPanel();
+                    rules_title_panel = new JPanel();
                     rules_title_panel.setBackground(rules_title_color);
                     rules_title_panel.add(rules_title);
                     box.add(rules_title_panel);
@@ -406,7 +641,7 @@ public class Afficheur{
 
                     JPanel groupPanel = new JPanel();
                     groupPanel.setLayout(new BoxLayout(groupPanel, BoxLayout.Y_AXIS));
-                    JButton B2 = new JButton("Afficher les variantes physiques");
+                    B2 = new JButton("Afficher les variantes physiques");
                     B2.setFocusable(false);
                     B2.setForeground(rules_title_color);
                     B2.setBackground(rules_box_color);
@@ -424,7 +659,7 @@ public class Afficheur{
                         new PhysicalTrees(transformer.generatePTrees(n), groupPanel, jd);
                     });
                     groupPanel.add(mainPanel);
-                    JScrollPane groupPanelSp = new JScrollPane(groupPanel);
+                    groupPanelSp = new JScrollPane(groupPanel);
                     groupPanelSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
                     groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -493,7 +728,7 @@ public class Afficheur{
             JPanel JP = new JPanel();
             JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
             JScrollPane SP = new JScrollPane(JP);
-            JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
+            JDialog jd = new JDialog(jDialog, "L'arbre physique", true);
 
             TreePanel treePanel1, treePanel2;
             //Estimator estimator = new Estimator(node, query);
@@ -517,6 +752,7 @@ public class Afficheur{
             JP.add(treePanel2);
 
             JPanel buttonsPanel = new JPanel();
+            buttonsPanel.setBackground(new Color(176, 226, 152));
             //buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
             JRadioButton radioButton1, radioButton2;
@@ -524,6 +760,8 @@ public class Afficheur{
 
             radioButton1 = new JRadioButton("Cout avec pipeline");
             radioButton2 = new JRadioButton("Cout avec materialisation");
+            radioButton1.setBackground(new Color(176, 226, 152));
+            radioButton2.setBackground(new Color(176, 226, 152));
 
             radioButton1.setSelected(true);
 
@@ -744,7 +982,7 @@ public class Afficheur{
                 int childX = x + dx;
                 int childY = y + LEVEL_HEIGHT;
                 g.drawLine(x, y + NODE_RADIUS, childX, childY - NODE_RADIUS);
-                if(node.getLeftChild().getLeftChild() != null) {
+                if(node.getRightChild().getLeftChild() != null) {
                     if (pCout) {
                         if (type == 1)
                             g.drawString("(1.1)", (x + childX) / 2, (y + childY) / 2);

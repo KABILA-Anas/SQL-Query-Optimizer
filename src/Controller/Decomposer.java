@@ -11,7 +11,16 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 public class Decomposer {
+
+    public static String getQueryPart(String query) {
+        query = query.toUpperCase();
+        int whereIndex = query.indexOf("WHERE");
+        String wherePart = query.substring(0, whereIndex+6);
+        return wherePart;
+    }
 
     public static Query SplitQuery(String query) throws SyntaxeException {
 

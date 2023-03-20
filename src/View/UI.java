@@ -19,6 +19,7 @@ public class UI extends JFrame{
         initComponents();
         setTitle("Optimiseur de requete");
         setLocation(400,200);
+        setSize(new Dimension(900, 300));
         setVisible(true);
     }
 
@@ -174,7 +175,8 @@ public class UI extends JFrame{
             transformer.generatePTrees();
             Optimizer optimizer = new Optimizer(transformer.getPtrees(), transformer.getQ());
             Decomposer.MyPair<Node, Node> optimalTree[] = optimizer.getOptimalTree();
-            P = new Afficheur(optimalTree, this, transformer.getQ());
+            String queryPart = Decomposer.getQueryPart(jTextField1.getText());
+            P = new Afficheur(optimalTree, this, transformer.getQ(), queryPart);
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {
             // TODO Auto-generated catch block

@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Controller.Decomposer;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
@@ -150,6 +151,7 @@ public class Query {
 		}
 		
 		if(visitedTables.contains(relation2)) {
+			C = Decomposer.joinSwap(C);
 			root = new Node("Jointure", C,root, new Node("Relation",relation1));
 			visitedTables.add(relation1);
 			

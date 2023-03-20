@@ -2,6 +2,7 @@
 Projet;Pid
 Budget;1;66
 Pid;2;66
+Did;2;66
 #
 Travaux;Tid
 Tid;3;66
@@ -13,3 +14,8 @@ Nom;6;66
 Prenom;6;66
 Cin;6;66
 Sexe;6;66
+#
+Department;Did
+Did;1;4
+Nom;1;4
+Chef;1;4
