@@ -13,7 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -218,7 +220,7 @@ public class Afficheur{
 
 
     private JTextArea adjustLabel(String label) {
-        JTextArea textArea = new JTextArea(4, 36);
+        JTextArea textArea = new JTextArea(3, 36);
         textArea.setText(label);
         textArea.setWrapStyleWord(true);
         textArea.setLineWrap(true);
@@ -230,18 +232,21 @@ public class Afficheur{
         return textArea;
     }
 
-    public void GenererConseils(Node node , Vector<String> conseils){
+    public void GenererConseils(Node node , Set<String> conseils){
         if(node.getLeftChild() == null)
             return;
         switch (node.getName()) {
-            case "FS" -> conseils.add("FS");
-            case "HS" -> conseils.add("HS");
-            case "IS" -> conseils.add("IS");
-            case "JTF" -> conseils.add("JTF");
-            case "BIB" -> conseils.add("BIB");
-            case "BII" -> conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
-            case "HJ" -> conseils.add("HJ");
-            case "PJ" -> conseils.add("PJ");
+            /*case "FS" -> conseils.add("");
+            case "HS" -> conseils.add("");
+            case "IS" -> conseils.add("");
+            case "JTF" -> conseils.add("");*/
+            case "BIB" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche, " +
+                    "et si la table qui est a droite peut être mise en mémoire ca donne un gain important de performance , c'est pour ca l'algorithme BIB a etait applique ( " + node.getExpression() + " )");
+            case "BII" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche, " +
+                    "et d'indexe la cle de jointure de la plus grande dans table, c'est pour ca l'algorithme BII a etait applique ( " +  node.getExpression() + " )");
+            //case "HJ" -> conseils.add("");
+            case "PJ" -> conseils.add("==> Quand l’une des tables est beaucoup plus petite que l’autre dans jointure, et cette jointure se presente beacoup , c'est mieux s'ils sont organisées dans une même grappe (cluster), " +
+                    "c'est le cas ici pour l'algorithme PJ ( " + node.getExpression() + " )");
         }
         GenererConseils(node.getLeftChild(),conseils);
         if(node.getRightChild() != null )
@@ -359,11 +364,14 @@ public class Afficheur{
 
 
 
-        Vector<String> conseils = new Vector<>();
+        Set<String> conseils = new HashSet<>();
         /*conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
         conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
         conseils.add("Lor");*/
         GenererConseils(optimalTree[0].getSecond(), conseils);
+        //System.out.println("size = " +  conseils.size());
+        conseils.add("==> Pour l'ordre des conditions c'est mieux de commence par les selection que les jointures quand la table contient beaucoup de donnees");
+        conseils.add("==> Les colonnes qui sont utilise beaucoup dans le WHERE, c'est mieux de les indexe");
 
         //1
 
@@ -378,16 +386,19 @@ public class Afficheur{
             //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_label.setFont(new Font("Arial",Font.BOLD,16));
             rule_label.setForeground(rules_color);
-            rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
+            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_panel.add(rule_label);
-            rule_panel.setPreferredSize(new Dimension(100,rule_panel.getPreferredSize().height));
-            box.add(rule_panel);
-            box.add(Box.createVerticalStrut(5));
+            //rule_panel.setPreferredSize(new Dimension(100,rule_panel.getPreferredSize().height));
+
+            rule_panel.add(Box.createVerticalStrut(15));
         }
+        box.add(rule_panel);
 
 
-        conseils = new Vector<>();
+        conseils = new HashSet<>();
         GenererConseils(optimalTree[1].getSecond(), conseils);
+        conseils.add("==> Pour l'ordre des conditions c'est mieux de commence par les selection que les jointures quand la table contient beaucoup de donnees");
+        conseils.add("==> Les colonnes qui sont utilise beaucoup dans le WHERE, c'est mieux de les indexe");
 
         JPanel rule_panel2 = new JPanel();
         rule_panel2.setLayout(new BoxLayout(rule_panel2, BoxLayout.Y_AXIS));
@@ -401,12 +412,14 @@ public class Afficheur{
             //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_label.setFont(new Font("Arial",Font.BOLD,16));
             rule_label.setForeground(rules_color);
-            rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
+            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_panel2.add(rule_label);
-            rule_panel2.setPreferredSize(new Dimension(100,rule_panel2.getPreferredSize().height));
-            box.add(rule_panel2);
-            box.add(Box.createVerticalStrut(5));
+            //rule_panel2.setPreferredSize(new Dimension(100,rule_panel2.getPreferredSize().height));
+
+            rule_panel.add(Box.createVerticalStrut(15));
+            //box.add(Box.createVerticalStrut(5));
         }
+        box.add(rule_panel2);
 
 
         explications.setBackground(rules_box_color);
@@ -1009,10 +1022,10 @@ public class Afficheur{
                 coutLabel.setForeground(Color.BLACK);
 
                 if(type == 0) {
-                    coutLabel.setText("Cout avec Pipeline = " + cout[0]);
+                    coutLabel.setText("Cout avec Pipeline = " + cout[0] + " ms");
                     coutPanel.add(coutLabel);
                 }else{
-                    coutLabel.setText("Cout avec materialisation = " + cout[1]);
+                    coutLabel.setText("Cout avec materialisation = " + cout[1] + " ms");
                     coutPanel.add(coutLabel);
                 }
                 add(coutPanel);

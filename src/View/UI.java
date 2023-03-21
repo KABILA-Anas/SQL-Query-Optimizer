@@ -12,28 +12,10 @@ import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Vector;
 
 public class UI extends JFrame{
-
-    static File statistique = new File("catalog/statistiques.txt");
-    static File description = new File("catalog/descrption.txt");
-    public static Scanner myReaders;
-    public static Scanner myReaderd;
-
-    static {
-        try {
-            myReaders = new Scanner(statistique);
-            myReaderd = new Scanner(description);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
 	public UI() {
         initComponents();
