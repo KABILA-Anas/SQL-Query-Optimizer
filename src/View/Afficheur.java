@@ -999,9 +999,9 @@ public class Afficheur{
             setBackground(Color.WHITE);
             if(pCout){
                 //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
-                double[] pipeline_cout = {0};
+                double[] cout = {0, 0};
                 Estimator estimator = new Estimator(tree,query);
-                double totalCout = estimator.estimate(pipeline_cout);
+                estimator.estimate(cout);
                 JPanel coutPanel = new JPanel();
                 coutPanel.setBackground(new Color(176, 226, 152));
                 JLabel coutLabel = new JLabel();
@@ -1009,10 +1009,10 @@ public class Afficheur{
                 coutLabel.setForeground(Color.BLACK);
 
                 if(type == 0) {
-                    coutLabel.setText("Cout avec Pipeline = " + pipeline_cout[0]);
+                    coutLabel.setText("Cout avec Pipeline = " + cout[0]);
                     coutPanel.add(coutLabel);
                 }else{
-                    coutLabel.setText("Cout avec materialisation = " + totalCout);
+                    coutLabel.setText("Cout avec materialisation = " + cout[1]);
                     coutPanel.add(coutLabel);
                 }
                 add(coutPanel);

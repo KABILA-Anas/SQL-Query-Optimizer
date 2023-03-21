@@ -36,13 +36,14 @@ public class Optimizer {
     }
 
     public void estimatePtrees(){
+
         for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()) {
             for (Node n : entry.getValue()) {
                 //Vector<Node> nodes = new Vector<Node>();
-                double[] pipeline_cout = {0};
+                double[] coutV = {0, 0};
                 Estimator estimator = new Estimator(n,query);
-                double totalCout = estimator.estimate(pipeline_cout);
-                cout.put(n, new Decomposer.MyPair<Double, Double>(totalCout, pipeline_cout[0]));
+                estimator.estimate(coutV);
+                cout.put(n, new Decomposer.MyPair<Double, Double>(coutV[1], coutV[0]));
 
                 if(optimalTree[0] == null) {
                     optimalTree[0] = new Decomposer.MyPair<>(entry.getKey(), n);

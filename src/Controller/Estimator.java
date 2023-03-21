@@ -31,41 +31,49 @@ public class Estimator {
     }
 
 
-    public double estimate(double[] pipeline_cout){
-        estimate(tree.getLeftChild());
+    public void estimate(double[] cout){
+        estimate(tree.getLeftChild(), cout);
         //we should move this section later !!!
-        double ct = calculCoutTot(tree, pipeline_cout);
+        //double ct = calculCoutTot(tree, cout);
         tree.setCout(1.1);
-        pipeline_cout[0] = Math.round(pipeline_cout[0] + 1.1 + 0.5);
+        cout[0] = Math.round(cout[0] + 1.1 + 0.5);
+        cout[1] = Math.round(cout[1] + 1.1 + 0.5);
         //
-        return Math.round(ct + 0.5);
+        //return Math.round(ct + 0.5);
     }
 
-    private int estimate(Node N){
-        int left, right = 0;
+    private int estimate(Node N, double[] cout){
+        int nbrLine = 0, left, right = 0;
 
         if (N.getLeftChild() == null)
             return nbrLines.get(N.getExpression());
 
-        left = estimate(N.getLeftChild());
+        left = estimate(N.getLeftChild(), cout);
 
         //** Binary operator
         if (N.getRightChild() != null){
-            right = estimate(N.getRightChild());
+            right = estimate(N.getRightChild(), cout);
             //BIB(N,4000,1000000);
             //PJ(N,1000000,4000);
             switch (N.getName()){
                 case "BIB" :
-                    return BIB(N,left,right);
+                    nbrLine = BIB(N,left,right);
+                    break;
                 case "BII" :
-                    return BII(N,left,right);
+                    nbrLine = BII(N,left,right);
+                    break;
                 case "JTF" :
-                    return JTF(N,left,right);
+                    nbrLine = JTF(N,left,right);
+                    break;
                 case "JH" :
-                    return JH(N,left,right);
+                    nbrLine = JH(N,left,right);
+                    break;
                 case "PJ" :
-                    return PJ(N,left,right);
+                    nbrLine = PJ(N,left,right);
             }
+
+            if(cout[0] < N.getCout())
+                cout[0] = N.getCout();
 
             /*for (Decomposer.MyPair<String, String> pair : Decomposer.joinSplit(N.getExpression())){
                 System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
@@ -73,15 +81,20 @@ public class Estimator {
         } else {
             switch (N.getName()){
                 case "FS" :
-                    return FS(N,left);
+                    nbrLine = FS(N,left);
+                    break;
                 case "IS" :
-                    return IS(N,left);
+                    nbrLine = IS(N,left);
+                    break;
                 case "HS" :
-                    return HS(N,left);
+                    nbrLine = HS(N,left);
             }
         }
 
-        return (int) ((left + right)*0.7);
+        cout[1] += N.getCout() + 1.1;
+
+        return nbrLine;
+        //return (int) ((left + right)*0.7);
     }
 
     private double calculCoutTot(Node node , double[] pipeline_cout ){

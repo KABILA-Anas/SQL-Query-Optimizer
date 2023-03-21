@@ -10,6 +10,7 @@ public class Catalog {
     static File description = new File("catalog/descrption.txt");
 
 
+
     public static int getStatsTable(String table, int index){
         try {
             Scanner myReader = new Scanner(statistique);
