@@ -1,6 +1,7 @@
 package model;
 
 
+import java.util.Objects;
 
 public class Node {
 	private String name;
@@ -9,10 +10,21 @@ public class Node {
 	private Node leftChild;
 	private Node rightChild;
 
-	final private int COUNT = 10;
 
-	
-	
+	//Constructeur pour les relations (feuilles)
+	public Node(String name, String expression) {
+		this.name = name;
+		this.expression = expression;
+	}
+
+	//Constructeur pour un operateur Unaire
+	public Node(String name, String expression, Node leftChild) {
+		this.name = name;
+		this.expression = expression;
+		this.leftChild = leftChild;
+	}
+
+	//Constructeur pour un operateur binaire ( Union - Intersection - Produit cartesien )
 	public Node(String name, Node leftChild, Node rightChild) {
 		super();
 		this.name = name;
@@ -20,16 +32,14 @@ public class Node {
 		this.rightChild = rightChild;
 	}
 
-	public Node(String name, String expression, Node leftChild) {
+	//Constructeur pour un operateur binaire ( Jointure )
+	public Node(String name, String expression, Node leftChild, Node rightChild) {
 		this.name = name;
 		this.expression = expression;
 		this.leftChild = leftChild;
+		this.rightChild = rightChild;
 	}
 
-	public Node(String name, String expression) {
-		this.name = name;
-		this.expression = expression;
-	}
 
 	public static Node copierNode(Node node){
 		if (node == null) {
@@ -37,12 +47,6 @@ public class Node {
 		}
 		Node copy = new Node(node.name,node.expression,copierNode(node.leftChild),copierNode(node.rightChild));
 		return copy;
-	}
-	public Node(String name, String expression, Node leftChild, Node rightChild) {
-		this.name = name;
-		this.expression = expression;
-		this.leftChild = leftChild;
-		this.rightChild = rightChild;
 	}
 
 
@@ -119,35 +123,15 @@ public class Node {
 		return height(this);
 	}
 
-
-
-
-
-
-
-
-	public void print2DUtil(Node root, int space)
-	{
-	    // Base case
-	    if (root == null)
-	        return;
-
-	    // Increase distance between levels
-	    space += COUNT;
-
-	    // Process right child first
-	    print2DUtil(root.rightChild, space);
-
-	    // Print current node after space
-	    // count
-	    System.out.println();
-	    for (int i = COUNT; i < space; i++)
-	    	System.out.print(" ");
-	    System.out.println(root);
-
-	    // Process left child
-	    print2DUtil(root.leftChild, space);
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Node node)) return false;
+		return Objects.equals(expression, node.expression) && Objects.equals(leftChild, node.leftChild) && Objects.equals(rightChild, node.rightChild);
 	}
-	
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, expression, cout, leftChild, rightChild);
+	}
 }

@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.font.TextAttribute;
 import java.util.Map;
 import java.util.Vector;
 
@@ -128,7 +129,7 @@ public class Afficheur{
 
 
 
-    public Afficheur(JDialog frame, String optimaleQuery) {
+    public Afficheur(JDialog frame, String initialQuery, String optimaleQuery) {
 
         JDialog jDialog = new JDialog(frame,"La requete optimale",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -140,22 +141,63 @@ public class Afficheur{
         // Create the two labels
         JPanel title1 = new JPanel();
         title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
-        JLabel label1 = new JLabel(optimaleQuery);
-        label1.setFont(new Font("Arial", Font.BOLD, 20));
-        label1.setForeground(Color.WHITE);
-        title1.add(Box.createVerticalStrut(25));
+        JLabel label1 = new JLabel(initialQuery);
+        label1.setFont(new Font("Arial", Font.BOLD, 16));
+        title1.add(Box.createVerticalStrut(20));
         title1.add(label1);
-        title1.add(Box.createVerticalStrut(10));
-        title1.add(Box.createVerticalStrut(10));
-        title1.setBackground(title1_color);
+        title1.add(Box.createVerticalStrut(25));
+        title1.setBackground(button_color);
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel title11 = new JPanel();
+
+        title11.setBackground(button_color);
+        title11.setLayout(new BoxLayout(title11,BoxLayout.Y_AXIS));
+        JLabel label11 = new JLabel("La requete initiale");
+        Font font = new Font("Arial", Font.BOLD, 20);
+        Map attributes = font.getAttributes();
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        label11.setFont(font.deriveFont(attributes));
+        //label11.setFont(new Font("Arial", Font.BOLD, 16));
+        title11.add(Box.createVerticalStrut(25));
+        title11.add(label11);
+        title11.add(Box.createVerticalStrut(10));
+        label11.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel title2 = new JPanel();
+        title2.setLayout(new BoxLayout(title2,BoxLayout.Y_AXIS));
+        JLabel label2 = new JLabel(optimaleQuery);
+        label2.setFont(new Font("Arial", Font.BOLD, 16));
+        label2.setForeground(Color.WHITE);
+        title2.add(Box.createVerticalStrut(20));
+        title2.add(label2);
+        title2.add(Box.createVerticalStrut(20));
+        title2.setBackground(title1_color);
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel title22 = new JPanel();
+        title22.setLayout(new BoxLayout(title22,BoxLayout.Y_AXIS));
+        JLabel label22 = new JLabel("La requete optimale");
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        label22.setFont(font.deriveFont(attributes));
+        //label22.setFont(new Font("Arial", Font.BOLD, 16));
+        label22.setForeground(Color.WHITE);
+        title22.add(Box.createVerticalStrut(20));
+        title22.add(label22);
+        title22.add(Box.createVerticalStrut(10));
+        title22.setBackground(title1_color);
+        label22.setAlignmentX(Component.CENTER_ALIGNMENT);
         //title1.setBackground(Color.red);
         //
 
 
         // Create a panel to hold the labels
-        JPanel titlePanel1 = new JPanel(new GridLayout(1, 2));
+        JPanel titlePanel1 = new JPanel();
+        titlePanel1.setLayout(new BoxLayout(titlePanel1, BoxLayout.Y_AXIS));
+        titlePanel1.add(title11);
         titlePanel1.add(title1);
+        titlePanel1.add(title22);
+        titlePanel1.add(title2);
 
         // Add the title panel to the top of the main panel
         titlePanel.add(titlePanel1, BorderLayout.NORTH);
@@ -207,7 +249,7 @@ public class Afficheur{
     }
 
 
-    public Afficheur(Decomposer.MyPair<Node, Node> optimalTree[], JFrame frame, Query query, String queryPart) {
+    public Afficheur(Decomposer.MyPair<Node, Node> optimalTree[], JFrame frame, Query query, String initialQuery) {
         //this.tree = tree;
         this.query = query;
         JDialog jDialog = new JDialog(frame,"L'arbre algébrique optimale",true);
@@ -401,6 +443,7 @@ public class Afficheur{
         right_box.add(Box.createVerticalStrut(15));
 
         //optimale query
+        String queryPart = Decomposer.getQueryPart(initialQuery);
         JButton B = new JButton("Afficher la requete optimale");
         B.setAlignmentX(Component.CENTER_ALIGNMENT);
         B.setFocusable(false);
@@ -408,7 +451,7 @@ public class Afficheur{
         B.addActionListener(e -> {
             // Toggle the visibility of the panel
             String optimalQuery = queryPart + Optimizer.getEquivQuery(optimalTree[0].getSecond());
-            new Afficheur(jDialog, optimalQuery);
+            new Afficheur(jDialog, initialQuery, optimalQuery);
         });
 
         JButton B1 = new JButton("Afficher la requete optimale");
@@ -418,7 +461,7 @@ public class Afficheur{
         B1.addActionListener(e -> {
             // Toggle the visibility of the panel
             String optimalQuery = queryPart + Optimizer.getEquivQuery(optimalTree[1].getSecond());
-            new Afficheur(jDialog, optimalQuery);
+            new Afficheur(jDialog, initialQuery, optimalQuery);
         });
         //
         title1.add(B);

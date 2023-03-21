@@ -296,15 +296,6 @@ public class Transformer {
 		return true;
 	}
 
-	public void printTrees() {
-		for (Map.Entry<Integer, Vector<Node>> entry : trees.entrySet())
-			for (Node n : entry.getValue()) {
-				n.print2DUtil(n, 0);
-				System.out.println("-------------------------------------------------------------------------------------");
-			}
-
-	}
-
 
 	//***************************** JC *****************************//
 	public void JC(){

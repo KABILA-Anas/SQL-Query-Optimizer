@@ -175,7 +175,7 @@ public class UI extends JFrame{
             transformer.generatePTrees();
             Optimizer optimizer = new Optimizer(transformer.getPtrees(), transformer.getQ());
             Decomposer.MyPair<Node, Node> optimalTree[] = optimizer.getOptimalTree();
-            String queryPart = Decomposer.getQueryPart(jTextField1.getText());
+            String queryPart = jTextField1.getText().toUpperCase();
             P = new Afficheur(optimalTree, this, transformer.getQ(), queryPart);
             //P.printTree();
         } catch (SyntaxeException | SemantiqueException e) {

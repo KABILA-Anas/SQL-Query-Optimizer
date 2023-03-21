@@ -36,9 +36,9 @@ public class Estimator {
         //we should move this section later !!!
         double ct = calculCoutTot(tree, pipeline_cout);
         tree.setCout(1.1);
-        pipeline_cout[0] += 1.1;
+        pipeline_cout[0] = Math.round(pipeline_cout[0] + 1.1 + 0.5);
         //
-        return ct;
+        return Math.round(ct + 0.5);
     }
 
     private int estimate(Node N){
