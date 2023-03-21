@@ -240,12 +240,12 @@ public class Afficheur{
             case "HS" -> conseils.add("");
             case "IS" -> conseils.add("");
             case "JTF" -> conseils.add("");*/
-            case "BIB" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche, " +
-                    "et si la table qui est a droite peut être mise en mémoire ca donne un gain important de performance , c'est pour ca l'algorithme BIB a etait applique ( " + node.getExpression() + " )");
-            case "BII" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche, " +
-                    "et d'indexe la cle de jointure de la plus grande dans table, c'est pour ca l'algorithme BII a etait applique ( " +  node.getExpression() + " )");
+            case "BIB" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table du plus petit nombre de lignes à gauche, " +
+                    "et si la table qui est a droite peut être mise en mémoire ca donne un gain important de performance , c'est pour ça l'algorithme BIB à était appliqué ( " + node.getExpression() + " )");
+            case "BII" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table du plus petit nombre de lignes à gauche, " +
+                    "et d'indexer la clé de jointure de la table la plus grande, c'est pour ça l'algorithme BII à était appliqué ( " +  node.getExpression() + " )");
             //case "HJ" -> conseils.add("");
-            case "PJ" -> conseils.add("==> Quand l’une des tables est beaucoup plus petite que l’autre dans jointure, et cette jointure se presente beacoup , c'est mieux s'ils sont organisées dans une même grappe (cluster), " +
+            case "PJ" -> conseils.add("==> Quand l’une des tables est beaucoup plus petite que l’autre dans jointure, et cette jointure se présente beaucoup , c'est mieux s'ils sont organisées dans une même grappe (cluster), " +
                     "c'est le cas ici pour l'algorithme PJ ( " + node.getExpression() + " )");
         }
         GenererConseils(node.getLeftChild(),conseils);
@@ -370,8 +370,8 @@ public class Afficheur{
         conseils.add("Lor");*/
         GenererConseils(optimalTree[0].getSecond(), conseils);
         //System.out.println("size = " +  conseils.size());
-        conseils.add("==> Pour l'ordre des conditions c'est mieux de commence par les selection que les jointures quand la table contient beaucoup de donnees");
-        conseils.add("==> Les colonnes qui sont utilise beaucoup dans le WHERE, c'est mieux de les indexe");
+        conseils.add("==> Pour l'ordre des conditions c'est mieux de commencer par les selection que les jointures quand la table contient beaucoup de données");
+        conseils.add("==> Les colonnes qui sont utilisées beaucoup dans le WHERE, c'est mieux de les indexés");
 
         //1
 
@@ -397,8 +397,8 @@ public class Afficheur{
 
         conseils = new HashSet<>();
         GenererConseils(optimalTree[1].getSecond(), conseils);
-        conseils.add("==> Pour l'ordre des conditions c'est mieux de commence par les selection que les jointures quand la table contient beaucoup de donnees");
-        conseils.add("==> Les colonnes qui sont utilise beaucoup dans le WHERE, c'est mieux de les indexe");
+        conseils.add("==> Pour l'ordre des conditions c'est mieux de commencer par les selection que les jointures quand la table contient beaucoup de données");
+        conseils.add("==> Les colonnes qui sont utilisées beaucoup dans le WHERE, c'est mieux de les indexés");
 
         JPanel rule_panel2 = new JPanel();
         rule_panel2.setLayout(new BoxLayout(rule_panel2, BoxLayout.Y_AXIS));
