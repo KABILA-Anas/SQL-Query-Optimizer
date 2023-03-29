@@ -1,8 +1,8 @@
 package Controller;
 
+import View.MainClass;
 import model.Node;
 import model.Query;
-import model.service.Catalog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +23,8 @@ public class Estimator {
         this.query = query;
 
         for (String table : query.getTables()){
-            nbrLines.put(table, Catalog.getStatsTable(table, 1));
-            FBM.put(table, Catalog.getStatsTable(table, 4));
+            nbrLines.put(table, MainClass.catalog.getStatsTable(table, 1));
+            FBM.put(table, MainClass.catalog.getStatsTable(table, 4));
         }
         /*System.out.println(nbrLines);
         System.out.println(FBM);*/
@@ -142,14 +142,14 @@ public class Estimator {
 
         double Bl = left/FBM.get(tableL);
         //
-        int orderMoyen = Catalog.getColumnDesc(tableR, columnR, 2);
+        int orderMoyen = MainClass.catalog.getColumnDesc(tableR, columnR, 2);
         double hauteur, Tsecondaire = 0;
         hauteur = (double) Math.round(Math.log(right) / Math.log(orderMoyen) + 0.5);
 
-        if(Catalog.isPrimaryKey(tableR, columnR)){
+        if(MainClass.catalog.isPrimaryKey(tableR, columnR)){
             Tsecondaire = (hauteur + 1) * (TempsTrans + TempsPosDébut);
         } else {
-            double sel = right / Catalog.getColumnCard(columnR, tableR);
+            double sel = right / MainClass.catalog.getColumnCard(columnR, tableR);
             Tsecondaire = Math.round(((hauteur-1) + sel + sel/orderMoyen) * (TempsTrans + TempsPosDébut) + 0.5);
         }
         //
@@ -244,19 +244,19 @@ public class Estimator {
         Decomposer.MyPair<String, String> pair = Decomposer.selectionSplit(node.getExpression());
         table = query.getAliasTable(pair.getSecond());
         column = pair.getFirst();
-        int orderMoyen = Catalog.getColumnDesc(table, column, 2);
+        int orderMoyen = MainClass.catalog.getColumnDesc(table, column, 2);
         double hauteur, cout = 0;
         hauteur = (double) Math.round(Math.log(nbrLigne) / Math.log(orderMoyen) + 0.5);
 
 
 
-        if(Catalog.isPrimaryKey(table, column)){
+        if(MainClass.catalog.isPrimaryKey(table, column)){
 
             cout = (hauteur + 1) * (TempsTrans + TempsPosDébut);
 
         } else {
 
-            double sel = nbrLigne / Catalog.getColumnCard(column, table);
+            double sel = nbrLigne / MainClass.catalog.getColumnCard(column, table);
             cout = Math.round(((hauteur -1) + sel + sel/orderMoyen) * (TempsTrans + TempsPosDébut) + 0.5);
 
         }

@@ -8,10 +8,13 @@ import model.Node;
 import model.Query;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
+import model.service.Catalog;
 
 import java.util.Vector;
 
 public class MainClass {
+
+	public static Catalog catalog;
 
 	public static void main(String[] args) {
 		

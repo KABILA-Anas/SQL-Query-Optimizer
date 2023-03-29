@@ -10,6 +10,7 @@ import model.Node;
 import model.Query;
 import model.exception.SemantiqueException;
 import model.exception.SyntaxeException;
+import model.service.Catalog;
 
 import java.awt.*;
 import java.util.Map;
@@ -148,6 +149,7 @@ public class UI extends JFrame{
 
         try {
             Query query = Decomposer.SplitQuery(jTextField1.getText());
+            MainClass.catalog = new Catalog(query);
             Transformer transformer = new Transformer(query);
             //P = new Afficheur(transformer.TransformQuery(),this);
             Node node = transformer.TransformQuery();
@@ -170,6 +172,7 @@ public class UI extends JFrame{
 
         try {
             Query query = Decomposer.SplitQuery(jTextField1.getText());
+            MainClass.catalog = new Catalog(query);
             Transformer transformer = new Transformer(query);
             //P = new Afficheur(transformer.TransformQuery(),this);
             Node node = transformer.TransformQuery();
