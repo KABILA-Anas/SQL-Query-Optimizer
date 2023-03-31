@@ -13,8 +13,8 @@ import java.util.Scanner;
 
 public class Catalog {
 
-    static File statistique = new File("catalog/statistiques.txt");
-    static File description = new File("catalog/descrption.txt");
+    static File statistique = new File("src/catalog/statistiques.txt");
+    static File description = new File("src/catalog/descrption.txt");
     Query query;
     Map<String,TableStats> tablesStats = new HashMap<String, TableStats>();
     Map<String,TableDesc> tablesDesc = new HashMap<String, TableDesc>();

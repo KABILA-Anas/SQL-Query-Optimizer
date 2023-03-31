@@ -6,6 +6,7 @@ import model.Query;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 public class Estimator {
@@ -53,8 +54,7 @@ public class Estimator {
         //** Binary operator
         if (N.getRightChild() != null){
             right = estimate(N.getRightChild(), cout);
-            //BIB(N,4000,1000000);
-            //PJ(N,1000000,4000);
+
             switch (N.getName()){
                 case "BIB" :
                     nbrLine = BIB(N,left,right);
@@ -72,12 +72,13 @@ public class Estimator {
                     nbrLine = PJ(N,left,right);
             }
 
-            if(cout[0] < N.getCout())
+            if(cout[0] <= N.getCout())
                 cout[0] = N.getCout();
+            else {
+                Random random = new Random();
+                cout[0] += random.nextDouble(N.getCout() - 0 + 1) + 0;
+            }
 
-            /*for (Decomposer.MyPair<String, String> pair : Decomposer.joinSplit(N.getExpression())){
-                System.out.println("Column : " + pair.getFirst() + "  Table : " + pair.getSecond());
-            }*/
         } else {
             switch (N.getName()){
                 case "FS" :
@@ -94,7 +95,6 @@ public class Estimator {
         cout[1] += N.getCout() + 1.1;
 
         return nbrLine;
-        //return (int) ((left + right)*0.7);
     }
 
     private double calculCoutTot(Node node , double[] pipeline_cout ){

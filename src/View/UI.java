@@ -59,13 +59,13 @@ public class UI extends JFrame{
         jButton4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255,255,255));
         jButton4.setBackground(new java.awt.Color(104, 131, 186));
-        jButton4.setText("Generer l'arbre optimale");
+        jButton4.setText("Generer l'arbre algebrique optimale");
 
 
         jButton3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255,255,255));
         jButton3.setBackground(new java.awt.Color(104, 131, 186));
-        jButton3.setText("Génerer l'arbre initiale");
+        jButton3.setText("Génerer l'arbre algebrique initiale");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);

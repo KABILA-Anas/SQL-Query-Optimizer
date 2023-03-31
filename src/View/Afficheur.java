@@ -45,18 +45,14 @@ public class Afficheur{
         JDialog jDialog = new JDialog(frame,"L'arbre algébrique initiale",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container content = jDialog.getContentPane();
-        //content.setLayout(new BoxLayout(jDialog, BoxLayout.X_AXIS));
 
-        //JPanel mainPanel = new JPanel();
         int nrbLtrees = 0;
         for (Map.Entry<Integer, Vector<Node>> entry : transformer.getTrees().entrySet())
             nrbLtrees += ((Vector<Node>)entry.getValue()).size();
 
-        //Transformer transformer = new Transformer();
         Vector<Node> initptrees = transformer.generatePTrees(tree);
         int nbrPtrees = initptrees.size();
 
-        //TitlePanel titlePanel = new TitlePanel();
 
         JButton B1 = new JButton("Afficher les variantes logiques");
         B1.setFocusable(false);
@@ -65,7 +61,6 @@ public class Afficheur{
         B2.setFocusable(false);
         B2.setBackground(button_color);
         JPanel titlePanel = new JPanel(new BorderLayout());
-        // Create the two labels
         JPanel title1 = new JPanel();
         title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
         JLabel label1 = new JLabel("Nombre des arbres logiques : " + nrbLtrees);
@@ -79,8 +74,6 @@ public class Afficheur{
         title1.setBackground(title1_color);
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
         B1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //title1.setBackground(Color.red);
-        //
         JPanel title2 = new JPanel();
         title2.setLayout(new BoxLayout(title2,BoxLayout.Y_AXIS));
         JLabel label2 = new JLabel("Nombre des arbres physiques : " + nbrPtrees);
@@ -89,19 +82,15 @@ public class Afficheur{
         title2.add(Box.createVerticalStrut(25));
         title2.add(label2);
         title2.add(Box.createVerticalStrut(10));
-        //title2.add(B2);
         title2.setBackground(title2_color);
         label2.setAlignmentX(Component.CENTER_ALIGNMENT);
         B2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Create a panel to hold the labels
         JPanel titlePanel1 = new JPanel(new GridLayout(1, 2));
         titlePanel1.add(title1);
         titlePanel1.add(title2);
 
-        // Add the title panel to the top of the main panel
         titlePanel.add(titlePanel1, BorderLayout.NORTH);
-        //tree panel
         TreePanel treePanel = new TreePanel(tree, false, 0);
 
 
@@ -109,7 +98,6 @@ public class Afficheur{
         content.add(titlePanel);
         content.add(Box.createVerticalStrut(35));
         content.setBackground(Color.white);
-        //treePanel.add(titlePanel,FlowLayout.LEFT);
         content.add(treePanel);
 
         B1.addActionListener(e -> {
@@ -119,11 +107,9 @@ public class Afficheur{
 
         B2.addActionListener(e -> {
             // Toggle the visibility of the panel
-            //Transformer transformer = new Transformer();
             new PhysicalTrees(initptrees, (JPanel) content, jDialog);
         });
 
-        //jDialog.setContentPane(jScrollPane);
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
         jDialog.setVisible(true);
@@ -140,7 +126,6 @@ public class Afficheur{
 
 
         JPanel titlePanel = new JPanel(new BorderLayout());
-        // Create the two labels
         JPanel title1 = new JPanel();
         title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
         JLabel label1 = new JLabel(initialQuery);
@@ -160,7 +145,6 @@ public class Afficheur{
         Map attributes = font.getAttributes();
         attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         label11.setFont(font.deriveFont(attributes));
-        //label11.setFont(new Font("Arial", Font.BOLD, 16));
         title11.add(Box.createVerticalStrut(25));
         title11.add(label11);
         title11.add(Box.createVerticalStrut(10));
@@ -182,16 +166,12 @@ public class Afficheur{
         JLabel label22 = new JLabel("La requete optimale");
         attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         label22.setFont(font.deriveFont(attributes));
-        //label22.setFont(new Font("Arial", Font.BOLD, 16));
         label22.setForeground(Color.WHITE);
         title22.add(Box.createVerticalStrut(20));
         title22.add(label22);
         title22.add(Box.createVerticalStrut(10));
         title22.setBackground(title1_color);
         label22.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //title1.setBackground(Color.red);
-        //
-
 
         // Create a panel to hold the labels
         JPanel titlePanel1 = new JPanel();
@@ -203,16 +183,12 @@ public class Afficheur{
 
         // Add the title panel to the top of the main panel
         titlePanel.add(titlePanel1, BorderLayout.NORTH);
-        //tree panel
-
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(titlePanel);
         content.add(Box.createVerticalStrut(35));
         content.setBackground(Color.white);
-        //treePanel.add(titlePanel,FlowLayout.LEFT);
 
-        //jDialog.setContentPane(jScrollPane);
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
         jDialog.setVisible(true);
@@ -236,15 +212,10 @@ public class Afficheur{
         if(node.getLeftChild() == null)
             return;
         switch (node.getName()) {
-            /*case "FS" -> conseils.add("");
-            case "HS" -> conseils.add("");
-            case "IS" -> conseils.add("");
-            case "JTF" -> conseils.add("");*/
             case "BIB" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table du plus petit nombre de lignes à gauche, " +
                     "et si la table qui est a droite peut être mise en mémoire ca donne un gain important de performance , c'est pour ça l'algorithme BIB à était appliqué ( " + node.getExpression() + " )");
             case "BII" -> conseils.add("==> Dans la jointure c’est mieux de mettre la table du plus petit nombre de lignes à gauche, " +
                     "et d'indexer la clé de jointure de la table la plus grande, c'est pour ça l'algorithme BII à était appliqué ( " +  node.getExpression() + " )");
-            //case "HJ" -> conseils.add("");
             case "PJ" -> conseils.add("==> Quand l’une des tables est beaucoup plus petite que l’autre dans jointure, et cette jointure se présente beaucoup , c'est mieux s'ils sont organisées dans une même grappe (cluster), " +
                     "c'est le cas ici pour l'algorithme PJ ( " + node.getExpression() + " )");
         }
@@ -255,30 +226,16 @@ public class Afficheur{
 
 
     public Afficheur(Decomposer.MyPair<Node, Node> optimalTree[], JFrame frame, Query query, String initialQuery) {
-        //this.tree = tree;
         this.query = query;
         JDialog jDialog = new JDialog(frame,"L'arbre algébrique optimale",true);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container content = jDialog.getContentPane();
-        //content.setLayout(new BoxLayout(jDialog, BoxLayout.X_AXIS));
 
         JButton B2 = new JButton("Afficher les variantes physiques");
         B2.setFocusable(false);
         B2.setBackground(button_color);
-        // Create the two labels
-        //title1.setBackground(Color.red);
-        //
         B2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Create a panel to hold the labels
-
-        // Add the title panel to the top of the main panel
-        //tree panel
-
-        /*JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));*/
-
-        //
         JPanel title1 = new JPanel();
         title1.setLayout(new BoxLayout(title1,BoxLayout.Y_AXIS));
         JLabel label1 = new JLabel("L'arbre algebrique le plus optimale");
@@ -290,8 +247,6 @@ public class Afficheur{
         title1.add(Box.createVerticalStrut(10));
         title1.setBackground(title1_color);
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //title1.setBackground(Color.red);
-        //
         JPanel title2 = new JPanel();
         title2.setLayout(new BoxLayout(title2,BoxLayout.Y_AXIS));
         JLabel label2 = new JLabel("Le meilleur plan physique");
@@ -314,7 +269,6 @@ public class Afficheur{
         title3.add(Box.createVerticalStrut(10));
         title3.setBackground(title1_color);
         label3.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //title1.setBackground(Color.red);
         //
         JPanel title4 = new JPanel();
         title4.setLayout(new BoxLayout(title4,BoxLayout.Y_AXIS));
@@ -332,7 +286,6 @@ public class Afficheur{
         TreePanel physicaltree1 = new TreePanel(optimalTree[0].getSecond(),true,0);
         JPanel pipe_panel = new JPanel();
         pipe_panel.setLayout(new BoxLayout(pipe_panel,BoxLayout.Y_AXIS));
-        //JScrollPane pipe_sp  = new JScrollPane(pipe_panel);
 
         pipe_panel.add(title1);
         pipe_panel.add(logictree1);
@@ -343,7 +296,6 @@ public class Afficheur{
         TreePanel physicaltree2 = new TreePanel(optimalTree[1].getSecond(),true,1);
         JPanel mat_panel = new JPanel();
         mat_panel.setLayout(new BoxLayout(mat_panel,BoxLayout.Y_AXIS));
-        //JScrollPane mat_sp  = new JScrollPane(mat_panel);
 
         mat_panel.add(title3);
         mat_panel.add(logictree2);
@@ -353,23 +305,18 @@ public class Afficheur{
         JPanel explications = new JPanel();
 
         Box box = Box.createVerticalBox();
-        JLabel rules_title = new JLabel(" Explications et conseils : ");
+        JLabel rules_title = new JLabel(" Conseils : ");
         rules_title.setFont(new Font("Arial",Font.BOLD,22));
         JPanel rules_title_panel = new JPanel();
         rules_title_panel.setBackground(rules_title_color);
         rules_title_panel.add(rules_title);
         box.add(rules_title_panel);
-        //box.add(rules_title);
         box.add(Box.createVerticalStrut(15));
 
 
 
         Set<String> conseils = new HashSet<>();
-        /*conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
-        conseils.add("Dans la jointure c’est mieux de mettre la table avec le plus petit nombre de lignes a gauche");
-        conseils.add("Lor");*/
         GenererConseils(optimalTree[0].getSecond(), conseils);
-        //System.out.println("size = " +  conseils.size());
         conseils.add("==> Pour l'ordre des conditions c'est mieux de commencer par les selection que les jointures quand la table contient beaucoup de données");
         conseils.add("==> Les colonnes qui sont utilisées beaucoup dans le WHERE, c'est mieux de les indexés");
 
@@ -383,12 +330,9 @@ public class Afficheur{
 
 
             rule_label = adjustLabel(rule);
-            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_label.setFont(new Font("Arial",Font.BOLD,16));
             rule_label.setForeground(rules_color);
-            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_panel.add(rule_label);
-            //rule_panel.setPreferredSize(new Dimension(100,rule_panel.getPreferredSize().height));
 
             rule_panel.add(Box.createVerticalStrut(15));
         }
@@ -409,15 +353,11 @@ public class Afficheur{
 
 
             rule_label = adjustLabel(rule);
-            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_label.setFont(new Font("Arial",Font.BOLD,16));
             rule_label.setForeground(rules_color);
-            //rule_label.setPreferredSize(new Dimension(100, rule_label.getPreferredSize().height));
             rule_panel2.add(rule_label);
-            //rule_panel2.setPreferredSize(new Dimension(100,rule_panel2.getPreferredSize().height));
 
             rule_panel.add(Box.createVerticalStrut(15));
-            //box.add(Box.createVerticalStrut(5));
         }
         box.add(rule_panel2);
 
@@ -427,7 +367,6 @@ public class Afficheur{
         //RadioButtons
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setBackground(new Color(176, 226, 152));
-        //buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
         JRadioButton radioButton1, radioButton2;
         ButtonGroup buttonGroup;
@@ -481,18 +420,14 @@ public class Afficheur{
         title1.add(Box.createVerticalStrut(15));
         title3.add(B1);
         title3.add(Box.createVerticalStrut(15));
-        //right_box.add(B);
         right_box.add(Box.createVerticalStrut(15));
         right_box.add(explications);
 
         JPanel right_panel = new JPanel();
         right_panel.setBackground(rules_box_color);
-        //right_panel.setLayout(new BoxLayout(right_panel,BoxLayout.Y_AXIS));
-        //buttonsPanel.setPreferredSize(new Dimension(right_panel.getPreferredSize().width, (int) (0.2*right_panel.getPreferredSize().height)));
         right_panel.add(right_box);
-        //explications.setPreferredSize(new Dimension(500, explications.getPreferredSize().height));
         box.setPreferredSize(new Dimension(485, box.getPreferredSize().height));
-        right_panel.setPreferredSize(new Dimension(500, right_panel.getPreferredSize().height));
+        right_panel.setPreferredSize(new Dimension(right_panel.getPreferredSize().width, right_panel.getPreferredSize().height));
         //
         pipe_panel.setVisible(true);
         mat_panel.setVisible(false);
@@ -513,30 +448,15 @@ public class Afficheur{
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
         content.add(Box.createVerticalStrut(35));
         content.setBackground(Color.white);
-        //treePanel.add(titlePanel,FlowLayout.LEFT);
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(Color.white);
         JScrollPane mainpanel_sp = new JScrollPane(mainPanel);
         mainPanel.add(pipe_panel);
         mainPanel.add(mat_panel);
-        //mainPanel.add(buttonsPanel,FlowLayout.LEFT);
         content.setBackground(Color.white);
         content.add(mainpanel_sp);
         content.add(right_panel);
-        /*content.add(pipe_sp);
-        content.add(mat_sp);*/
 
-
-
-        /*B2.addActionListener(e -> {
-            // Toggle the visibility of the panel
-            //Transformer transformer = new Transformer();
-            new PhysicalTrees(optimalTree[0].getSecond(), jDialog, 3);
-        });*/
-
-        //logictree1.add(B2, FlowLayout.LEFT);
-
-        //jDialog.setContentPane(jScrollPane);
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
         jDialog.setVisible(true);
@@ -555,8 +475,6 @@ public class Afficheur{
         }
 
         //JPanel
-
-        //System.out.println("nrbLtrees " + nrbLtrees + "  nbrPtrees " + nbrPtrees);
         TitlePanel titlePanel = new TitlePanel("Nombre des arbres logiques : " + nrbLtrees, "Nombre des arbres physiques : " + nbrPtrees);
 
         JDialog jDialog = new JDialog(frame,"Relational Tree",true);
@@ -566,13 +484,11 @@ public class Afficheur{
         JP.setLayout(new BoxLayout(JP, BoxLayout.Y_AXIS));
         JScrollPane SP = new JScrollPane(JP);
         JP.add(titlePanel);
-        //int i = 0;
         TreePanel mainTree;
         for (Map.Entry<Node, Vector<Node>> entry : ptrees.entrySet()){
             mainTree = new TreePanel(entry.getKey(), false, 0);
             mainTree.setBackground(Color.PINK);
             mainTree.setBorder(BorderFactory.createLoweredBevelBorder());
-            //JButton B = new Button("Afficher les arbres physiques");
             JToggleButton B = new JToggleButton("Afficher les arbres physiques");
             B.setBackground(Color.BLACK);
             B.setForeground(Color.WHITE);
@@ -584,16 +500,13 @@ public class Afficheur{
             JPI.setLayout(new BoxLayout(JPI, BoxLayout.Y_AXIS));
             for (Node n : entry.getValue()) {
                 JPI.add(new TreePanel(n, printCout, 0));
-                //i++;
             }
             JPI.setVisible(false);
             JP.add(JPI);
             B.addActionListener(e -> {
-                // Toggle the visibility of the panel
                 JPI.setVisible(!JPI.isVisible());
             });
         }
-        //System.out.println("==> " + i);
         System.out.println("--------------------------------------------------------");
 
         jDialog.setContentPane(SP);
@@ -619,8 +532,6 @@ public class Afficheur{
             mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
 
             JPanel rulesPanel = new JPanel();
-            //rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
-            //rulesPanel.setLayout(new FlowLayout());
             Box box = Box.createVerticalBox();
             Vector<String> rules;
             JLabel rules_title = new JLabel("L'arbre algebrique initiale");
@@ -629,7 +540,6 @@ public class Afficheur{
             rules_title_panel.setBackground(rules_title_color);
             rules_title_panel.add(rules_title);
             box.add(rules_title_panel);
-            //box.add(rules_title);
             box.add(Box.createVerticalStrut(15));
 
 
@@ -661,9 +571,6 @@ public class Afficheur{
             groupPanelSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-            //groupPanel.setVisible(true);
-            //JScrollPane groupPanelSp = new JScrollPane(groupPanel);
-            //groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             cardPanel.add(groupPanelSp);
             //
 
@@ -675,8 +582,6 @@ public class Afficheur{
                     mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
 
                     rulesPanel = new JPanel();
-                    //rulesPanel.setLayout(new BoxLayout(rulesPanel,BoxLayout.Y_AXIS));
-                    //rulesPanel.setLayout(new FlowLayout());
                     box = Box.createVerticalBox();
                     rules = transformer.getRules(n);
                     rules_title = new JLabel(" Les règles appliquées : ");
@@ -685,7 +590,6 @@ public class Afficheur{
                     rules_title_panel.setBackground(rules_title_color);
                     rules_title_panel.add(rules_title);
                     box.add(rules_title_panel);
-                    //box.add(rules_title);
                     box.add(Box.createVerticalStrut(15));
 
                     int etape = 0;
@@ -733,14 +637,8 @@ public class Afficheur{
                     groupPanelSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
                     groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-                    //groupPanel.setVisible(true);
-                    //JScrollPane groupPanelSp = new JScrollPane(groupPanel);
-                    //groupPanelSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                     cardPanel.add(groupPanelSp);
                 }
-            /*cardPanel.add(new JLabel("Card 1"), "card1");
-            cardPanel.add(new JLabel("Card 2"), "card2");
-            cardPanel.add(new JLabel("Card 3"), "card3");*/
 
             nextButton = new JButton("→");
             nextButton.setFont(new Font("",Font.BOLD,22));
@@ -801,9 +699,6 @@ public class Afficheur{
             JDialog jd = new JDialog(jDialog, "L'arbre physique", true);
 
             TreePanel treePanel1, treePanel2;
-            //Estimator estimator = new Estimator(node, query);
-            //double[] pipeline = {0};
-            //estimator.estimate(pipeline);
             if(type > 1)
                 treePanel1 = new TreePanel(node, true, type - 2);
             else
@@ -823,7 +718,6 @@ public class Afficheur{
 
             JPanel buttonsPanel = new JPanel();
             buttonsPanel.setBackground(new Color(176, 226, 152));
-            //buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
             JRadioButton radioButton1, radioButton2;
             ButtonGroup buttonGroup;
@@ -864,7 +758,6 @@ public class Afficheur{
 
             Container content = jd.getContentPane();
             jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //TreePanel treePanel = new TreePanel(tree, false);
             content.add(SP);
             jd.pack();
             jd.setLocationRelativeTo(jDialog);
@@ -875,7 +768,6 @@ public class Afficheur{
             JPanel JP = new JPanel();
             JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
             JScrollPane SP = new JScrollPane(JP);
-            //JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
             TreePanel treePanel;
             for (Node n : nodes) {
                 treePanel = new TreePanel(n, false, 0);
@@ -893,107 +785,15 @@ public class Afficheur{
                     //Transformer transformer = new Transformer();
                     new PhysicalTrees(n, jd, 0);
                 });
-                /*JButton B3 = new JButton("Calculer le cout avec materialisation");
-                B3.setFocusable(false);
-                B3.setBackground(new Color(176, 226, 152));
-                bPanel.add(Box.createVerticalStrut(5));
-                bPanel.add(B3);
-                B3.addActionListener(e -> {
-                    // Toggle the visibility of the panel
-                    Transformer transformer = new Transformer();
-                    //Transformer transformer = new Transformer();
-                    new PhysicalTrees(n, jd, 1);
-                });*/
                 treePanel.add(bPanel, FlowLayout.LEFT);
                 JP.add(treePanel);
             }
-            //Container content = jd.getContentPane();
-            //jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //TreePanel treePanel = new TreePanel(tree, false);
-            //JP.setSize(panel.getSize());
             SP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             SP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
             panel.add(SP);
             jd.pack();
-            //jd.setLocationRelativeTo(jDialog);
-            //jd.setVisible(true);
         }
     }
-
-
-    /*
-    private class PhysicalTrees {
-
-        public PhysicalTrees(Node node, JDialog jDialog, int type) {
-            JPanel JP = new JPanel();
-            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
-            JScrollPane SP = new JScrollPane(JP);
-            JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
-
-            TreePanel treePanel;
-            Estimator estimator = new Estimator(node, query);
-            double[] pipeline = {0};
-            estimator.estimate(pipeline);
-            treePanel = new TreePanel(node, true, type);
-            treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-
-            JP.add(treePanel);
-
-            Container content = jd.getContentPane();
-            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //TreePanel treePanel = new TreePanel(tree, false);
-            content.add(SP);
-            jd.pack();
-            jd.setLocationRelativeTo(jDialog);
-            jd.setVisible(true);
-        }
-
-        public PhysicalTrees(Vector<Node> nodes, JDialog jDialog) {
-            JPanel JP = new JPanel();
-            JP.setLayout(new BoxLayout(JP, BoxLayout.X_AXIS));
-            JScrollPane SP = new JScrollPane(JP);
-            JDialog jd = new JDialog(jDialog, "Les arbres physiques", true);
-            TreePanel treePanel;
-            for (Node n : nodes) {
-                treePanel = new TreePanel(n, false, 0);
-                treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-                JButton B2 = new JButton("     Calculer le cout avec pipeline      ");
-                B2.setFocusable(false);
-                B2.setBackground(new Color(176, 226, 152));
-                JPanel bPanel = new JPanel();
-                bPanel.setLayout(new BoxLayout(bPanel, BoxLayout.Y_AXIS));
-                bPanel.setBackground(Color.white);
-                bPanel.add(B2);
-                B2.addActionListener(e -> {
-                    // Toggle the visibility of the panel
-                    Transformer transformer = new Transformer();
-                    //Transformer transformer = new Transformer();
-                    new PhysicalTrees(n, jd, 0);
-                });
-                JButton B3 = new JButton("Calculer le cout avec materialisation");
-                B3.setFocusable(false);
-                B3.setBackground(new Color(176, 226, 152));
-                bPanel.add(Box.createVerticalStrut(5));
-                bPanel.add(B3);
-                B3.addActionListener(e -> {
-                    // Toggle the visibility of the panel
-                    Transformer transformer = new Transformer();
-                    //Transformer transformer = new Transformer();
-                    new PhysicalTrees(n, jd, 1);
-                });
-                treePanel.add(bPanel, FlowLayout.LEFT);
-                JP.add(treePanel);
-            }
-            Container content = jd.getContentPane();
-            jd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //TreePanel treePanel = new TreePanel(tree, false);
-            content.add(SP);
-            jd.pack();
-            jd.setLocationRelativeTo(jDialog);
-            jd.setVisible(true);
-        }
-    }
-     */
 
     private class TreePanel extends JPanel {
         private Node tree;
@@ -1011,7 +811,6 @@ public class Afficheur{
             setLayout(new FlowLayout(FlowLayout.LEFT));
             setBackground(Color.WHITE);
             if(pCout){
-                //add(new JLabel("==> Cout avec Pipeline = " + Double.toString(Optimizer.getCoutPipeline(tree))), FlowLayout.LEFT);
                 double[] cout = {0, 0};
                 Estimator estimator = new Estimator(tree,query);
                 estimator.estimate(cout);
@@ -1049,7 +848,6 @@ public class Afficheur{
         }
 
         private void drawNode(Graphics g, Node node, int x, int y, int dx) {
-            //g.drawOval(x - NODE_RADIUS, y - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2);
 
             String nodeLabel = node.toString();
             if(pCout && !node.getName().equals("Relation"))
@@ -1125,20 +923,6 @@ public class Afficheur{
             // Add the title panel to the top of the main panel
             add(titlePanel, BorderLayout.NORTH);
         }
-
-        /*public static void main(String[] args) {
-            JFrame frame = new JFrame("TitlePanel Example");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setPreferredSize(new Dimension(400, 300));
-
-            JPanel contentPane = new JPanel(new BorderLayout());
-            TitlePanel titlePanel = new TitlePanel("Title 1", "Title 2");
-            contentPane.add(titlePanel, BorderLayout.NORTH);
-
-            frame.setContentPane(contentPane);
-            frame.pack();
-            frame.setVisible(true);
-        }*/
     }
 	
 	
