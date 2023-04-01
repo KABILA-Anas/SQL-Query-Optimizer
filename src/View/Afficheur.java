@@ -454,8 +454,12 @@ public class Afficheur{
         mainPanel.add(pipe_panel);
         mainPanel.add(mat_panel);
         content.setBackground(Color.white);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        mainpanel_sp.setPreferredSize(new Dimension((int) (0.6 * screenSize.width), (int)(0.90*screenSize.height)));
+        right_panel.setPreferredSize(new Dimension((int) (0.4 * screenSize.width), (int)(0.90*screenSize.height)));
         content.add(mainpanel_sp);
         content.add(right_panel);
+        content.setPreferredSize(new Dimension(screenSize.width, (int)(0.90*screenSize.height)));
 
         jDialog.pack();
         jDialog.setLocationRelativeTo(null);
